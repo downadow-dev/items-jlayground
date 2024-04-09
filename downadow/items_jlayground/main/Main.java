@@ -318,8 +318,9 @@ public class Main extends JPanel {
 									Thread.sleep(30);
 								else
 									Thread.sleep(110);
-							} else Thread.sleep(15);
+							}
 						}
+						Thread.sleep(20);
 					} catch(Exception e) {
 						e.printStackTrace();
 					}
