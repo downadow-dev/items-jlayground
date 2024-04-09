@@ -318,7 +318,7 @@ public class Main extends JPanel {
 									Thread.sleep(30);
 								else
 									Thread.sleep(110);
-							};
+							} else Thread.sleep(15);
 						}
 					} catch(Exception e) {
 						e.printStackTrace();
@@ -332,7 +332,7 @@ public class Main extends JPanel {
 				while(true) {
 					try {
 						fr.repaint();
-						Thread.sleep(10);
+						Thread.sleep(30);
 					} catch(Exception e) {
 						e.printStackTrace();
 					}
