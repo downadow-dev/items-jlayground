@@ -1,14 +1,3 @@
-/*
- * Автор                  downadow (Sviatoslav)
- * 
- * : Данный файл доступен по лицензии Downadow
- * : License 7 как "Программное обеспечение".
- * 
- * 
- *                                    2024 г.
- */
-
-
 package downadow.items_jlayground.main;
 
 import javax.swing.*;
