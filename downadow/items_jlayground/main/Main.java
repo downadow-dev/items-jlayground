@@ -12,7 +12,7 @@ import java.io.FileWriter;
 
 public class Main extends JPanel {
 	/* ширина и высота карты в объектах */
-	private static final int WIDTH = 91, HEIGHT = 40;
+	private static final int WIDTH = 104, HEIGHT = 49;
 	/* карта */
 	private static char[] map = new char[WIDTH * HEIGHT];
 	
@@ -22,7 +22,7 @@ public class Main extends JPanel {
 	/* замедленное время */
 	private static boolean slow = false;
 	
-	private static int cameraStart = 32 + 30 * WIDTH;
+	private static int cameraStart = 32 + 40 * WIDTH;
 	/* выбранный блок */
 	private static int selected = -1;
 	/* вывести помощь */
@@ -124,7 +124,7 @@ public class Main extends JPanel {
 						/* стереть карту, selected и cameraStart */
 						else if(e.getKeyCode() == KeyEvent.VK_HOME) {
 							selected = -1;
-							cameraStart = 32 + 30 * WIDTH;
+							cameraStart = 32 + 40 * WIDTH;
 							for(int i = 0; i < map.length; i++)
 								map[i] = '.';
 						}
