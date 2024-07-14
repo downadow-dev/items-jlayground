@@ -28,6 +28,9 @@ public class Main extends JPanel {
 	/* вывести помощь */
 	private static boolean help = true;
 	
+	/* тёмный режим */
+	private static boolean darkMode = false;
+	
 	private static JFrame fr;
 	
 	/* возвращает адрес блока, на который указывает прицел */
@@ -42,6 +45,16 @@ public class Main extends JPanel {
 		new Thread() {
 			public void run() {
 				try {
+					/* ещё взрывы */
+					if(map[saved + 1] == '"')
+						new Thread() {public void run() {boom(saved + 1);}}.start();
+					if(map[saved - 1] == '"')
+						new Thread() {public void run() {boom(saved - 1);}}.start();
+					if(map[saved - WIDTH] == '"')
+						new Thread() {public void run() {boom(saved - WIDTH);}}.start();
+					if(map[saved + WIDTH] == '"')
+						new Thread() {public void run() {boom(saved + WIDTH);}}.start();
+					
 					map[saved] = '.';
 					map[saved + 1] = '.';
 					map[saved - 1] = '.';
@@ -165,12 +178,23 @@ public class Main extends JPanel {
 								public void run() {
 									try {
 										Thread.sleep(30000);
-										if(map[saved] == 'f')
+										if(slow)
+											Thread.sleep(20000);
+										if(map[saved] == 'f');
 											map[saved] = 'b';
 									} catch(Exception e) {}
 								}
 							}.start();
 						}
+						/* поставить воду */
+						else if(e.getKeyCode() == KeyEvent.VK_COMMA)
+							map[selectedBlockAddr()] = 'W';
+						/* поставить слизь */
+						else if(e.getKeyCode() == KeyEvent.VK_Z)
+							map[selectedBlockAddr()] = 'z';
+						/* поставить бомбу */
+						else if(e.getKeyChar() == '*')
+							map[selectedBlockAddr()] = '"';
 						/* поставить res/b.png */
 						else if(e.getKeyCode() == KeyEvent.VK_B)
 							map[selectedBlockAddr()] = 'B';
@@ -252,6 +276,20 @@ public class Main extends JPanel {
 						} else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == ')') {
 							map[selected] = '>';
 							boom(selected - 8 - WIDTH);
+						} else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == '"') {
+							selected = -1;
+							map[selected] = '.';
+							boom(selected);
+							boom(selected - 1 - WIDTH);
+							boom(selected - 2);
+							boom(selected + 2);
+							boom(selected + 1 + WIDTH);
+							boom(selected + 1 - WIDTH);
+							boom(selected - 1 + WIDTH);
+							boom(selected - 1 - WIDTH * 2);
+							boom(selected + 1 + WIDTH * 2);
+							boom(selected + 1 - WIDTH * 2);
+							boom(selected - 1 + WIDTH * 2);
 						}
 						/* операции с выделенным блоком */
 						else if(e.getKeyCode() == KeyEvent.VK_W && selected != -1 && (map[selected - WIDTH] == '.' || map[selected - WIDTH] == 'g' || map[selected - WIDTH] == 'W') && map[selected] != 'f') {
@@ -278,8 +316,7 @@ public class Main extends JPanel {
 							map[selected + 1] = map[selected];
 							map[selected] = '.';
 							selected++;
-						} else if(e.getKeyCode() == KeyEvent.VK_COMMA)
-							map[selectedBlockAddr()] = 'W';
+						}
 						else if(e.getKeyCode() == KeyEvent.VK_PERIOD) {
 							for(int i = 0; i < map.length; i++)
 								if(map[i] == 'W')
@@ -288,6 +325,11 @@ public class Main extends JPanel {
 								if(map[i] == 'W')
 									map[i] = '.';
 						}
+						
+						else if(e.getKeyCode() == KeyEvent.VK_F3 && !darkMode)
+							darkMode = true;
+						else if(e.getKeyCode() == KeyEvent.VK_F3 && darkMode)
+							darkMode = false;
 					}
 				} catch(Exception ex) {
 					ex.printStackTrace();
@@ -308,7 +350,7 @@ public class Main extends JPanel {
 						/* "физика" */
 						for(int i = 0; i < map.length - WIDTH; i++) {
 							if(selected == -1 && (map[i] == '@' ||  map[i] == 's' || map[i] == '|' ||  map[i] == 'd' || map[i] == '#' ||
-							    map[i] == 'l' || map[i] == 'c' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '(' || map[i] == ')') && map[i + WIDTH] == '.') {
+							    map[i] == 'l' || map[i] == 'c' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')') && (map[i + WIDTH] == '.' || map[i + WIDTH] == 'W' || map[i + WIDTH] == 'g')) {
 								map[i + WIDTH] = map[i];
 								map[i] = '.';
 								
@@ -425,6 +467,10 @@ public class Main extends JPanel {
 						g.setColor(new Color(10, 10, 255));
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						g.drawRect(ii * 60 , i * 60, 60, 60);
+					} else if(map[iii] == 'z') {
+						g.setColor(new Color(0, 225, 0));
+						g.fillRect(ii * 60, i * 60, 60, 60);
+						g.drawRect(ii * 60 , i * 60, 60, 60);
 					} else if(map[iii] == '@')
 						g.drawImage(new ImageIcon("res/box.png").getImage(), ii * 60 - 60, i * 60 - 60, 120, 120, null);
 					else if(map[iii] == 'y') {
@@ -461,9 +507,16 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("res/gun1_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
 						map[iii] = ']';
 					} else {
-						g.setColor(new Color(80, 80, 80));
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						g.setColor(new Color(140, 140, 140));
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 					}
 				} catch(ArrayIndexOutOfBoundsException e) {}
@@ -497,6 +550,8 @@ public class Main extends JPanel {
 					} else if(map[iii] == '>') {
 						g.drawImage(new ImageIcon("res/tank1_1.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
 						map[iii] = ')';
+					} else if(map[iii] == '"') {
+						g.drawImage(new ImageIcon("res/bomb.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
 					}
 					
 					/* подсветка выбранного блока */
@@ -522,7 +577,7 @@ public class Main extends JPanel {
 			g.setFont(new Font("Monospaced", Font.PLAIN, 15));
 			
 			if(slow)
-				g.drawString("slow", 970, 20);
+				g.drawString("~", 970, 20);
 			
 			if(help) {
 				g.drawImage(new ImageIcon("res/black.png").getImage(), 0, 0, 1024, 728, null);
@@ -558,6 +613,10 @@ public class Main extends JPanel {
 				g.drawString("=...............:  поставить танк", 20, 560);
 				g.drawString("F...............:  огонь", 20, 580);
 				g.drawString("<запятая>.......:  вода, для удаления всей воды нажмите '.'", 20, 600);
+				g.drawString("*...............:  бомба", 20, 620);
+				g.drawString("Z...............:  слизь (зелёный блок)", 20, 640);
+				
+				g.drawString("F3..............:  тёмный/светлый режим", 20, 670);
 			}
 		}
 	}
