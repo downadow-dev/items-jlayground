@@ -254,25 +254,25 @@ public class Main extends JPanel {
 							boom(selected - 8 - WIDTH);
 						}
 						/* операции с выделенным блоком */
-						else if(e.getKeyCode() == KeyEvent.VK_W && selected != -1 && (map[selected - WIDTH] == '.' || map[selected - WIDTH] == 'g') && map[selected] != 'f') {
+						else if(e.getKeyCode() == KeyEvent.VK_W && selected != -1 && (map[selected - WIDTH] == '.' || map[selected - WIDTH] == 'g' || map[selected - WIDTH] == 'W') && map[selected] != 'f') {
 							if(slow)
 								Thread.sleep(50);
 							map[selected - WIDTH] = map[selected];
 							map[selected] = '.';
 							selected -= WIDTH;
-						} else if(e.getKeyCode() == KeyEvent.VK_S && selected != -1 && (map[selected + WIDTH] == '.' || map[selected + WIDTH] == 'g') && map[selected] != 'f') {
+						} else if(e.getKeyCode() == KeyEvent.VK_S && selected != -1 && (map[selected + WIDTH] == '.' || map[selected + WIDTH] == 'g' || map[selected + WIDTH] == 'W') && map[selected] != 'f') {
 							if(slow)
 								Thread.sleep(50);
 							map[selected + WIDTH] = map[selected];
 							map[selected] = '.';
 							selected += WIDTH;
-						} else if(e.getKeyCode() == KeyEvent.VK_A && selected != -1 && (map[selected - 1] == '.' || map[selected - 1] == 'g') && map[selected] != 'f') {
+						} else if(e.getKeyCode() == KeyEvent.VK_A && selected != -1 && (map[selected - 1] == '.' || map[selected - 1] == 'g' || map[selected - 1] == 'W') && map[selected] != 'f') {
 							if(slow)
 								Thread.sleep(50);
 							map[selected - 1] = map[selected];
 							map[selected] = '.';
 							selected--;
-						} else if(e.getKeyCode() == KeyEvent.VK_D && selected != -1 && (map[selected + 1] == '.' || map[selected + 1] == 'g') && map[selected] != 'f') {
+						} else if(e.getKeyCode() == KeyEvent.VK_D && selected != -1 && (map[selected + 1] == '.' || map[selected + 1] == 'g' || map[selected + 1] == 'W') && map[selected] != 'f') {
 							if(slow)
 								Thread.sleep(50);
 							map[selected + 1] = map[selected];
@@ -316,7 +316,7 @@ public class Main extends JPanel {
 									Thread.sleep(30);
 								else
 									Thread.sleep(110);
-							} else if(selected == -1 && map[i] == 'W') {
+							} else if(map[i] == 'W') {
 								if(map[i - 1] == 'f')
 									map[i - 1] = 'W';
 								if(map[i + 1] == 'f')
