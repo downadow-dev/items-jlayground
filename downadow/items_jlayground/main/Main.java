@@ -47,13 +47,13 @@ public class Main extends JPanel {
 				try {
 					/* ещё взрывы */
 					if(map[saved + 1] == '"')
-						new Thread() {public void run() {boom(saved + 1);}}.start();
+						boom(saved + 1);
 					if(map[saved - 1] == '"')
-						new Thread() {public void run() {boom(saved - 1);}}.start();
+						boom(saved - 1);
 					if(map[saved - WIDTH] == '"')
-						new Thread() {public void run() {boom(saved - WIDTH);}}.start();
+						boom(saved - WIDTH);
 					if(map[saved + WIDTH] == '"')
-						new Thread() {public void run() {boom(saved + WIDTH);}}.start();
+						boom(saved + WIDTH);
 					
 					map[saved] = '.';
 					map[saved + 1] = '.';
@@ -277,8 +277,8 @@ public class Main extends JPanel {
 							map[selected] = '>';
 							boom(selected - 8 - WIDTH);
 						} else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == '"') {
-							selected = -1;
 							map[selected] = '.';
+							
 							boom(selected);
 							boom(selected - 1 - WIDTH);
 							boom(selected - 2);
@@ -290,6 +290,8 @@ public class Main extends JPanel {
 							boom(selected + 1 + WIDTH * 2);
 							boom(selected + 1 - WIDTH * 2);
 							boom(selected - 1 + WIDTH * 2);
+							
+							selected = -1;
 						}
 						/* операции с выделенным блоком */
 						else if(e.getKeyCode() == KeyEvent.VK_W && selected != -1 && (map[selected - WIDTH] == '.' || map[selected - WIDTH] == 'g' || map[selected - WIDTH] == 'W') && map[selected] != 'f') {
