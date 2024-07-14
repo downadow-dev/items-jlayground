@@ -415,37 +415,72 @@ public class Main extends JPanel {
 			for(int ii = 0; ii < WIDTH; ii++) {
 				try {
 					if(map[iii] == '#') {
-						g.setColor(new Color(80, 80, 80));
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						g.setColor(new Color(140, 140, 140));
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
 						g.drawImage(new ImageIcon("res/reshetka.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'l') {
-						g.setColor(new Color(80, 80, 80));
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						g.setColor(new Color(140, 140, 140));
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
 						g.drawImage(new ImageIcon("res/lestnica.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'g') {
-						g.setColor(new Color(80, 80, 80));
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						g.setColor(new Color(140, 140, 140));
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
 						g.drawImage(new ImageIcon("res/glass.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '|') {
-						g.setColor(new Color(80, 80, 80));
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						g.setColor(new Color(140, 140, 140));
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
 						g.drawImage(new ImageIcon("res/door_or_stick.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'd') {
-						g.setColor(new Color(80, 80, 80));
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						g.setColor(new Color(140, 140, 140));
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
 						g.drawImage(new ImageIcon("res/bed.png").getImage(), ii * 60 - 60, i * 60, 120, 60, null);
@@ -479,31 +514,59 @@ public class Main extends JPanel {
 						g.setColor(new Color(255, 255, 0));
 						g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
 					} else if(map[iii] == '[') {
-						g.setColor(new Color(80, 80, 80));
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						g.setColor(new Color(140, 140, 140));
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
 						g.drawImage(new ImageIcon("res/gun0_0.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '{') {
-						g.setColor(new Color(80, 80, 80));
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						g.setColor(new Color(140, 140, 140));
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
 						g.drawImage(new ImageIcon("res/gun0_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
 						map[iii] = '[';
 					} else if(map[iii] == ']') {
-						g.setColor(new Color(80, 80, 80));
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						g.setColor(new Color(140, 140, 140));
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
 						g.drawImage(new ImageIcon("res/gun1_0.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '}') {
-						g.setColor(new Color(80, 80, 80));
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						g.setColor(new Color(140, 140, 140));
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
 						g.drawImage(new ImageIcon("res/gun1_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
