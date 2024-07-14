@@ -190,7 +190,7 @@ public class Main extends JPanel {
 						else if(e.getKeyCode() == KeyEvent.VK_C)
 							map[selectedBlockAddr()] = 'c';
 						/* поставить танк */
-						else if(e.getKeyCode() == KeyEvent.VK_0)
+						else if(e.getKeyCode() == KeyEvent.VK_EQUALS)
 							map[selectedBlockAddr()] = '(';
 						/* поставить стекло */
 						else if(e.getKeyCode() == KeyEvent.VK_G && map[selectedBlockAddr() + WIDTH] != '.')
@@ -278,6 +278,15 @@ public class Main extends JPanel {
 							map[selected + 1] = map[selected];
 							map[selected] = '.';
 							selected++;
+						} else if(e.getKeyCode() == KeyEvent.VK_COMMA)
+							map[selectedBlockAddr()] = 'W';
+						else if(e.getKeyCode() == KeyEvent.VK_PERIOD) {
+							for(int i = 0; i < map.length; i++)
+								if(map[i] == 'W')
+									map[i] = '.';
+							for(int i = 0; i < map.length; i++)
+								if(map[i] == 'W')
+									map[i] = '.';
 						}
 					}
 				} catch(Exception ex) {
@@ -307,6 +316,27 @@ public class Main extends JPanel {
 									Thread.sleep(30);
 								else
 									Thread.sleep(110);
+							} else if(selected == -1 && map[i] == 'W') {
+								if(map[i - 1] == 'f')
+									map[i - 1] = 'W';
+								if(map[i + 1] == 'f')
+									map[i + 1] = 'W';
+								if(map[i + WIDTH] == 'f')
+									map[i + WIDTH] = 'W';
+								if(map[i - WIDTH] == 'f')
+									map[i - WIDTH] = 'W';
+								
+								if((map[i + WIDTH] != '.' && map[i + WIDTH] != 'W') || i + WIDTH * 2 > map.length) {
+									if(map[i - 1] == '.' || map[i - 1] == 'd' || map[i - 1] == '|')
+										map[i - 1] = 'W';
+								
+									if(map[i + 1] == '.')
+										map[i + 1] = 'W';
+								}
+								
+								if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'd' || map[i + WIDTH] == '|')
+									map[i + WIDTH] = 'W';
+								
 							}
 						}
 						Thread.sleep(20);
@@ -391,7 +421,11 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("res/bricks.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'w')
 						g.drawImage(new ImageIcon("res/W.png").getImage(), ii * 60, i * 60, 60, 60, null);
-					else if(map[iii] == '@')
+					else if(map[iii] == 'W') {
+						g.setColor(new Color(10, 10, 255));
+						g.fillRect(ii * 60, i * 60, 60, 60);
+						g.drawRect(ii * 60 , i * 60, 60, 60);
+					} else if(map[iii] == '@')
 						g.drawImage(new ImageIcon("res/box.png").getImage(), ii * 60 - 60, i * 60 - 60, 120, 120, null);
 					else if(map[iii] == 'y') {
 						g.setColor(new Color(255, 255, 0));
@@ -521,8 +555,9 @@ public class Main extends JPanel {
 				g.drawString("W...............:  поставить красивый блок", 20, 500);
 				g.drawString("C...............:  поставить автомобиль", 20, 520);
 				g.drawString("U...............:  поставить огнестрельное оружие", 20, 540);
-				g.drawString("0...............:  поставить танк", 20, 560);
+				g.drawString("=...............:  поставить танк", 20, 560);
 				g.drawString("F...............:  огонь", 20, 580);
+				g.drawString("<запятая>.......:  вода, для удаления всей воды нажмите '.'", 20, 600);
 			}
 		}
 	}
