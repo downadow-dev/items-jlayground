@@ -362,20 +362,30 @@ public class Main extends JPanel {
 									Thread.sleep(110);
 							} else if(map[i] == 'W') {
 								if(map[i - 1] == 'f')
-									map[i - 1] = 'W';
+									map[i - 1] = 'b';
 								if(map[i + 1] == 'f')
-									map[i + 1] = 'W';
+									map[i + 1] = 'b';
 								if(map[i + WIDTH] == 'f')
-									map[i + WIDTH] = 'W';
+									map[i + WIDTH] = 'b';
 								if(map[i - WIDTH] == 'f')
-									map[i - WIDTH] = 'W';
+									map[i - WIDTH] = 'b';
 								
 								if((map[i + WIDTH] != '.' && map[i + WIDTH] != 'W') || i + WIDTH * 2 > map.length) {
-									if(map[i - 1] == '.' || map[i - 1] == 'd' || map[i - 1] == '|')
+									if(map[i - 1] == '.' || map[i - 1] == 'd' || map[i - 1] == '|') {
+										if(!slow)
+											Thread.sleep(160);
+										else
+											Thread.sleep(400);
 										map[i - 1] = 'W';
-								
-									if(map[i + 1] == '.')
+									}
+									
+									if(map[i + 1] == '.' || map[i + 1] == 'd' || map[i + 1] == '|') {
+										if(!slow)
+											Thread.sleep(160);
+										else
+											Thread.sleep(400);
 										map[i + 1] = 'W';
+									}
 								}
 								
 								if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'd' || map[i + WIDTH] == '|')
