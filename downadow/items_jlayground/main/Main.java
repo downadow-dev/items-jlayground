@@ -22,6 +22,8 @@ public class Main extends JPanel {
 	/* замедленное время */
 	private static boolean slow = false;
 	
+	private static boolean noWater = false;
+	
 	private static int cameraStart = 32 + 40 * WIDTH;
 	/* выбранный блок */
 	private static int selected = -1;
@@ -320,12 +322,7 @@ public class Main extends JPanel {
 							selected++;
 						}
 						else if(e.getKeyCode() == KeyEvent.VK_PERIOD) {
-							for(int i = 0; i < map.length; i++)
-								if(map[i] == 'W')
-									map[i] = '.';
-							for(int i = 0; i < map.length; i++)
-								if(map[i] == 'W')
-									map[i] = '.';
+							noWater = true;
 						}
 						
 						else if(e.getKeyCode() == KeyEvent.VK_F3 && !darkMode)
@@ -360,7 +357,7 @@ public class Main extends JPanel {
 									Thread.sleep(30);
 								else
 									Thread.sleep(110);
-							} else if(map[i] == 'W') {
+							} else if(map[i] == 'W' && !noWater) {
 								if(map[i - 1] == 'f')
 									map[i - 1] = 'b';
 								if(map[i + 1] == 'f')
@@ -391,6 +388,11 @@ public class Main extends JPanel {
 								if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'd' || map[i + WIDTH] == '|' || map[i + WIDTH] == '#')
 									map[i + WIDTH] = 'W';
 								
+							} else if(noWater) {
+								for(int ii = 0; ii < map.length; ii++)
+									if(map[ii] == 'W')
+										map[ii] = '.';
+								noWater = false;
 							}
 						}
 						Thread.sleep(20);
