@@ -59,26 +59,23 @@ public class Main extends JPanel {
 					if(map[saved + WIDTH] == '"')
 						boom(saved + WIDTH);
 					
-					map[saved] = '.';
-					map[saved + 1] = '.';
-					map[saved - 1] = '.';
-					map[saved + WIDTH] = '.';
-					map[saved - WIDTH] = '.';
-					for(int i = 0; i < 5; i++) {
-						map[saved] = (char)((int)'0' + i);
+					try {
+						if(map[saved] != 'R')         map[saved] = '.';
+						if(map[saved + 1] != 'R')     map[saved + 1] = '.';
+						if(map[saved - 1] != 'R')     map[saved - 1] = '.';
+						if(map[saved + WIDTH] != 'R') map[saved + WIDTH] = '.';
+						if(map[saved - WIDTH] != 'R') map[saved - WIDTH] = '.';
+					} catch(ArrayIndexOutOfBoundsException e) {}
+					for(int i = 0; i < 7; i++) {
+						if(map[saved] != 'R')
+							map[saved] = (char)((int)'0' + i);
 						if(!slow)
 							Thread.sleep(30);
 						else
 							Thread.sleep(110);
 					}
-					for(int i = 4; i > 0; i--) {
-						map[saved] = (char)((int)'0' + i);
-						if(!slow)
-							Thread.sleep(20);
-						else
-							Thread.sleep(100);
-					}
-					map[saved] = '.';
+					if(map[saved] != 'R')
+						map[saved] = '.';
 				} catch(Exception ex) {
 					ex.printStackTrace();
 				}
@@ -209,8 +206,11 @@ public class Main extends JPanel {
 						else if(e.getKeyCode() == KeyEvent.VK_E && selected == -1)
 							map[selectedBlockAddr()] = '#';
 						/* поставить res/bricks.png */
-						else if(e.getKeyCode() == KeyEvent.VK_R)
+						else if(e.getKeyChar() == 'r')
 							map[selectedBlockAddr()] = 'r';
+						/* поставить res/superbricks.png */
+						else if(e.getKeyChar() == 'R')
+							map[selectedBlockAddr()] = 'R';
 						/* поставить лестницу */
 						else if(e.getKeyCode() == KeyEvent.VK_L)
 							map[selectedBlockAddr()] = 'l';
@@ -533,6 +533,8 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("res/stone.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'r')
 						g.drawImage(new ImageIcon("res/bricks.png").getImage(), ii * 60, i * 60, 60, 60, null);
+					else if(map[iii] == 'R')
+						g.drawImage(new ImageIcon("res/superbricks.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'w')
 						g.drawImage(new ImageIcon("res/W.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'W') {
@@ -717,7 +719,7 @@ public class Main extends JPanel {
 				g.drawString("B...............:  поставить коричневый блок", 20, 220);
 				g.drawString("X...............:  поставить коробку", 20, 240);
 				g.drawString("E...............:  поставить решётку", 20, 260);
-				g.drawString("R...............:  поставить кирпичный блок", 20, 280);
+				g.drawString("rR..............:  поставить кирпичный блок", 20, 280);
 				g.drawString("L...............:  поставить лестницу", 20, 300);
 				g.drawString("G...............:  поставить стекло", 20, 320);
 				g.drawString("T...............:  поставить камень", 20, 340);
