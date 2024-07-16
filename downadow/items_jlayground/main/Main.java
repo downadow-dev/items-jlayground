@@ -482,6 +482,8 @@ public class Main extends JPanel {
 			public void run() {
 				while(true) {
 					try {
+						if(selected != -1 && (map[selected] == '.' || map[selected] == 'W' || map[selected] == 'R'))
+							selected = -1;
 						fr.repaint();
 						Thread.sleep(30);
 					} catch(Exception e) {
