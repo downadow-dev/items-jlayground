@@ -16,6 +16,8 @@ public class Main extends JPanel {
 	/* карта */
 	private static char[] map = new char[WIDTH * HEIGHT];
 	
+	private static boolean[] forBoom = new boolean[WIDTH * HEIGHT];
+	
 	private static boolean ui = true;
 	/* блокировка управления */
 	private static boolean block = false;
@@ -265,8 +267,25 @@ public class Main extends JPanel {
 						else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == ')')
 							map[selected] = '(';
 						/* взрыв */
-						else if(e.getKeyCode() == KeyEvent.VK_ENTER && selected == -1 && ((int)map[selectedBlockAddr()] > (int)'9' || (int)map[selectedBlockAddr()] < (int)'0'))
-							boom(selectedBlockAddr());
+						else if(e.getKeyCode() == KeyEvent.VK_ENTER && selected == -1 && ((int)map[selectedBlockAddr()] > (int)'9' || (int)map[selectedBlockAddr()] < (int)'0')) {
+							new Thread() {
+								public void run() {
+									for(int i = 0; i < forBoom.length; i++) {
+										if(forBoom[i]) {
+											forBoom[i] = false;
+											boom(i);
+											try {Thread.sleep(50);} catch(Exception ex) {}
+										}
+									}
+								}
+							}.start();
+						} else if(e.getKeyCode() == KeyEvent.VK_INSERT) {
+							forBoom[selectedBlockAddr()] = true;
+						}
+						else if(e.getKeyCode() == KeyEvent.VK_MINUS) {
+							for(int i = 0; i < forBoom.length; i++)
+								forBoom[i] = false;
+						}
 						/* активация объектов */
 						else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == '[')
 							map[selected] = '{';
@@ -633,6 +652,19 @@ public class Main extends JPanel {
 		/*********************************/
 		
 		if(ui) {
+			iii = cameraStart;
+			for(int i = 0; i < HEIGHT; i++) {
+				for(int ii = 0; ii < WIDTH; ii++) {
+					try {
+						if(forBoom[iii]) {
+							g.drawImage(new ImageIcon("res/red.png").getImage(), ii * 60 - 60, i * 60, 180, 60, null);
+							g.drawImage(new ImageIcon("res/red.png").getImage(), ii * 60, i * 60 - 60, 60, 180, null);
+						}
+					} catch(ArrayIndexOutOfBoundsException e) {}
+					iii++;
+				}
+			}
+			
 			g.drawImage(new ImageIcon("res/pricel.png").getImage(), 1024 / 2 - 7, 700 / 2 - 20, 12, 8, null);
 			g.drawImage(new ImageIcon("res/vignette.png").getImage(), 0, 0, 1024, 728, null);
 			
@@ -672,7 +704,7 @@ public class Main extends JPanel {
 				g.drawString("N...............:  поставить кровать", 20, 400);
 				g.drawString("D...............:  поставить палку (можете называть и дверью)", 20, 420);
 				g.drawString("O...............:  поставить лампу", 20, 440);
-				g.drawString("<Enter>.........:  сделать взрыв или активировать выделенный объект (если доступно)", 20, 460);
+				g.drawString("<Enter>.........:  сделать взрыв помеченных клавишей <Insert> или активировать выдел. объект (если доступно)", 20, 460);
 				g.drawString("<F2>............:  включить/выключить замедление времени (оно работает не во всех случаях)", 20, 480);
 				g.drawString("W...............:  поставить красивый блок", 20, 500);
 				g.drawString("C...............:  поставить автомобиль", 20, 520);
