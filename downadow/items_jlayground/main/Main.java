@@ -12,7 +12,7 @@ import java.io.FileWriter;
 
 public class Main extends JPanel {
 	/* ширина и высота карты в объектах */
-	private static final int WIDTH = 104, HEIGHT = 49;
+	private static final int WIDTH = 100, HEIGHT = 50;
 	/* карта */
 	private static char[] map = new char[WIDTH * HEIGHT];
 	
@@ -247,6 +247,9 @@ public class Main extends JPanel {
 						/* поставить свет */
 						else if(e.getKeyCode() == KeyEvent.VK_O)
 							map[selectedBlockAddr()] = '^';
+						/* поставить вертолёт */
+						else if(e.getKeyCode() == KeyEvent.VK_I)
+							map[selectedBlockAddr()] = '/';
 						/* выбрать блок */
 						else if(e.getKeyCode() == KeyEvent.VK_SPACE && selected == -1 && map[selectedBlockAddr()] != '.')
 							selected = selectedBlockAddr();
@@ -266,6 +269,10 @@ public class Main extends JPanel {
 							map[selected] = ')';
 						else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == ')')
 							map[selected] = '(';
+						else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == '/')
+							map[selected] = '\\';
+						else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == '\\')
+							map[selected] = '/';
 						/* взрыв */
 						else if(e.getKeyCode() == KeyEvent.VK_ENTER && selected == -1 && ((int)map[selectedBlockAddr()] > (int)'9' || (int)map[selectedBlockAddr()] < (int)'0')) {
 							new Thread() {
@@ -402,7 +409,14 @@ public class Main extends JPanel {
 									if(map[ii] == 'W')
 										map[ii] = '.';
 								noWater = false;
-							}
+							} else if(map[i] == '/' && map[i + WIDTH] == '.')
+								map[i] = 'i';
+							else if(map[i] == '\\' && map[i + WIDTH] == '.')
+								map[i] = 'I';
+							else if(map[i] == 'i')
+								map[i] = '/';
+							else if(map[i] == 'I')
+								map[i] = '\\';
 						}
 						Thread.sleep(20);
 					} catch(Exception e) {
@@ -626,6 +640,14 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("res/car0.png").getImage(), ii * 60 - 60, i * 60 - 20, 180, 80, null);
 					else if(map[iii] == 'C')
 						g.drawImage(new ImageIcon("res/car1.png").getImage(), ii * 60 - 60, i * 60 - 20, 180, 80, null);
+					else if(map[iii] == '/')
+						g.drawImage(new ImageIcon("res/helicopter_00.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
+					else if(map[iii] == '\\')
+						g.drawImage(new ImageIcon("res/helicopter_10.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
+					else if(map[iii] == 'i')
+						g.drawImage(new ImageIcon("res/helicopter_01.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
+					else if(map[iii] == 'I')
+						g.drawImage(new ImageIcon("res/helicopter_11.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
 					else if(map[iii] == '(')
 						g.drawImage(new ImageIcon("res/tank0_0.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
 					else if(map[iii] == ')')
@@ -707,7 +729,7 @@ public class Main extends JPanel {
 				g.drawString("<Enter>.........:  сделать взрыв помеченных клавишей <Insert> или активировать выдел. объект (если доступно)", 20, 460);
 				g.drawString("<F2>............:  включить/выключить замедление времени (оно работает не во всех случаях)", 20, 480);
 				g.drawString("W...............:  поставить красивый блок", 20, 500);
-				g.drawString("C...............:  поставить автомобиль", 20, 520);
+				g.drawString("C...............:  поставить автомобиль, 'i' для вертолёта", 20, 520);
 				g.drawString("U...............:  поставить огнестрельное оружие", 20, 540);
 				g.drawString("=...............:  поставить танк", 20, 560);
 				g.drawString("F...............:  огонь", 20, 580);
