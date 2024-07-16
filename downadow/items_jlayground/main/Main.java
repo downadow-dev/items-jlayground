@@ -44,6 +44,47 @@ public class Main extends JPanel {
 	
 	private static long startTime = 0;
 	
+	private static void fire(int addr) {
+		final int saved = addr;
+		if(map[saved] == 'B' || map[saved] == 'l' || map[saved] == '|' ||
+		   map[saved] == '@' || map[saved] == 'd' || map[saved] == 'w' ||
+		   map[saved] == 'c' || map[saved] == 'C') {
+			map[saved] = 'f';
+
+			new Thread() {
+				public void run() {
+					try {
+						for(int i = 0; i < 6; i++) {
+							Thread.sleep(5000);
+							if(map[saved] != 'f')
+								break;
+							if(map[saved - 1] == 'B' || map[saved - 1] == 'l' || map[saved - 1] == '|' ||
+							   map[saved - 1] == '@' || map[saved - 1] == 'd' || map[saved - 1] == 'w' ||
+							   map[saved - 1] == 'c' || map[saved - 1] == 'C')
+								fire(saved - 1);
+							if(map[saved + 1] == 'B' || map[saved + 1] == 'l' || map[saved + 1] == '|' ||
+							   map[saved + 1] == '@' || map[saved + 1] == 'd' || map[saved + 1] == 'w' ||
+							   map[saved + 1] == 'c' || map[saved + 1] == 'C')
+								fire(saved + 1);
+							if(map[saved + WIDTH] == 'B' || map[saved + WIDTH] == 'l' || map[saved + WIDTH] == '|' ||
+							   map[saved + WIDTH] == '@' || map[saved + WIDTH] == 'd' || map[saved + WIDTH] == 'w' ||
+							   map[saved + WIDTH] == 'c' || map[saved + WIDTH] == 'C')
+								fire(saved + WIDTH);
+							if(map[saved - WIDTH] == 'B' || map[saved - WIDTH] == 'l' || map[saved - WIDTH] == '|' ||
+							   map[saved - WIDTH] == '@' || map[saved - WIDTH] == 'd' || map[saved - WIDTH] == 'w' ||
+							   map[saved - WIDTH] == 'c' || map[saved - WIDTH] == 'C')
+								fire(saved - WIDTH);
+						}
+						if(slow)
+							Thread.sleep(15000);
+						if(map[saved] == 'f');
+							map[saved] = 'b';
+					} catch(Exception e) {}
+				}
+			}.start();
+		}
+	}
+	
 	private static void boom(int addr) {
 		final int saved = addr;
 		new Thread() {
@@ -65,6 +106,9 @@ public class Main extends JPanel {
 						if(map[saved - 1] != 'R')     map[saved - 1] = '.';
 						if(map[saved + WIDTH] != 'R') map[saved + WIDTH] = '.';
 						if(map[saved - WIDTH] != 'R') map[saved - WIDTH] = '.';
+						fire(saved - 2);
+						fire(saved + 2);
+						fire(saved + WIDTH * 2);
 					} catch(ArrayIndexOutOfBoundsException e) {}
 					for(int i = 0; i < 7; i++) {
 						if(map[saved] != 'R')
@@ -172,20 +216,7 @@ public class Main extends JPanel {
 						         (map[selectedBlockAddr()] == 'B' || map[selectedBlockAddr()] == 'l' || map[selectedBlockAddr()] == '|' ||
 						          map[selectedBlockAddr()] == '@' || map[selectedBlockAddr()] == 'd' || map[selectedBlockAddr()] == 'w' ||
 						          map[selectedBlockAddr()] == 'c' || map[selectedBlockAddr()] == 'C')) {
-							final int saved = selectedBlockAddr();
-							map[saved] = 'f';
-							
-							new Thread() {
-								public void run() {
-									try {
-										Thread.sleep(30000);
-										if(slow)
-											Thread.sleep(20000);
-										if(map[saved] == 'f');
-											map[saved] = 'b';
-									} catch(Exception e) {}
-								}
-							}.start();
+							fire(selectedBlockAddr());
 						}
 						/* поставить воду */
 						else if(e.getKeyCode() == KeyEvent.VK_COMMA)
