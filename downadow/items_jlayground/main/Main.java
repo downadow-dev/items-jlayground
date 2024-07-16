@@ -233,6 +233,9 @@ public class Main extends JPanel {
 						/* поставить коробку */
 						else if(e.getKeyCode() == KeyEvent.VK_X)
 							map[selectedBlockAddr()] = '@';
+						/* поставить чёрную дыру */
+						else if(e.getKeyChar() == ';')
+							map[selectedBlockAddr()] = 'A';
 						/* поставить решётку */
 						else if(e.getKeyCode() == KeyEvent.VK_E && selected == -1)
 							map[selectedBlockAddr()] = '#';
@@ -448,8 +451,26 @@ public class Main extends JPanel {
 								map[i] = '/';
 							else if(map[i] == 'I')
 								map[i] = '\\';
+							else if(map[i] == 'A') {
+								for(int ii = 10; ii > 0; ii--) {
+									try {
+										if(map[i - ii] != 'A') map[i - ii] = '.';
+										if(map[i + ii] != 'A') map[i + ii] = '.';
+										if(map[i + WIDTH * ii] != 'A') map[i + WIDTH * ii] = '.';
+										if(map[i - WIDTH * ii] != 'A') map[i - WIDTH * ii] = '.';
+										if(map[i - WIDTH * ii - ii] != 'A') map[i - WIDTH * ii - ii] = '.';
+										if(map[i - WIDTH * ii + ii] != 'A') map[i - WIDTH * ii + ii] = '.';
+										if(map[i + WIDTH * ii - ii] != 'A') map[i + WIDTH * ii - ii] = '.';
+										if(map[i + WIDTH * ii + ii] != 'A') map[i + WIDTH * ii + ii] = '.';
+									} catch(Exception e) {}
+									if(!slow)
+										Thread.sleep(25);
+									else
+										Thread.sleep(140);
+								}
+							}
 						}
-						Thread.sleep(20);
+						Thread.sleep(30);
 					} catch(Exception e) {
 						e.printStackTrace();
 					}
@@ -693,6 +714,8 @@ public class Main extends JPanel {
 						map[iii] = ')';
 					} else if(map[iii] == '"') {
 						g.drawImage(new ImageIcon("res/bomb.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
+					} else if(map[iii] == 'A') {
+						g.drawImage(new ImageIcon("res/dyra.png").getImage(), ii * 60 - 60, i * 60 - 60, 120, 120, null);
 					}
 					
 					/* подсветка выбранного блока */
@@ -765,7 +788,7 @@ public class Main extends JPanel {
 				g.drawString("C...............:  поставить автомобиль, 'i' для вертолёта", 20, 520);
 				g.drawString("U...............:  поставить огнестрельное оружие", 20, 540);
 				g.drawString("=...............:  поставить танк", 20, 560);
-				g.drawString("F...............:  огонь", 20, 580);
+				g.drawString("F...............:  огонь, для установки чёрной дыры, нажмите ';'", 20, 580);
 				g.drawString("<запятая>.......:  вода, для удаления всей воды нажмите '.'", 20, 600);
 				g.drawString("*...............:  бомба", 20, 620);
 				g.drawString("Z...............:  слизь (зелёный блок)", 20, 640);
