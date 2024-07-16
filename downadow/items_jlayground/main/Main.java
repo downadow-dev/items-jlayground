@@ -284,6 +284,19 @@ public class Main extends JPanel {
 						/* поставить вертолёт */
 						else if(e.getKeyCode() == KeyEvent.VK_I)
 							map[selectedBlockAddr()] = '/';
+						/* поставить "ещё какие-то блоки" */
+						else if(e.getKeyCode() == KeyEvent.VK_1)
+							map[selectedBlockAddr()] = 'N';
+						else if(e.getKeyCode() == KeyEvent.VK_2)
+							map[selectedBlockAddr()] = 'J';
+						else if(e.getKeyCode() == KeyEvent.VK_3)
+							map[selectedBlockAddr()] = 'O';
+						else if(e.getKeyCode() == KeyEvent.VK_4)
+							map[selectedBlockAddr()] = 'L';
+						else if(e.getKeyCode() == KeyEvent.VK_5)
+							map[selectedBlockAddr()] = 'K';
+						else if(e.getKeyCode() == KeyEvent.VK_6)
+							map[selectedBlockAddr()] = 'U';
 						/* выбрать блок */
 						else if(e.getKeyCode() == KeyEvent.VK_SPACE && selected == -1 && map[selectedBlockAddr()] != '.')
 							selected = selectedBlockAddr();
@@ -591,7 +604,55 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("res/superbricks.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'w')
 						g.drawImage(new ImageIcon("res/W.png").getImage(), ii * 60, i * 60, 60, 60, null);
-					else if(map[iii] == 'W') {
+					else if(map[iii] == 'N')
+						g.drawImage(new ImageIcon("res/block0.png").getImage(), ii * 60, i * 60, 60, 60, null);
+					else if(map[iii] == 'J') {
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
+						g.fillRect(ii * 60, i * 60, 60, 60);
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
+						g.drawRect(ii * 60 , i * 60, 60, 60);
+						
+						g.drawImage(new ImageIcon("res/block1.png").getImage(), ii * 60, i * 60, 60, 60, null);
+					} else if(map[iii] == 'O')
+						g.drawImage(new ImageIcon("res/block2.png").getImage(), ii * 60, i * 60, 60, 60, null);
+					else if(map[iii] == 'L')
+						g.drawImage(new ImageIcon("res/block3.png").getImage(), ii * 60, i * 60, 60, 60, null);
+					else if(map[iii] == 'K') {
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
+						g.fillRect(ii * 60, i * 60, 60, 60);
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
+						g.drawRect(ii * 60 , i * 60, 60, 60);
+						
+						g.drawImage(new ImageIcon("res/block4.png").getImage(), ii * 60, i * 60, 60, 60, null);
+					} else if(map[iii] == 'U') {
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
+						g.fillRect(ii * 60, i * 60, 60, 60);
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
+						g.drawRect(ii * 60 , i * 60, 60, 60);
+						
+						g.drawImage(new ImageIcon("res/pautina.png").getImage(), ii * 60, i * 60, 60, 60, null);
+					} else if(map[iii] == 'W') {
 						g.setColor(new Color(10, 10, 255));
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						g.drawRect(ii * 60 , i * 60, 60, 60);
@@ -786,7 +847,7 @@ public class Main extends JPanel {
 				g.drawString("O...............:  поставить лампу", 20, 440);
 				g.drawString("<Enter>.........:  сделать взрыв пом. клавишей <Insert> или активировать выдел. объект, '-' для уд. выд.", 20, 460);
 				g.drawString("<F2>............:  включить/выключить замедление времени (оно работает не во всех случаях)", 20, 480);
-				g.drawString("W...............:  поставить красивый блок", 20, 500);
+				g.drawString("W123456.........:  (ещё какие-то блоки, включая ковёр и паутину)", 20, 500);
 				g.drawString("C...............:  поставить автомобиль, 'i' для вертолёта", 20, 520);
 				g.drawString("U...............:  поставить огнестрельное оружие", 20, 540);
 				g.drawString("=...............:  поставить танк", 20, 560);
