@@ -3,6 +3,8 @@ package downadow.items_jlayground.main;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Font;
@@ -168,6 +170,22 @@ public class Main extends JPanel {
 							cameraStart--;
 						/* стереть карту, selected и cameraStart */
 						else if(e.getKeyCode() == KeyEvent.VK_HOME) {
+							// сохранение карты
+							
+							Files.deleteIfExists(Paths.get(".map"));
+							FileWriter fw = new FileWriter(".map");
+							int iii = 0;
+							for(int i = 0; i < HEIGHT; i++) {
+								for(int ii = 0; ii < WIDTH; ii++) {
+									fw.write(map[iii]);
+									iii++;
+								}
+								fw.write("\n");
+							}
+							fw.close();
+							
+							//////////////////////
+							
 							selected = -1;
 							cameraStart = 32 + 40 * WIDTH;
 							for(int i = 0; i < map.length; i++)
@@ -299,6 +317,12 @@ public class Main extends JPanel {
 							map[selectedBlockAddr()] = 'U';
 						else if(e.getKeyCode() == KeyEvent.VK_7)
 							map[selectedBlockAddr()] = 'Y';
+						else if(e.getKeyCode() == KeyEvent.VK_8)
+							map[selectedBlockAddr()] = 'v';
+						else if(e.getKeyCode() == KeyEvent.VK_9)
+							map[selectedBlockAddr()] = 'V';
+						else if(e.getKeyCode() == KeyEvent.VK_0)
+							map[selectedBlockAddr()] = ';';
 						/* выбрать блок */
 						else if(e.getKeyCode() == KeyEvent.VK_SPACE && selected == -1 && map[selectedBlockAddr()] != '.')
 							selected = selectedBlockAddr();
@@ -394,6 +418,7 @@ public class Main extends JPanel {
 							darkMode = true;
 						else if(e.getKeyCode() == KeyEvent.VK_F3 && darkMode)
 							darkMode = false;
+						
 					}
 				} catch(Exception ex) {
 					ex.printStackTrace();
@@ -414,7 +439,7 @@ public class Main extends JPanel {
 						/* "физика" */
 						for(int i = 0; i < map.length - WIDTH; i++) {
 							if(selected == -1 && (map[i] == '@' ||  map[i] == 's' || map[i] == '|' ||  map[i] == 'd' || map[i] == '#' ||
-							    map[i] == 'l' || map[i] == 'c' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')') && (map[i + WIDTH] == '.' || map[i + WIDTH] == 'W' || map[i + WIDTH] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - WIDTH] != 'z')) {
+							    map[i] == 'l' || map[i] == 'c' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':') && (map[i + WIDTH] == '.' || map[i + WIDTH] == 'W' || map[i + WIDTH] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - WIDTH] != 'z')) {
 								map[i + WIDTH] = map[i];
 								map[i] = '.';
 								
@@ -483,6 +508,26 @@ public class Main extends JPanel {
 									else
 										Thread.sleep(140);
 								}
+							} else if(map[i] == ':' && map[i - 1] == '.') {
+								map[i] = '.';
+								map[i - 1] = ':';
+								Thread.sleep(400);
+							} else if(map[i] == ':' && map[i - 1] == 'z' && map[i - WIDTH] == '.' && map[i - WIDTH - 1] == '.') {
+								map[i] = '.';
+								map[i - WIDTH - 1] = ':';
+								Thread.sleep(400);
+							} else if(map[i] == ';' && map[i + 1] == 'z' && map[i - WIDTH] == '.' && map[i - WIDTH + 1] == '.') {
+								map[i] = '.';
+								map[i - WIDTH + 1] = ';';
+								Thread.sleep(400);
+							} else if(map[i] == ':') {
+								map[i] = ';';
+							} else if(map[i] == ';' && map[i + 1] == '.') {
+								map[i] = '.';
+								map[i + 1] = ';';
+								Thread.sleep(400);
+							} else if(map[i] == ';') {
+								map[i] = ':';
 							}
 						}
 						Thread.sleep(30);
@@ -605,6 +650,9 @@ public class Main extends JPanel {
 					} else if(map[iii] == '^') {
 						g.setColor(new Color(255, 255, 255));
 						g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
+					} else if(map[iii] == 'v') {
+						g.setColor(new Color(255, 0, 0));
+						g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
 					} else if(map[iii] == 'b') {
 						g.setColor(new Color(20, 20, 20));
 						g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
@@ -695,6 +743,20 @@ public class Main extends JPanel {
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
 						g.drawImage(new ImageIcon("res/gun0_0.png").getImage(), ii * 60, i * 60, 60, 60, null);
+					} else if(map[iii] == 'V') {
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
+						g.fillRect(ii * 60, i * 60, 60, 60);
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
+						g.drawRect(ii * 60 , i * 60, 60, 60);
+						
+						g.drawImage(new ImageIcon("res/B2.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '{') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -724,6 +786,34 @@ public class Main extends JPanel {
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
 						g.drawImage(new ImageIcon("res/gun1_0.png").getImage(), ii * 60, i * 60, 60, 60, null);
+					} else if(map[iii] == ':') {
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
+						g.fillRect(ii * 60, i * 60, 60, 60);
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
+						g.drawRect(ii * 60 , i * 60, 60, 60);
+						
+						g.drawImage(new ImageIcon("res/left.png").getImage(), ii * 60, i * 60, 60, 60, null);
+					} else if(map[iii] == ';') {
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
+						g.fillRect(ii * 60, i * 60, 60, 60);
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
+						g.drawRect(ii * 60 , i * 60, 60, 60);
+						
+						g.drawImage(new ImageIcon("res/right.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '}') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -766,6 +856,9 @@ public class Main extends JPanel {
 					/* подсветка света */
 					else if(Main.map[iii] == '^')
 						g.drawImage(new ImageIcon("res/white.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
+					
+					else if(Main.map[iii] == 'v')
+						g.drawImage(new ImageIcon("res/red_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
 					
 					else if((int)Main.map[iii] > (int)'0' && (int)Main.map[iii] < (int)'9')
 						g.drawImage(new ImageIcon("res/boom" + Main.map[iii] + ".png").getImage(), ii * 60 - 60, i * 60 - 60, 180, 180, null);
@@ -863,7 +956,7 @@ public class Main extends JPanel {
 				g.drawString("O...............:  поставить лампу", 20, 440);
 				g.drawString("<Enter>.........:  сделать взрыв пом. клавишей <Insert> или активировать выдел. объект, '-' для уд. выд.", 20, 460);
 				g.drawString("<F2>............:  включить/выключить замедление времени (оно работает не во всех случаях)", 20, 480);
-				g.drawString("W1234567........:  (ещё какие-то блоки, включая ковёр и паутину)", 20, 500);
+				g.drawString("W1234567890.....:  (ещё какие-то блоки, включая ковёр и паутину)", 20, 500);
 				g.drawString("C...............:  поставить автомобиль, 'i' для вертолёта", 20, 520);
 				g.drawString("U...............:  поставить огнестрельное оружие", 20, 540);
 				g.drawString("=...............:  поставить танк", 20, 560);
@@ -872,7 +965,7 @@ public class Main extends JPanel {
 				g.drawString("*...............:  бомба", 20, 620);
 				g.drawString("Z...............:  слизь (зелёный блок)", 20, 640);
 				
-				g.drawString("F3..............:  тёмный/светлый режим", 20, 670);
+				g.drawString("<F3>............:  тёмный/светлый режим", 20, 670);
 			}
 		}
 	}
