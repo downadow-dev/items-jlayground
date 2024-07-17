@@ -512,11 +512,11 @@ public class Main extends JPanel {
 								map[i] = '.';
 								map[i - 1] = ':';
 								Thread.sleep(!slow ? 400 : 1000);
-							} else if(map[i] == ':' && map[i - 1] == 'z' && map[i - WIDTH] == '.' && map[i - WIDTH - 1] == '.') {
+							} else if(map[i] == ':'  && map[i - 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH - 1] == '.') {
 								map[i] = '.';
 								map[i - WIDTH - 1] = ':';
 								Thread.sleep(!slow ? 400 : 1000);
-							} else if(map[i] == ';' && map[i + 1] == 'z' && map[i - WIDTH] == '.' && map[i - WIDTH + 1] == '.') {
+							} else if(map[i] == ';'  && map[i + 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH + 1] == '.') {
 								map[i] = '.';
 								map[i - WIDTH + 1] = ';';
 								Thread.sleep(!slow ? 400 : 1000);
