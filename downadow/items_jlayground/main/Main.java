@@ -508,6 +508,8 @@ public class Main extends JPanel {
 									else
 										Thread.sleep(140);
 								}
+							} else if(map[i] == ':' && (map[i - 1] == 'z' || map[i + 1] == 'z' || map[i - WIDTH] == 'z') || map[i + WIDTH] == 'z') {
+								continue;
 							} else if(map[i] == ':' && map[i - 1] == '.') {
 								map[i] = '.';
 								map[i - 1] = ':';
@@ -888,6 +890,8 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("res/bomb.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
 					} else if(map[iii] == 'A') {
 						g.drawImage(new ImageIcon("res/dyra.png").getImage(), ii * 60 - 60, i * 60 - 60, 120, 120, null);
+					} else if(map[iii] == 'z') {
+						g.drawImage(new ImageIcon("res/green.png").getImage(), ii * 60 - 15, i * 60 - 15, 90, 90, null);
 					}
 					
 					/* подсветка выбранного блока */
@@ -933,7 +937,7 @@ public class Main extends JPanel {
 				
 				g.drawString("<стрелки>.......:  перемещение", 20, 20);
 				g.drawString("<F1>............:  скрыть/показать эту помощь", 20, 40);
-				g.drawString("<Home>..........:  сброс", 20, 60);
+				g.drawString("<Home>..........:  сохранение карты и сброс", 20, 60);
 				g.drawString("<ESC>...........:  скрыть интерфейс и сохранить карту, либо показать интерфейс", 20, 80);
 				g.drawString("<Backspace>.....:  удалить объект под прицелом", 20, 100);
 				
