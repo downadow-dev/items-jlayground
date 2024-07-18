@@ -279,6 +279,9 @@ public class Main extends JPanel {
 						/* поставить жёлтый блок */
 						else if(e.getKeyCode() == KeyEvent.VK_Y)
 							map[selectedBlockAddr()] = 'y';
+						/* поставить радужный блок */
+						else if(e.getKeyChar() == '$')
+							map[selectedBlockAddr()] = '$';
 						/* поставить огнестрельное оружие */
 						else if(e.getKeyCode() == KeyEvent.VK_U)
 							map[selectedBlockAddr()] = '[';
@@ -826,6 +829,8 @@ public class Main extends JPanel {
 						
 						g.drawImage(new ImageIcon("res/gun1_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
 						map[iii] = ']';
+					} else if(map[iii] == '$') {
+						g.drawImage(new ImageIcon("res/rainbow.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -964,7 +969,7 @@ public class Main extends JPanel {
 				g.drawString("C...............:  поставить автомобиль, 'i' для вертолёта", 20, 520);
 				g.drawString("U...............:  поставить огнестрельное оружие", 20, 540);
 				g.drawString("=...............:  поставить танк", 20, 560);
-				g.drawString("F...............:  огонь", 20, 580);
+				g.drawString("F...............:  огонь; '$' --- радужный блок", 20, 580);
 				g.drawString("<запятая>.......:  вода, для удаления всей воды нажмите '.'", 20, 600);
 				g.drawString("*...............:  бомба, которая не работает", 20, 620);
 				g.drawString("Z...............:  слизь (зелёный блок); попробуйте также клавиши <F4>, <F5>, <F6> и <F7>", 20, 640);
