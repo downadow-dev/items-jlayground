@@ -94,7 +94,6 @@ public class Main extends JPanel {
 		new Thread() {
 			public void run() {
 				try {
-					
 					try {
 						if(map[saved] != 'R')         map[saved] = '.';
 						if(map[saved + 1] != 'R')     map[saved + 1] = '.';
@@ -490,22 +489,16 @@ public class Main extends JPanel {
 							else if(map[i] == 'I')
 								map[i] = '\\';
 							else if(map[i] == 'A') {
-								for(int ii = 10; ii > 0; ii--) {
-									try {
-										if(map[i - ii] != 'A') map[i - ii] = '.';
-										if(map[i + ii] != 'A') map[i + ii] = '.';
-										if(map[i + WIDTH * ii] != 'A') map[i + WIDTH * ii] = '.';
-										if(map[i - WIDTH * ii] != 'A') map[i - WIDTH * ii] = '.';
-										if(map[i - WIDTH * ii - ii] != 'A') map[i - WIDTH * ii - ii] = '.';
-										if(map[i - WIDTH * ii + ii] != 'A') map[i - WIDTH * ii + ii] = '.';
-										if(map[i + WIDTH * ii - ii] != 'A') map[i + WIDTH * ii - ii] = '.';
-										if(map[i + WIDTH * ii + ii] != 'A') map[i + WIDTH * ii + ii] = '.';
-									} catch(Exception e) {}
-									if(!slow)
-										Thread.sleep(25);
-									else
-										Thread.sleep(140);
-								}
+								if(map[i - 1] == '.' || map[i - 1] == 'f' || map[i - 1] == 'W')
+									map[i - 1] = 'A';
+								else if(map[i + 1] == '.' || map[i + 1] == 'f' || map[i + 1] == 'W')
+									map[i + 1] = 'A';
+								else if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'f' || map[i + WIDTH] == 'W')
+									map[i + WIDTH] = 'A';
+								else if(map[i - WIDTH] == '.' || map[i - WIDTH] == 'f' || map[i - WIDTH] == 'W')
+									map[i - WIDTH] = 'A';
+								
+								Thread.sleep(!slow ? 50 : 500);
 							} else if(map[i] == ':' && (map[i - 1] == 'z' || map[i + 1] == 'z' || map[i - WIDTH] == 'z') || map[i + WIDTH] == 'z') {
 								continue;
 							} else if(map[i] == ':' && map[i - 1] == '.') {
@@ -814,6 +807,10 @@ public class Main extends JPanel {
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
 						g.drawImage(new ImageIcon("res/right.png").getImage(), ii * 60, i * 60, 60, 60, null);
+					} else if(map[iii] == 'A') {
+						g.setColor(new Color(0, 0, 0));
+						g.fillRect(ii * 60, i * 60, 60, 60);
+						g.drawRect(ii * 60 , i * 60, 60, 60);
 					} else if(map[iii] == '}') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -886,8 +883,6 @@ public class Main extends JPanel {
 						map[iii] = ')';
 					} else if(map[iii] == '"') {
 						g.drawImage(new ImageIcon("res/bomb.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
-					} else if(map[iii] == 'A') {
-						g.drawImage(new ImageIcon("res/dyra.png").getImage(), ii * 60 - 60, i * 60 - 60, 120, 120, null);
 					} else if(map[iii] == 'z') {
 						g.drawImage(new ImageIcon("res/green.png").getImage(), ii * 60 - 15, i * 60 - 15, 90, 90, null);
 					} else if((map[iii] >= 'а' && map[iii] <= 'я') || (map[iii] >= 'А' && map[iii] <= 'Я') || map[iii] == '-' || map[iii] == '!' || map[iii] == '?') {
@@ -969,12 +964,12 @@ public class Main extends JPanel {
 				g.drawString("C...............:  поставить автомобиль, 'i' для вертолёта", 20, 520);
 				g.drawString("U...............:  поставить огнестрельное оружие", 20, 540);
 				g.drawString("=...............:  поставить танк", 20, 560);
-				g.drawString("F...............:  огонь, для установки чёрной дыры, нажмите ';'", 20, 580);
+				g.drawString("F...............:  огонь", 20, 580);
 				g.drawString("<запятая>.......:  вода, для удаления всей воды нажмите '.'", 20, 600);
 				g.drawString("*...............:  бомба, которая не работает", 20, 620);
 				g.drawString("Z...............:  слизь (зелёный блок); попробуйте также клавиши <F4>, <F5>, <F6> и <F7>", 20, 640);
 				
-				g.drawString("<F3>............:  тёмный/светлый режим; '+' для вставки буквы или других доступных символов;", 20, 670);
+				g.drawString("<F3>............:  тёмный/светлый режим; '+' для вставки буквы или других доступных символов; ';' --- ???", 20, 670);
 			}
 		}
 	}
