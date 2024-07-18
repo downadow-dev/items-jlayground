@@ -843,22 +843,6 @@ public class Main extends JPanel {
 						
 						g.drawImage(new ImageIcon("res/gun1_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
 						map[iii] = ']';
-					} else if((map[iii] >= 'а' && map[iii] <= 'я') || map[iii] == '-') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
-							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
-						
-						g.setColor(new Color(255, 255, 255));
-						g.setFont(new Font("Monospaced", Font.PLAIN, 60));
-						g.drawString("" + map[iii], ii * 60 + 15, i * 60 + 60);
 					} else {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -920,6 +904,10 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("res/dyra.png").getImage(), ii * 60 - 60, i * 60 - 60, 120, 120, null);
 					} else if(map[iii] == 'z') {
 						g.drawImage(new ImageIcon("res/green.png").getImage(), ii * 60 - 15, i * 60 - 15, 90, 90, null);
+					} else if((map[iii] >= 'а' && map[iii] <= 'я') || map[iii] == '-') {
+						g.setColor(new Color(255, 255, 255));
+						g.setFont(new Font("Monospaced", Font.PLAIN, 60));
+						g.drawString("" + map[iii], ii * 60 + 15, i * 60 + 60);
 					}
 					
 					/* подсветка выбранного блока */
