@@ -94,15 +94,6 @@ public class Main extends JPanel {
 		new Thread() {
 			public void run() {
 				try {
-					/* ещё взрывы */
-					if(map[saved + 1] == '"')
-						boom(saved + 1);
-					if(map[saved - 1] == '"')
-						boom(saved - 1);
-					if(map[saved - WIDTH] == '"')
-						boom(saved - WIDTH);
-					if(map[saved + WIDTH] == '"')
-						boom(saved + WIDTH);
 					
 					try {
 						if(map[saved] != 'R')         map[saved] = '.';
@@ -390,12 +381,6 @@ public class Main extends JPanel {
 						} else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == ')') {
 							map[selected] = '>';
 							boom(selected - 8 - WIDTH);
-						} else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == '"') {
-							map[selected] = '.';
-							
-							boom(selected);
-							
-							selected = -1;
 						}
 						/* операции с выделенным блоком */
 						else if(e.getKeyCode() == KeyEvent.VK_W && selected != -1 && (map[selected - WIDTH] == '.' || map[selected - WIDTH] == 'g' || map[selected - WIDTH] == 'W') && map[selected] != 'f') {
@@ -986,7 +971,7 @@ public class Main extends JPanel {
 				g.drawString("=...............:  поставить танк", 20, 560);
 				g.drawString("F...............:  огонь, для установки чёрной дыры, нажмите ';'", 20, 580);
 				g.drawString("<запятая>.......:  вода, для удаления всей воды нажмите '.'", 20, 600);
-				g.drawString("*...............:  бомба", 20, 620);
+				g.drawString("*...............:  бомба, которая не работает", 20, 620);
 				g.drawString("Z...............:  слизь (зелёный блок); попробуйте также клавиши <F4>, <F5>, <F6> и <F7>", 20, 640);
 				
 				g.drawString("<F3>............:  тёмный/светлый режим; '+' для вставки буквы или других доступных символов;", 20, 670);
