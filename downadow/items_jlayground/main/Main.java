@@ -28,6 +28,8 @@ public class Main extends JPanel {
 	
 	private static boolean noWater = false;
 	
+	private static boolean select = false;
+	
 	private static int cameraStart = 32 + 40 * WIDTH;
 	/* выбранный блок */
 	private static int selected = -1;
@@ -158,6 +160,12 @@ public class Main extends JPanel {
 		fr.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				try {
+					if(select && (e.getKeyChar() >= 'а' && e.getKeyChar() <= 'я') || e.getKeyChar() == '-') {
+						map[selectedBlockAddr()] = e.getKeyChar();
+						select = false;
+						return;
+					}
+					
 					if(!block) {
 						/* перемещение камеры */
 						if(e.getKeyCode() == KeyEvent.VK_UP)
@@ -270,7 +278,7 @@ public class Main extends JPanel {
 						else if(e.getKeyCode() == KeyEvent.VK_C)
 							map[selectedBlockAddr()] = 'c';
 						/* поставить танк */
-						else if(e.getKeyCode() == KeyEvent.VK_EQUALS)
+						else if(e.getKeyChar() == '=')
 							map[selectedBlockAddr()] = '(';
 						/* поставить стекло */
 						else if(e.getKeyCode() == KeyEvent.VK_G && map[selectedBlockAddr() + WIDTH] != '.')
@@ -329,6 +337,10 @@ public class Main extends JPanel {
 						/* убрать выделение */
 						else if(e.getKeyCode() == KeyEvent.VK_SPACE && selected != -1)
 							selected = -1;
+						/* вставить блок */
+						else if(e.getKeyChar() == '+') {
+							select = true;
+						}
 						/* отражение объектов */
 						else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == 'c')
 							map[selected] = 'C';
@@ -831,6 +843,22 @@ public class Main extends JPanel {
 						
 						g.drawImage(new ImageIcon("res/gun1_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
 						map[iii] = ']';
+					} else if((map[iii] >= 'а' && map[iii] <= 'я') || map[iii] == '-') {
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
+						g.fillRect(ii * 60, i * 60, 60, 60);
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
+						g.drawRect(ii * 60 , i * 60, 60, 60);
+						
+						g.setColor(new Color(255, 255, 255));
+						g.setFont(new Font("Monospaced", Font.PLAIN, 60));
+						g.drawString("" + map[iii], ii * 60 + 15, i * 60 + 60);
 					} else {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -924,7 +952,10 @@ public class Main extends JPanel {
 			
 			g.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 14));
 			g.setColor(new Color(255, 255, 0));
-			g.drawString("" + fill((System.currentTimeMillis() - startTime) / 60000, 2) + ":" + fill((System.currentTimeMillis() - startTime) / 1000 % 60, 2), 15, 20);
+			if(!select)
+				g.drawString("" + fill((System.currentTimeMillis() - startTime) / 60000, 2) + ":" + fill((System.currentTimeMillis() - startTime) / 1000 % 60, 2), 15, 20);
+			else
+				g.drawString("Введите символ...", 15, 20);
 			
 			g.setColor(new Color(250, 250, 250));
 			g.setFont(new Font("Monospaced", Font.PLAIN, 15));
@@ -969,7 +1000,7 @@ public class Main extends JPanel {
 				g.drawString("*...............:  бомба", 20, 620);
 				g.drawString("Z...............:  слизь (зелёный блок)", 20, 640);
 				
-				g.drawString("<F3>............:  тёмный/светлый режим", 20, 670);
+				g.drawString("<F3>............:  тёмный/светлый режим; '+' для вставки буквы", 20, 670);
 			}
 		}
 	}
