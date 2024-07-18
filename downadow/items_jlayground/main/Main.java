@@ -52,7 +52,7 @@ public class Main extends JPanel {
 		final int saved = addr;
 		if(map[saved] == 'B' || map[saved] == 'l' || map[saved] == '|' ||
 		   map[saved] == '@' || map[saved] == 'd' || map[saved] == 'w' ||
-		   map[saved] == 'c' || map[saved] == 'C') {
+		   map[saved] == 'c' || map[saved] == 'C' || map[saved] == 'L') {
 			map[saved] = 'f';
 
 			new Thread() {
@@ -64,19 +64,19 @@ public class Main extends JPanel {
 								break;
 							if(map[saved - 1] == 'B' || map[saved - 1] == 'l' || map[saved - 1] == '|' ||
 							   map[saved - 1] == '@' || map[saved - 1] == 'd' || map[saved - 1] == 'w' ||
-							   map[saved - 1] == 'c' || map[saved - 1] == 'C')
+							   map[saved - 1] == 'c' || map[saved - 1] == 'C' || map[saved - 1] == 'L')
 								fire(saved - 1);
 							if(map[saved + 1] == 'B' || map[saved + 1] == 'l' || map[saved + 1] == '|' ||
 							   map[saved + 1] == '@' || map[saved + 1] == 'd' || map[saved + 1] == 'w' ||
-							   map[saved + 1] == 'c' || map[saved + 1] == 'C')
+							   map[saved + 1] == 'c' || map[saved + 1] == 'C' || map[saved + 1] == 'L')
 								fire(saved + 1);
 							if(map[saved + WIDTH] == 'B' || map[saved + WIDTH] == 'l' || map[saved + WIDTH] == '|' ||
 							   map[saved + WIDTH] == '@' || map[saved + WIDTH] == 'd' || map[saved + WIDTH] == 'w' ||
-							   map[saved + WIDTH] == 'c' || map[saved + WIDTH] == 'C')
+							   map[saved + WIDTH] == 'c' || map[saved + WIDTH] == 'C' || map[saved + WIDTH] == 'L')
 								fire(saved + WIDTH);
 							if(map[saved - WIDTH] == 'B' || map[saved - WIDTH] == 'l' || map[saved - WIDTH] == '|' ||
 							   map[saved - WIDTH] == '@' || map[saved - WIDTH] == 'd' || map[saved - WIDTH] == 'w' ||
-							   map[saved - WIDTH] == 'c' || map[saved - WIDTH] == 'C')
+							   map[saved - WIDTH] == 'c' || map[saved - WIDTH] == 'C' || map[saved - WIDTH] == 'L')
 								fire(saved - WIDTH);
 						}
 						if(slow)
@@ -179,29 +179,6 @@ public class Main extends JPanel {
 							cameraStart++;
 						else if(e.getKeyCode() == KeyEvent.VK_LEFT)
 							cameraStart--;
-						/* стереть карту, selected и cameraStart */
-						else if(e.getKeyCode() == KeyEvent.VK_HOME) {
-							// сохранение карты
-							
-							Files.deleteIfExists(Paths.get(".map"));
-							FileWriter fw = new FileWriter(".map");
-							int iii = 0;
-							for(int i = 0; i < HEIGHT; i++) {
-								for(int ii = 0; ii < WIDTH; ii++) {
-									fw.write(map[iii]);
-									iii++;
-								}
-								fw.write("\n");
-							}
-							fw.close();
-							
-							//////////////////////
-							
-							selected = -1;
-							cameraStart = 32 + 40 * WIDTH;
-							for(int i = 0; i < map.length; i++)
-								map[i] = '.';
-						}
 						/* показать/скрыть помощь */
 						else if(e.getKeyCode() == KeyEvent.VK_F1 && !help && ui)
 							help = true;
@@ -213,6 +190,23 @@ public class Main extends JPanel {
 						else if(e.getKeyCode() == KeyEvent.VK_F2 && slow)
 							slow = false;
 						/*******************************/
+						else if(e.getKeyCode() == KeyEvent.VK_F4 && map[selectedBlockAddr()] != '.') {
+							for(int i = selectedBlockAddr() - 1; map[i] == '.'; i--)
+								map[i] = map[selectedBlockAddr()];
+						}
+						else if(e.getKeyCode() == KeyEvent.VK_F5 && map[selectedBlockAddr()] != '.') {
+							for(int i = selectedBlockAddr() + 1; map[i] == '.'; i++)
+								map[i] = map[selectedBlockAddr()];
+						}
+						else if(e.getKeyCode() == KeyEvent.VK_F6 && map[selectedBlockAddr()] != '.') {
+							for(int i = selectedBlockAddr() + WIDTH; map[i] == '.'; i += WIDTH)
+								map[i] = map[selectedBlockAddr()];
+						}
+						else if(e.getKeyCode() == KeyEvent.VK_F7 && map[selectedBlockAddr()] != '.') {
+							for(int i = selectedBlockAddr() - WIDTH; map[i] == '.'; i -= WIDTH)
+								map[i] = map[selectedBlockAddr()];
+						}
+						
 						else if(e.getKeyCode() == KeyEvent.VK_ESCAPE && ui) {
 							// сохранение карты
 							
@@ -361,6 +355,10 @@ public class Main extends JPanel {
 							map[selected] = '\\';
 						else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == '\\')
 							map[selected] = '/';
+						else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == ';')
+							map[selected] = ':';
+						else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == ':')
+							map[selected] = ';';
 						/* взрыв */
 						else if(e.getKeyCode() == KeyEvent.VK_ENTER && selected == -1 && ((int)map[selectedBlockAddr()] > (int)'9' || (int)map[selectedBlockAddr()] < (int)'0')) {
 							new Thread() {
@@ -959,7 +957,7 @@ public class Main extends JPanel {
 				
 				g.drawString("<стрелки>.......:  перемещение", 20, 20);
 				g.drawString("<F1>............:  скрыть/показать эту помощь", 20, 40);
-				g.drawString("<Home>..........:  сохранение карты и сброс", 20, 60);
+				
 				g.drawString("<ESC>...........:  скрыть интерфейс и сохранить карту, либо показать интерфейс", 20, 80);
 				g.drawString("<Backspace>.....:  удалить объект под прицелом", 20, 100);
 				
@@ -989,9 +987,9 @@ public class Main extends JPanel {
 				g.drawString("F...............:  огонь, для установки чёрной дыры, нажмите ';'", 20, 580);
 				g.drawString("<запятая>.......:  вода, для удаления всей воды нажмите '.'", 20, 600);
 				g.drawString("*...............:  бомба", 20, 620);
-				g.drawString("Z...............:  слизь (зелёный блок)", 20, 640);
+				g.drawString("Z...............:  слизь (зелёный блок); попробуйте также клавиши <F4>, <F5>, <F6> и <F7>", 20, 640);
 				
-				g.drawString("<F3>............:  тёмный/светлый режим; '+' для вставки буквы или других доступных символов", 20, 670);
+				g.drawString("<F3>............:  тёмный/светлый режим; '+' для вставки буквы или других доступных символов;", 20, 670);
 			}
 		}
 	}
