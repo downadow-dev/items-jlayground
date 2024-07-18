@@ -3,13 +3,13 @@ package downadow.items_jlayground.main;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Font;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.io.File;
+import java.util.Scanner;
 import java.io.FileWriter;
 
 public class Main extends JPanel {
@@ -135,11 +135,14 @@ public class Main extends JPanel {
 		try {
 			/* загрузка карты */
 			
-			byte[] loadedMap = Files.readAllBytes(Paths.get(".map"));
+			Scanner sc = new Scanner(new File(".map"));
 			int ii = 0;
-			for(int i = 0; i < loadedMap.length; i++)
-				if(loadedMap[i] != '\n')
-					map[ii++] = (char)loadedMap[i];
+			while(sc.hasNextLine()) {
+				char[] line = sc.nextLine().toCharArray();
+				for(int i = 0; i < WIDTH; i++)
+					map[ii++] = line[i];
+			}
+			sc.close();
 			
 			/******************/
 		} catch(Exception e) {
