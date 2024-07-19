@@ -204,20 +204,37 @@ public class Main extends JPanel {
 						else if(e.getKeyCode() == KeyEvent.VK_F2 && slow)
 							slow = false;
 						/*******************************/
-						else if(e.getKeyCode() == KeyEvent.VK_F4 && map[selectedBlockAddr()] != '.') {
+						else if(e.getKeyCode() == KeyEvent.VK_F4 && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() - 1] == '.') {
 							for(int i = selectedBlockAddr() - 1; map[i] == '.'; i--)
 								map[i] = map[selectedBlockAddr()];
 						}
-						else if(e.getKeyCode() == KeyEvent.VK_F5 && map[selectedBlockAddr()] != '.') {
+						else if(e.getKeyCode() == KeyEvent.VK_F5 && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() + 1] == '.') {
 							for(int i = selectedBlockAddr() + 1; map[i] == '.'; i++)
 								map[i] = map[selectedBlockAddr()];
 						}
-						else if(e.getKeyCode() == KeyEvent.VK_F6 && map[selectedBlockAddr()] != '.') {
+						else if(e.getKeyCode() == KeyEvent.VK_F6 && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() + WIDTH] == '.') {
 							for(int i = selectedBlockAddr() + WIDTH; map[i] == '.'; i += WIDTH)
 								map[i] = map[selectedBlockAddr()];
 						}
-						else if(e.getKeyCode() == KeyEvent.VK_F7 && map[selectedBlockAddr()] != '.') {
+						else if(e.getKeyCode() == KeyEvent.VK_F7 && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() - WIDTH] == '.') {
 							for(int i = selectedBlockAddr() - WIDTH; map[i] == '.'; i -= WIDTH)
+								map[i] = map[selectedBlockAddr()];
+						}
+						
+						else if(e.getKeyCode() == KeyEvent.VK_F4 && map[selectedBlockAddr()] != '.') {
+							for(int i = selectedBlockAddr() - 1; map[i] != '.'; i--)
+								map[i] = map[selectedBlockAddr()];
+						}
+						else if(e.getKeyCode() == KeyEvent.VK_F5 && map[selectedBlockAddr()] != '.') {
+							for(int i = selectedBlockAddr() + 1; map[i] != '.'; i++)
+								map[i] = map[selectedBlockAddr()];
+						}
+						else if(e.getKeyCode() == KeyEvent.VK_F6 && map[selectedBlockAddr()] != '.') {
+							for(int i = selectedBlockAddr() + WIDTH; map[i] != '.'; i += WIDTH)
+								map[i] = map[selectedBlockAddr()];
+						}
+						else if(e.getKeyCode() == KeyEvent.VK_F7 && map[selectedBlockAddr()] != '.') {
+							for(int i = selectedBlockAddr() - WIDTH; map[i] != '.'; i -= WIDTH)
 								map[i] = map[selectedBlockAddr()];
 						}
 						
