@@ -237,7 +237,7 @@ public class Main extends JPanel {
 						/* поставить слизь */
 						else if(e.getKeyCode() == KeyEvent.VK_Z)
 							map[selectedBlockAddr()] = 'z';
-						/* поставить бомбу */
+						/* поставить "бомбу" */
 						else if(e.getKeyChar() == '*')
 							map[selectedBlockAddr()] = '"';
 						/* поставить res/b.png */
@@ -246,9 +246,12 @@ public class Main extends JPanel {
 						/* поставить коробку */
 						else if(e.getKeyCode() == KeyEvent.VK_X)
 							map[selectedBlockAddr()] = '@';
-						/* поставить чёрную дыру */
+						/* поставить '???' */
 						else if(e.getKeyChar() == ';')
 							map[selectedBlockAddr()] = 'A';
+						/* поставить блок-батут */
+						else if(e.getKeyChar() == '%')
+							map[selectedBlockAddr()] = '%';
 						/* поставить решётку */
 						else if(e.getKeyCode() == KeyEvent.VK_E && selected == -1)
 							map[selectedBlockAddr()] = '#';
@@ -524,6 +527,11 @@ public class Main extends JPanel {
 								Thread.sleep(!slow ? 400 : 1000);
 							} else if(map[i] == ';') {
 								map[i] = ':';
+							}
+							/* работа батута */
+							else if(map[i] == '%' && (map[i - WIDTH] != '.' && map[i - WIDTH * 2] == '.' && map[i - WIDTH * 3] == '.' && map[i - WIDTH * 4] == '.')) {
+								map[i - WIDTH * 4] = map[i - WIDTH];
+								map[i - WIDTH] = '.';
 							}
 						}
 						Thread.sleep(30);
@@ -814,6 +822,10 @@ public class Main extends JPanel {
 						g.setColor(new Color(0, 0, 0));
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						g.drawRect(ii * 60 , i * 60, 60, 60);
+					} else if(map[iii] == '%') {
+						g.setColor(new Color(255, 150, 0));
+						g.fillRect(ii * 60, i * 60, 60, 60);
+						g.drawRect(ii * 60 , i * 60, 60, 60);
 					} else if(map[iii] == '}') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -969,7 +981,7 @@ public class Main extends JPanel {
 				g.drawString("C...............:  поставить автомобиль, 'i' для вертолёта", 20, 520);
 				g.drawString("U...............:  поставить огнестрельное оружие", 20, 540);
 				g.drawString("=...............:  поставить танк", 20, 560);
-				g.drawString("F...............:  огонь; '$' --- радужный блок", 20, 580);
+				g.drawString("F...............:  огонь; '$' --- радужный блок; '%' --- блок-батут", 20, 580);
 				g.drawString("<запятая>.......:  вода, для удаления всей воды нажмите '.'", 20, 600);
 				g.drawString("*...............:  бомба, которая не работает", 20, 620);
 				g.drawString("Z...............:  слизь (зелёный блок); попробуйте также клавиши <F4>, <F5>, <F6> и <F7>", 20, 640);
