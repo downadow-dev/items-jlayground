@@ -30,6 +30,8 @@ public class Main extends JPanel {
 	
 	private static boolean select = false;
 	
+	private static boolean fill = false;
+	
 	private static int cameraStart = 32 + 40 * WIDTH;
 	/* выбранный блок */
 	private static int selected = -1;
@@ -191,9 +193,63 @@ public class Main extends JPanel {
 						return;
 					}
 					
+					else if(e.getKeyCode() == KeyEvent.VK_LEFT && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() - 1] == '.') {
+						for(int i = selectedBlockAddr() - 1; map[i] == '.'; i--)
+							map[i] = map[selectedBlockAddr()];
+						fill = false;
+						return;
+					}
+					else if(e.getKeyCode() == KeyEvent.VK_RIGHT && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() + 1] == '.') {
+						for(int i = selectedBlockAddr() + 1; map[i] == '.'; i++)
+							map[i] = map[selectedBlockAddr()];
+						fill = false;
+						return;
+					}
+					else if(e.getKeyCode() == KeyEvent.VK_DOWN && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() + WIDTH] == '.') {
+						for(int i = selectedBlockAddr() + WIDTH; map[i] == '.'; i += WIDTH)
+							map[i] = map[selectedBlockAddr()];
+						fill = false;
+						return;
+					}
+					else if(e.getKeyCode() == KeyEvent.VK_UP && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() - WIDTH] == '.') {
+						for(int i = selectedBlockAddr() - WIDTH; map[i] == '.'; i -= WIDTH)
+							map[i] = map[selectedBlockAddr()];
+						fill = false;
+						return;
+					}
+					
+					else if(e.getKeyCode() == KeyEvent.VK_LEFT && fill && map[selectedBlockAddr()] != '.') {
+						for(int i = selectedBlockAddr() - 1; map[i] != '.'; i--)
+							map[i] = map[selectedBlockAddr()];
+						fill = false;
+						return;
+					}
+					else if(e.getKeyCode() == KeyEvent.VK_RIGHT && fill && map[selectedBlockAddr()] != '.') {
+						for(int i = selectedBlockAddr() + 1; map[i] != '.'; i++)
+							map[i] = map[selectedBlockAddr()];
+						fill = false;
+						return;
+					}
+					else if(e.getKeyCode() == KeyEvent.VK_DOWN && fill && map[selectedBlockAddr()] != '.') {
+						for(int i = selectedBlockAddr() + WIDTH; map[i] != '.'; i += WIDTH)
+							map[i] = map[selectedBlockAddr()];
+						fill = false;
+						return;
+					}
+					else if(e.getKeyCode() == KeyEvent.VK_UP && fill && map[selectedBlockAddr()] != '.') {
+						for(int i = selectedBlockAddr() - WIDTH; map[i] != '.'; i -= WIDTH)
+							map[i] = map[selectedBlockAddr()];
+						fill = false;
+						return;
+					}
+					
 					if(!block) {
+						if(e.getKeyCode() == KeyEvent.VK_F4 && !fill)
+							fill = true;
+						else if(e.getKeyCode() == KeyEvent.VK_F4 && fill)
+							fill = false;
 						/* перемещение камеры */
-						if(e.getKeyCode() == KeyEvent.VK_UP)
+						else if(e.getKeyCode() == KeyEvent.VK_UP)
 							cameraStart -= WIDTH;
 						else if(e.getKeyCode() == KeyEvent.VK_DOWN)
 							cameraStart += WIDTH;
@@ -212,39 +268,6 @@ public class Main extends JPanel {
 						else if(e.getKeyCode() == KeyEvent.VK_F2 && slow)
 							slow = false;
 						/*******************************/
-						else if(e.getKeyCode() == KeyEvent.VK_F4 && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() - 1] == '.') {
-							for(int i = selectedBlockAddr() - 1; map[i] == '.'; i--)
-								map[i] = map[selectedBlockAddr()];
-						}
-						else if(e.getKeyCode() == KeyEvent.VK_F5 && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() + 1] == '.') {
-							for(int i = selectedBlockAddr() + 1; map[i] == '.'; i++)
-								map[i] = map[selectedBlockAddr()];
-						}
-						else if(e.getKeyCode() == KeyEvent.VK_F6 && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() + WIDTH] == '.') {
-							for(int i = selectedBlockAddr() + WIDTH; map[i] == '.'; i += WIDTH)
-								map[i] = map[selectedBlockAddr()];
-						}
-						else if(e.getKeyCode() == KeyEvent.VK_F7 && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() - WIDTH] == '.') {
-							for(int i = selectedBlockAddr() - WIDTH; map[i] == '.'; i -= WIDTH)
-								map[i] = map[selectedBlockAddr()];
-						}
-						
-						else if(e.getKeyCode() == KeyEvent.VK_F4 && map[selectedBlockAddr()] != '.') {
-							for(int i = selectedBlockAddr() - 1; map[i] != '.'; i--)
-								map[i] = map[selectedBlockAddr()];
-						}
-						else if(e.getKeyCode() == KeyEvent.VK_F5 && map[selectedBlockAddr()] != '.') {
-							for(int i = selectedBlockAddr() + 1; map[i] != '.'; i++)
-								map[i] = map[selectedBlockAddr()];
-						}
-						else if(e.getKeyCode() == KeyEvent.VK_F6 && map[selectedBlockAddr()] != '.') {
-							for(int i = selectedBlockAddr() + WIDTH; map[i] != '.'; i += WIDTH)
-								map[i] = map[selectedBlockAddr()];
-						}
-						else if(e.getKeyCode() == KeyEvent.VK_F7 && map[selectedBlockAddr()] != '.') {
-							for(int i = selectedBlockAddr() - WIDTH; map[i] != '.'; i -= WIDTH)
-								map[i] = map[selectedBlockAddr()];
-						}
 						
 						else if(e.getKeyCode() == KeyEvent.VK_ESCAPE && ui) {
 							// сохранение карты
@@ -1022,7 +1045,7 @@ public class Main extends JPanel {
 			if(help) {
 				g.drawImage(new ImageIcon("res/black.png").getImage(), 0, 0, 1024, 728, null);
 				
-				g.drawString("<стрелки>.......:  перемещение", 20, 20);
+				g.drawString("<стрелки>.......:  перемещение, но если нажато <F4>, то выбор стороны для заполнения/замены", 20, 20);
 				g.drawString("<F1>............:  скрыть/показать эту помощь", 20, 40);
 				
 				g.drawString("<ESC>...........:  скрыть интерфейс и сохранить карту, либо показать интерфейс", 20, 80);
@@ -1054,7 +1077,7 @@ public class Main extends JPanel {
 				g.drawString("fF..............:  огонь; '$' --- радужный блок; '%' --- блок-батут", 20, 580);
 				g.drawString("<запятая>.......:  вода, для удаления всей воды нажмите '.'", 20, 600);
 				g.drawString("*...............:  бомба, которая не работает", 20, 620);
-				g.drawString("Z...............:  слизь (зелёный блок); попробуйте также клавиши <F4>, <F5>, <F6> и <F7>", 20, 640);
+				g.drawString("Z...............:  слизь (зелёный блок)", 20, 640);
 				
 				g.drawString("<F3>............:  тёмный/светлый режим; '+' для вставки буквы или других доступных символов; ';' --- ???", 20, 670);
 			}
