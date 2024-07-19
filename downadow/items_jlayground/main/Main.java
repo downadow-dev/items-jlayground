@@ -295,8 +295,10 @@ public class Main extends JPanel {
 						else if(e.getKeyCode() == KeyEvent.VK_N)
 							map[selectedBlockAddr()] = 'd';
 						/* поставить дверь/палку */
-						else if(e.getKeyCode() == KeyEvent.VK_D && selected == -1)
+						else if(e.getKeyChar() == 'd' && selected == -1)
 							map[selectedBlockAddr()] = '|';
+						else if(e.getKeyChar() == 'D' && selected == -1)
+							map[selectedBlockAddr()] = '&';
 						/* поставить свет */
 						else if(e.getKeyCode() == KeyEvent.VK_O)
 							map[selectedBlockAddr()] = '^';
@@ -623,6 +625,20 @@ public class Main extends JPanel {
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
 						g.drawImage(new ImageIcon("res/door_or_stick.png").getImage(), ii * 60, i * 60, 60, 60, null);
+					} else if(map[iii] == '&') {
+						if(!darkMode)
+							g.setColor(new Color(80, 80, 80));
+						else
+							g.setColor(new Color(35, 35, 35));
+						
+						g.fillRect(ii * 60, i * 60, 60, 60);
+						if(!darkMode)
+							g.setColor(new Color(140, 140, 140));
+						else
+							g.setColor(new Color(70, 70, 70));
+						g.drawRect(ii * 60 , i * 60, 60, 60);
+						
+						g.drawImage(new ImageIcon("res/stick2.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'Y') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -944,10 +960,12 @@ public class Main extends JPanel {
 				g.drawString("Введите символ...", 15, 20);
 			
 			g.setColor(new Color(250, 250, 250));
-			g.setFont(new Font("Monospaced", Font.PLAIN, 15));
+			g.setFont(new Font("Monospaced", Font.BOLD, 20));
 			
 			if(slow)
 				g.drawString("~", 970, 20);
+			
+			g.setFont(new Font("Monospaced", Font.PLAIN, 15));
 			
 			if(help) {
 				g.drawImage(new ImageIcon("res/black.png").getImage(), 0, 0, 1024, 728, null);
@@ -973,7 +991,7 @@ public class Main extends JPanel {
 				g.drawString("Y...............:  поставить жёлтый блок", 20, 360);
 				g.drawString("S...............:  поставить песок", 20, 380);
 				g.drawString("N...............:  поставить кровать", 20, 400);
-				g.drawString("D...............:  поставить палку (можете называть и дверью)", 20, 420);
+				g.drawString("dD..............:  поставить палку (можете называть и дверью)", 20, 420);
 				g.drawString("O...............:  поставить лампу", 20, 440);
 				g.drawString("<Enter>.........:  сделать взрыв пом. клавишей <Insert> или активировать выдел. объект, '-' для уд. выд.", 20, 460);
 				g.drawString("<F2>............:  включить/выключить замедление времени (оно работает не во всех случаях)", 20, 480);
