@@ -89,6 +89,30 @@ public class Main extends JPanel {
 		}
 	}
 	
+	private static void fire2(int addr) {
+		final int saved = addr;
+		map[saved] = 'F';
+
+		new Thread() {
+			public void run() {
+				try {
+					Thread.sleep(!slow ? 500 : 1200);
+					if(map[saved - 1] != '.' && map[saved - 1] != 'F')
+						fire2(saved - 1);
+					if(map[saved + 1] != '.' && map[saved + 1] != 'F')
+						fire2(saved + 1);
+					if(map[saved + WIDTH] != '.' && map[saved + WIDTH] != 'F')
+						fire2(saved + WIDTH);
+					if(map[saved - WIDTH] != '.' && map[saved - WIDTH] != 'F')
+						fire2(saved - WIDTH);
+					
+					Thread.sleep(!slow ? 7000 : 15000);
+					map[saved] = '.';
+				} catch(Exception e) {}
+			}
+		}.start();
+	}
+	
 	private static void boom(int addr) {
 		final int saved = addr;
 		new Thread() {
@@ -225,12 +249,13 @@ public class Main extends JPanel {
 							map[selected] = '.';
 							selected = -1;
 						/* поставить огонь */
-						} else if(e.getKeyCode() == KeyEvent.VK_F && map[selectedBlockAddr()] != '.' &&
+						} else if(e.getKeyChar() == 'f' && map[selectedBlockAddr()] != '.' &&
 						         (map[selectedBlockAddr()] == 'B' || map[selectedBlockAddr()] == 'l' || map[selectedBlockAddr()] == '|' ||
 						          map[selectedBlockAddr()] == '@' || map[selectedBlockAddr()] == 'd' || map[selectedBlockAddr()] == 'w' ||
 						          map[selectedBlockAddr()] == 'c' || map[selectedBlockAddr()] == 'C')) {
 							fire(selectedBlockAddr());
-						}
+						} else if(e.getKeyChar() == 'F' && map[selectedBlockAddr()] != '.')
+							fire2(selectedBlockAddr());
 						/* поставить воду */
 						else if(e.getKeyCode() == KeyEvent.VK_COMMA)
 							map[selectedBlockAddr()] = 'W';
@@ -499,11 +524,11 @@ public class Main extends JPanel {
 							else if(map[i] == 'A') {
 								if(map[i - 1] == '.' || map[i - 1] == 'f' || map[i - 1] == 'W')
 									map[i - 1] = 'A';
-								else if(map[i + 1] == '.' || map[i + 1] == 'f' || map[i + 1] == 'W')
+								if(map[i + 1] == '.' || map[i + 1] == 'f' || map[i + 1] == 'W')
 									map[i + 1] = 'A';
-								else if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'f' || map[i + WIDTH] == 'W')
+								if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'f' || map[i + WIDTH] == 'W')
 									map[i + WIDTH] = 'A';
-								else if(map[i - WIDTH] == '.' || map[i - WIDTH] == 'f' || map[i - WIDTH] == 'W')
+								if(map[i - WIDTH] == '.' || map[i - WIDTH] == 'f' || map[i - WIDTH] == 'W')
 									map[i - WIDTH] = 'A';
 								
 								Thread.sleep(!slow ? 50 : 500);
@@ -883,6 +908,8 @@ public class Main extends JPanel {
 				try {
 					if(Main.map[iii] == 'f')
 						g.drawImage(new ImageIcon("res/fire.png").getImage(), ii * 60 - 30, i * 60 - 100, 180, 200, null);
+					else if(Main.map[iii] == 'F')
+						g.drawImage(new ImageIcon("res/fire2.png").getImage(), ii * 60 - 30, i * 60 - 100, 180, 200, null);
 					/* подсветка света */
 					else if(Main.map[iii] == '^')
 						g.drawImage(new ImageIcon("res/white.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
@@ -999,7 +1026,7 @@ public class Main extends JPanel {
 				g.drawString("C...............:  поставить автомобиль, 'i' для вертолёта", 20, 520);
 				g.drawString("U...............:  поставить огнестрельное оружие", 20, 540);
 				g.drawString("=...............:  поставить танк", 20, 560);
-				g.drawString("F...............:  огонь; '$' --- радужный блок; '%' --- блок-батут", 20, 580);
+				g.drawString("fF..............:  огонь; '$' --- радужный блок; '%' --- блок-батут", 20, 580);
 				g.drawString("<запятая>.......:  вода, для удаления всей воды нажмите '.'", 20, 600);
 				g.drawString("*...............:  бомба, которая не работает", 20, 620);
 				g.drawString("Z...............:  слизь (зелёный блок); попробуйте также клавиши <F4>, <F5>, <F6> и <F7>", 20, 640);
