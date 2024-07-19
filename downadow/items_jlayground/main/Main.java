@@ -105,6 +105,14 @@ public class Main extends JPanel {
 						fire2(saved + WIDTH);
 					if(map[saved - WIDTH] != '.' && map[saved - WIDTH] != 'F')
 						fire2(saved - WIDTH);
+					if(map[saved - WIDTH - 1] != '.' && map[saved - WIDTH - 1] != 'F')
+						fire2(saved - WIDTH - 1);
+					if(map[saved - WIDTH + 1] != '.' && map[saved - WIDTH + 1] != 'F')
+						fire2(saved - WIDTH + 1);
+					if(map[saved + WIDTH - 1] != '.' && map[saved + WIDTH - 1] != 'F')
+						fire2(saved + WIDTH - 1);
+					if(map[saved + WIDTH + 1] != '.' && map[saved + WIDTH + 1] != 'F')
+						fire2(saved + WIDTH + 1);
 					
 					Thread.sleep(!slow ? 7000 : 15000);
 					map[saved] = '.';
