@@ -962,7 +962,7 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("res/bomb.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
 					} else if(map[iii] == 'z') {
 						g.drawImage(new ImageIcon("res/green.png").getImage(), ii * 60 - 15, i * 60 - 15, 90, 90, null);
-					} else if((map[iii] >= 'а' && map[iii] <= 'я') || (map[iii] >= 'А' && map[iii] <= 'Я') || map[iii] == '-' || map[iii] == '!' || map[iii] == '?') {
+					} else if((map[iii] >= 'а' && map[iii] <= 'я') || (map[iii] >= 'А' && map[iii] <= 'Я') || map[iii] == '-' || map[iii] == '!' || map[iii] == '?' || map[iii] == 'ё' || map[iii] == 'Ё') {
 						g.setColor(new Color(255, 255, 255));
 						g.setFont(new Font("Monospaced", Font.PLAIN, 60));
 						g.drawString("" + map[iii], ii * 60 + 15, i * 60 + 60);
