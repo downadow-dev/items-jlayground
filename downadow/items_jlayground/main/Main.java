@@ -632,9 +632,9 @@ public class Main extends JPanel {
 								for(int ii = 0; ii < map.length - 1; ii++) {
 									if(map[ii] == 'P') {
 										if(map[i - 1] != '.')
-											map[ii - 1] = map[i - 1];
+											map[ii - 1] = map[i + 1];
 										if(map[i + 1] != '.')
-											map[ii + 1] = map[i + 1];
+											map[ii + 1] = map[i - 1];
 										if(map[i - WIDTH] != '.')
 											map[ii - WIDTH] = map[i - WIDTH];
 									
