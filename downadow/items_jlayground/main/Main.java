@@ -331,6 +331,11 @@ public class Main extends JPanel {
 						/* поставить res/bricks.png */
 						else if(e.getKeyChar() == 'r')
 							map[selectedBlockAddr()] = 'r';
+						/* поставить портал */
+						else if(e.getKeyChar() == 'p')
+							map[selectedBlockAddr()] = 'p';
+						else if(e.getKeyChar() == 'P')
+							map[selectedBlockAddr()] = 'P';
 						/* поставить res/superbricks.png */
 						else if(e.getKeyChar() == 'R')
 							map[selectedBlockAddr()] = 'R';
@@ -514,7 +519,7 @@ public class Main extends JPanel {
 			public void run() {
 				while(true) {
 					try {
-						/* "физика" */
+						/* "физика" и пр. */
 						for(int i = 0; i < map.length - WIDTH; i++) {
 							if(selected == -1 && (map[i] == '@' ||  map[i] == 's' || map[i] == '|' ||  map[i] == 'd' || map[i] == '#' ||
 							    map[i] == 'l' || map[i] == 'c' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':') && (map[i + WIDTH] == '.' || map[i + WIDTH] == 'W' || map[i + WIDTH] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - WIDTH] != 'z')) {
@@ -603,16 +608,48 @@ public class Main extends JPanel {
 							} else if(map[i] == ';') {
 								map[i] = ':';
 							}
-							/* работа батута */
-							else if(map[i] == '%' && (map[i - WIDTH] != '.' && map[i - WIDTH * 2] == '.' && map[i - WIDTH * 3] == '.' && map[i - WIDTH * 4] == '.')) {
-								map[i - WIDTH * 4] = map[i - WIDTH];
-								map[i - WIDTH] = '.';
-							}
 						}
 						Thread.sleep(30);
 					} catch(Exception e) {
 						e.printStackTrace();
 					}
+				}
+			}
+		}.start();
+		
+		new Thread() {
+			public void run() {
+				while(true) {
+					for(int i = 0; i < map.length; i++) {
+						try {
+							/* работа батута */
+							if(map[i] == '%' && (map[i - WIDTH] != '.' && map[i - WIDTH * 2] == '.' && map[i - WIDTH * 3] == '.' && map[i - WIDTH * 4] == '.')) {
+								map[i - WIDTH * 4] = map[i - WIDTH];
+								map[i - WIDTH] = '.';
+							}
+							/* работа порталов */
+							else if(map[i] == 'p') {
+								for(int ii = 0; ii < map.length - 1; ii++) {
+									if(map[ii] == 'P') {
+										if(map[i - 1] != '.')
+											map[ii - 1] = map[i - 1];
+										if(map[i + 1] != '.')
+											map[ii + 1] = map[i + 1];
+										if(map[i - WIDTH] != '.')
+											map[ii - WIDTH] = map[i - WIDTH];
+									
+										map[i - 1] = '.';
+										map[i + 1] = '.';
+										map[i - WIDTH] = '.';
+										break;
+									}
+								}
+							}
+						} catch(Exception e) {
+							e.printStackTrace();
+						}
+					}
+					try {Thread.sleep(40);} catch(Exception e) {}
 				}
 			}
 		}.start();
@@ -991,6 +1028,10 @@ public class Main extends JPanel {
 						map[iii] = ')';
 					} else if(map[iii] == '"') {
 						g.drawImage(new ImageIcon("res/bomb.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
+					} else if(map[iii] == 'p') {
+						g.drawImage(new ImageIcon("res/portal0.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
+					} else if(map[iii] == 'P') {
+						g.drawImage(new ImageIcon("res/portal1.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
 					} else if(map[iii] == 'z') {
 						g.drawImage(new ImageIcon("res/green.png").getImage(), ii * 60 - 15, i * 60 - 15, 90, 90, null);
 					} else if((map[iii] >= 'а' && map[iii] <= 'я') || (map[iii] >= 'А' && map[iii] <= 'Я') || map[iii] == '-' || map[iii] == '!' || map[iii] == '?' || map[iii] == 'ё' || map[iii] == 'Ё') {
@@ -1067,7 +1108,7 @@ public class Main extends JPanel {
 				g.drawString("S...............:  поставить песок", 20, 380);
 				g.drawString("N...............:  поставить кровать", 20, 400);
 				g.drawString("dD..............:  поставить палку (можете называть и дверью)", 20, 420);
-				g.drawString("O...............:  поставить лампу", 20, 440);
+				g.drawString("O...............:  поставить лампу; pP для установки портала", 20, 440);
 				g.drawString("<Enter>.........:  сделать взрыв пом. клавишей <Insert> или активировать выдел. объект, '-' для уд. выд.", 20, 460);
 				g.drawString("<F2>............:  включить/выключить замедление времени (оно работает не во всех случаях)", 20, 480);
 				g.drawString("W1234567890.....:  (ещё какие-то блоки, включая ковёр и паутину)", 20, 500);
