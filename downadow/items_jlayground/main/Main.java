@@ -636,7 +636,7 @@ public class Main extends JPanel {
 										if(map[i - 1] != '.')
 											map[ii + 1] = map[i - 1];
 										if(map[i - WIDTH] != '.')
-											map[ii - WIDTH] = map[i - WIDTH];
+											map[ii + WIDTH] = map[i - WIDTH];
 									
 										map[i - 1] = '.';
 										map[i + 1] = '.';
