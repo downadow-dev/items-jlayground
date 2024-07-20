@@ -99,21 +99,21 @@ public class Main extends JPanel {
 			public void run() {
 				try {
 					Thread.sleep(!slow ? 500 : 1200);
-					if(map[saved - 1] != '.' && map[saved - 1] != 'F')
+					if(map[saved - 1] != '.' && map[saved - 1] != 'F' && map[saved - 1] != 'W')
 						fire2(saved - 1);
-					if(map[saved + 1] != '.' && map[saved + 1] != 'F')
+					if(map[saved + 1] != '.' && map[saved + 1] != 'F' && map[saved + 1] != 'W')
 						fire2(saved + 1);
-					if(map[saved + WIDTH] != '.' && map[saved + WIDTH] != 'F')
+					if(map[saved + WIDTH] != '.' && map[saved + WIDTH] != 'F' && map[saved + WIDTH] != 'W')
 						fire2(saved + WIDTH);
-					if(map[saved - WIDTH] != '.' && map[saved - WIDTH] != 'F')
+					if(map[saved - WIDTH] != '.' && map[saved - WIDTH] != 'F' && map[saved - WIDTH] != 'W')
 						fire2(saved - WIDTH);
-					if(map[saved - WIDTH - 1] != '.' && map[saved - WIDTH - 1] != 'F')
+					if(map[saved - WIDTH - 1] != '.' && map[saved - WIDTH - 1] != 'F' && map[saved - WIDTH - 1] != 'W')
 						fire2(saved - WIDTH - 1);
-					if(map[saved - WIDTH + 1] != '.' && map[saved - WIDTH + 1] != 'F')
+					if(map[saved - WIDTH + 1] != '.' && map[saved - WIDTH + 1] != 'F' && map[saved - WIDTH + 1] != 'W')
 						fire2(saved - WIDTH + 1);
-					if(map[saved + WIDTH - 1] != '.' && map[saved + WIDTH - 1] != 'F')
+					if(map[saved + WIDTH - 1] != '.' && map[saved + WIDTH - 1] != 'F' && map[saved + WIDTH - 1] != 'W')
 						fire2(saved + WIDTH - 1);
-					if(map[saved + WIDTH + 1] != '.' && map[saved + WIDTH + 1] != 'F')
+					if(map[saved + WIDTH + 1] != '.' && map[saved + WIDTH + 1] != 'F' && map[saved + WIDTH + 1] != 'W')
 						fire2(saved + WIDTH + 1);
 					
 					Thread.sleep(!slow ? 7000 : 15000);
@@ -1108,7 +1108,7 @@ public class Main extends JPanel {
 				g.drawString("S...............:  поставить песок", 20, 380);
 				g.drawString("N...............:  поставить кровать", 20, 400);
 				g.drawString("dD..............:  поставить палку (можете называть и дверью)", 20, 420);
-				g.drawString("O...............:  поставить лампу; pP для установки портала", 20, 440);
+				g.drawString("O...............:  поставить лампу; pP для установки входного/выходного портала", 20, 440);
 				g.drawString("<Enter>.........:  сделать взрыв пом. клавишей <Insert> или активировать выдел. объект, '-' для уд. выд.", 20, 460);
 				g.drawString("<F2>............:  включить/выключить замедление времени (оно работает не во всех случаях)", 20, 480);
 				g.drawString("W1234567890.....:  (ещё какие-то блоки, включая ковёр и паутину)", 20, 500);
