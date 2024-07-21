@@ -662,11 +662,11 @@ public class Main extends JPanel {
 							else if(map[i] == '~' && map[i - WIDTH] != '.' && map[i - WIDTH] != 'W' && map[i - WIDTH] != '~' && map[i - WIDTH + 1] == '.') {
 								map[i - WIDTH + 1] = map[i - WIDTH];
 								map[i - WIDTH] = '.';
-								Thread.sleep(200);
+								Thread.sleep(!slow ? 200 : 500);
 							} else if(map[i] == ',' && map[i - WIDTH] != '.' && map[i - WIDTH] != 'W' && map[i - WIDTH] != '~' && map[i - WIDTH - 1] == '.') {
 								map[i - WIDTH - 1] = map[i - WIDTH];
 								map[i - WIDTH] = '.';
-								Thread.sleep(200);
+								Thread.sleep(!slow ? 200 : 500);
 							}
 						} catch(Exception e) {
 							e.printStackTrace();
@@ -972,9 +972,12 @@ public class Main extends JPanel {
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 					} else if(map[iii] == '~' || map[iii] == ',') {
-						g.setColor(new Color(225, 255, 255));
+						g.setColor(new Color(5, 5, 5));
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						g.drawRect(ii * 60 , i * 60, 60, 60);
+						g.setColor(new Color(60, 60, 60));
+						g.fillRect(ii * 60 + 20, i * 60 + 20, 20, 20);
+						g.drawRect(ii * 60 + 20, i * 60 + 20, 20, 20);
 						
 						if(ui)
 							g.drawImage(new ImageIcon("res/" + (map[iii] == '~' ? "right" : "left") + ".png").getImage(), ii * 60, i * 60, 60, 60, null);
