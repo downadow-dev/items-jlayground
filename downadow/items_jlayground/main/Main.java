@@ -63,7 +63,7 @@ public class Main extends JPanel {
 						for(int i = 0; i < 6; i++) {
 							Thread.sleep(5000);
 							if(map[saved] != 'f')
-								break;
+								return;
 							if(map[saved - 1] == 'B' || map[saved - 1] == 'l' || map[saved - 1] == '|' ||
 							   map[saved - 1] == '@' || map[saved - 1] == 'd' || map[saved - 1] == 'w' ||
 							   map[saved - 1] == 'c' || map[saved - 1] == 'C' || map[saved - 1] == 'L' || map[saved - 1] == 'X')
