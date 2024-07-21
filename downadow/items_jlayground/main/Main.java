@@ -525,7 +525,7 @@ public class Main extends JPanel {
 						/* "физика" и пр. */
 						for(int i = 0; i < map.length - WIDTH; i++) {
 							if(selected == -1 && (map[i] == '@' ||  map[i] == 's' || map[i] == '|' ||  map[i] == 'd' || map[i] == '#' ||
-							    map[i] == 'l' || map[i] == 'c' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`') && (map[i + WIDTH] == '.' || map[i + WIDTH] == 'W' || map[i + WIDTH] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - WIDTH] != 'z')) {
+							    map[i] == 'l' || map[i] == 'c' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`') && (map[i + WIDTH] == '.' || map[i + WIDTH] == 'W' || map[i + WIDTH] == 'b' || map[i + WIDTH] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - WIDTH] != 'z')) {
 								map[i + WIDTH] = map[i];
 								map[i] = '.';
 								
