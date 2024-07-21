@@ -322,6 +322,9 @@ public class Main extends JPanel {
 						
 						else if(e.getKeyChar() == 'X')
 							map[selectedBlockAddr()] = 'X';
+						/* поставить блок ускорения */
+						else if(e.getKeyChar() == '~')
+							map[selectedBlockAddr()] = '~';
 						/* поставить '???' */
 						else if(e.getKeyChar() == ';')
 							map[selectedBlockAddr()] = 'A';
@@ -441,6 +444,10 @@ public class Main extends JPanel {
 							map[selected] = ':';
 						else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == ':')
 							map[selected] = ';';
+						else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == '~')
+							map[selected] = ',';
+						else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == ',')
+							map[selected] = '~';
 						/* взрыв */
 						else if(e.getKeyCode() == KeyEvent.VK_ENTER && selected == -1 && ((int)map[selectedBlockAddr()] > (int)'9' || (int)map[selectedBlockAddr()] < (int)'0')) {
 							new Thread() {
@@ -650,6 +657,16 @@ public class Main extends JPanel {
 										break;
 									}
 								}
+							}
+							/* работа ускорения */
+							else if(map[i] == '~' && map[i - WIDTH] != '.' && map[i - WIDTH] != 'W' && map[i - WIDTH] != '~' && map[i - WIDTH + 1] == '.') {
+								map[i - WIDTH + 1] = map[i - WIDTH];
+								map[i - WIDTH] = '.';
+								Thread.sleep(200);
+							} else if(map[i] == ',' && map[i - WIDTH] != '.' && map[i - WIDTH] != 'W' && map[i - WIDTH] != '~' && map[i - WIDTH - 1] == '.') {
+								map[i - WIDTH - 1] = map[i - WIDTH];
+								map[i - WIDTH] = '.';
+								Thread.sleep(200);
 							}
 						} catch(Exception e) {
 							e.printStackTrace();
@@ -954,6 +971,12 @@ public class Main extends JPanel {
 						g.setColor(new Color(0, 0, 0));
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						g.drawRect(ii * 60 , i * 60, 60, 60);
+					} else if(map[iii] == '~' || map[iii] == ',') {
+						g.setColor(new Color(225, 255, 255));
+						g.fillRect(ii * 60, i * 60, 60, 60);
+						g.drawRect(ii * 60 , i * 60, 60, 60);
+						
+						g.drawImage(new ImageIcon("res/" + (map[iii] == '~' ? "right" : "left") + ".png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '%') {
 						g.setColor(new Color(255, 150, 0));
 						g.fillRect(ii * 60, i * 60, 60, 60);
@@ -1140,7 +1163,7 @@ public class Main extends JPanel {
 				g.drawString("fF..............:  огонь; '$' --- радужный блок; '%' --- блок-батут", 20, 580);
 				g.drawString("<запятая>.......:  вода, для удаления всей воды нажмите '.'", 20, 600);
 				g.drawString("*...............:  бомба, которая не работает", 20, 620);
-				g.drawString("Z...............:  слизь (зелёный блок)", 20, 640);
+				g.drawString("Z...............:  слизь (зелёный блок); '~' --- блок ускорения", 20, 640);
 				
 				g.drawString("<F3>............:  тёмный/светлый режим; '+' для вставки буквы или других доступных символов; ';' --- ???", 20, 670);
 			}
