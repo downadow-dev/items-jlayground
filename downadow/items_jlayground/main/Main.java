@@ -976,7 +976,8 @@ public class Main extends JPanel {
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/" + (map[iii] == '~' ? "right" : "left") + ".png").getImage(), ii * 60, i * 60, 60, 60, null);
+						if(ui)
+							g.drawImage(new ImageIcon("res/" + (map[iii] == '~' ? "right" : "left") + ".png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '%') {
 						g.setColor(new Color(255, 150, 0));
 						g.fillRect(ii * 60, i * 60, 60, 60);
