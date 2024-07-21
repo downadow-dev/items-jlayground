@@ -54,7 +54,7 @@ public class Main extends JPanel {
 		final int saved = addr;
 		if(map[saved] == 'B' || map[saved] == 'l' || map[saved] == '|' ||
 		   map[saved] == '@' || map[saved] == 'd' || map[saved] == 'w' ||
-		   map[saved] == 'c' || map[saved] == 'C' || map[saved] == 'L') {
+		   map[saved] == 'c' || map[saved] == 'C' || map[saved] == 'L' || map[saved] == 'X') {
 			map[saved] = 'f';
 
 			new Thread() {
@@ -66,19 +66,19 @@ public class Main extends JPanel {
 								break;
 							if(map[saved - 1] == 'B' || map[saved - 1] == 'l' || map[saved - 1] == '|' ||
 							   map[saved - 1] == '@' || map[saved - 1] == 'd' || map[saved - 1] == 'w' ||
-							   map[saved - 1] == 'c' || map[saved - 1] == 'C' || map[saved - 1] == 'L')
+							   map[saved - 1] == 'c' || map[saved - 1] == 'C' || map[saved - 1] == 'L' || map[saved - 1] == 'X')
 								fire(saved - 1);
 							if(map[saved + 1] == 'B' || map[saved + 1] == 'l' || map[saved + 1] == '|' ||
 							   map[saved + 1] == '@' || map[saved + 1] == 'd' || map[saved + 1] == 'w' ||
-							   map[saved + 1] == 'c' || map[saved + 1] == 'C' || map[saved + 1] == 'L')
+							   map[saved + 1] == 'c' || map[saved + 1] == 'C' || map[saved + 1] == 'L' || map[saved + 1] == 'X')
 								fire(saved + 1);
 							if(map[saved + WIDTH] == 'B' || map[saved + WIDTH] == 'l' || map[saved + WIDTH] == '|' ||
 							   map[saved + WIDTH] == '@' || map[saved + WIDTH] == 'd' || map[saved + WIDTH] == 'w' ||
-							   map[saved + WIDTH] == 'c' || map[saved + WIDTH] == 'C' || map[saved + WIDTH] == 'L')
+							   map[saved + WIDTH] == 'c' || map[saved + WIDTH] == 'C' || map[saved + WIDTH] == 'L' || map[saved + WIDTH] == 'X')
 								fire(saved + WIDTH);
 							if(map[saved - WIDTH] == 'B' || map[saved - WIDTH] == 'l' || map[saved - WIDTH] == '|' ||
 							   map[saved - WIDTH] == '@' || map[saved - WIDTH] == 'd' || map[saved - WIDTH] == 'w' ||
-							   map[saved - WIDTH] == 'c' || map[saved - WIDTH] == 'C' || map[saved - WIDTH] == 'L')
+							   map[saved - WIDTH] == 'c' || map[saved - WIDTH] == 'C' || map[saved - WIDTH] == 'L' || map[saved - WIDTH] == 'X')
 								fire(saved - WIDTH);
 						}
 						if(slow)
@@ -317,8 +317,11 @@ public class Main extends JPanel {
 						else if(e.getKeyCode() == KeyEvent.VK_B)
 							map[selectedBlockAddr()] = 'B';
 						/* поставить коробку */
-						else if(e.getKeyCode() == KeyEvent.VK_X)
+						else if(e.getKeyChar() == 'x')
 							map[selectedBlockAddr()] = '@';
+						
+						else if(e.getKeyChar() == 'X')
+							map[selectedBlockAddr()] = 'X';
 						/* поставить '???' */
 						else if(e.getKeyChar() == ';')
 							map[selectedBlockAddr()] = 'A';
@@ -1037,6 +1040,8 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("res/tank0_0.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
 					else if(map[iii] == ')')
 						g.drawImage(new ImageIcon("res/tank1_0.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
+					else if(map[iii] == 'X')
+						g.drawImage(new ImageIcon("res/box2.png").getImage(), ii * 60 - 60, i * 60 + 60, 120, 60, null);
 					else if(map[iii] == '<') {
 						g.drawImage(new ImageIcon("res/tank0_1.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
 						map[iii] = '(';
@@ -1115,7 +1120,7 @@ public class Main extends JPanel {
 				g.drawString("QE..............:  отразить выделенный объект (не для всех)", 20, 190);
 				
 				g.drawString("B...............:  поставить коричневый блок", 20, 220);
-				g.drawString("X...............:  поставить коробку", 20, 240);
+				g.drawString("Xx..............:  поставить ящик", 20, 240);
 				g.drawString("E...............:  поставить решётку", 20, 260);
 				g.drawString("rR..............:  поставить кирпичный блок", 20, 280);
 				g.drawString("L...............:  поставить лестницу", 20, 300);
