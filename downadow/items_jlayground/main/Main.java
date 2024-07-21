@@ -881,7 +881,10 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("res/box.png").getImage(), ii * 60 - 60, i * 60 - 60, 120, 120, null);
 					else if(map[iii] == 'y') {
 						g.setColor(new Color(255, 255, 0));
-						g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
+						g.fillRect(ii * 60, i * 60, 60, 60);
+						g.setColor(new Color(180, 180, 0));
+						g.drawRect(ii * 60, i * 60, 60, 60);
+						g.drawRect(ii * 60 + 1, i * 60 + 1, 58, 58);
 					} else if(map[iii] == '[') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -1153,7 +1156,7 @@ public class Main extends JPanel {
 				g.drawString("L...............:  поставить лестницу", 20, 300);
 				g.drawString("G...............:  поставить стекло", 20, 320);
 				g.drawString("T...............:  поставить камень", 20, 340);
-				g.drawString("Y...............:  поставить жёлтый блок", 20, 360);
+				g.drawString("Y...............:  поставить золотой блок", 20, 360);
 				g.drawString("S...............:  поставить песок", 20, 380);
 				g.drawString("N...............:  поставить кровать", 20, 400);
 				g.drawString("dD..............:  поставить палку (можете называть и дверью)", 20, 420);
