@@ -541,7 +541,7 @@ public class Main extends JPanel {
 									map[i - WIDTH] = 'b';
 								
 								if((map[i + WIDTH] != '.' && map[i + WIDTH] != 'W') || i + WIDTH * 2 > map.length) {
-									if(map[i - 1] == '.' || map[i - 1] == 'd' || map[i - 1] == '|' || map[i - 1] == '#') {
+									if(map[i - 1] == '.' || map[i - 1] == 'd' || map[i - 1] == '|' || map[i - 1] == '#' || map[i - 1] == 'l') {
 										if(!slow)
 											Thread.sleep(160);
 										else
@@ -549,7 +549,7 @@ public class Main extends JPanel {
 										map[i - 1] = 'W';
 									}
 									
-									if(map[i + 1] == '.' || map[i + 1] == 'd' || map[i + 1] == '|' || map[i + 1] == '#') {
+									if(map[i + 1] == '.' || map[i + 1] == 'd' || map[i + 1] == '|' || map[i + 1] == '#' || map[i + 1] == 'l') {
 										if(!slow)
 											Thread.sleep(160);
 										else
@@ -558,7 +558,7 @@ public class Main extends JPanel {
 									}
 								}
 								
-								if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'd' || map[i + WIDTH] == '|' || map[i + WIDTH] == '#')
+								if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'd' || map[i + WIDTH] == '|' || map[i + WIDTH] == '#' || map[i + WIDTH] == 'l')
 									map[i + WIDTH] = 'W';
 								
 							} else if(noWater) {
