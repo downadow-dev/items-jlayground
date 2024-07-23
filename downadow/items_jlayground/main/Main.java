@@ -161,9 +161,11 @@ public class Main extends JPanel {
 	
 	public static void main(String[] args) {
 		try {
-			/* загрузка карты */
+			/* загрузка карты и поведения */
 			
 			Scanner sc = new Scanner(new File(".map"));
+			behavior = sc.nextLine();
+			
 			int ii = 0;
 			while(sc.hasNextLine()) {
 				char[] line = sc.nextLine().toCharArray();
@@ -318,6 +320,7 @@ public class Main extends JPanel {
 							
 							Files.deleteIfExists(Paths.get(".map"));
 							FileWriter fw = new FileWriter(".map");
+							fw.write(behavior + "\n");
 							int iii = 0;
 							for(int i = 0; i < HEIGHT; i++) {
 								for(int ii = 0; ii < WIDTH; ii++) {
