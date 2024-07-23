@@ -1215,6 +1215,7 @@ public class Main extends JPanel {
 			
 			g.setColor(new Color(255, 255, 255));
 			g.drawString("" + selectedBlockAddr(), 15, 40);
+			try {g.drawString("" + map[selectedBlockAddr()], 65, 40);} catch(ArrayIndexOutOfBoundsException e) {}
 			
 			g.setColor(new Color(250, 250, 250));
 			g.setFont(new Font("Monospaced", Font.BOLD, 20));
