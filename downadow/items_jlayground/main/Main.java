@@ -23,6 +23,7 @@ public class Main extends JPanel {
 	private static boolean[] forBoom = new boolean[WIDTH * HEIGHT];
 	
 	private static String behavior = "";
+	private static int behaviorSelected = 0;
 	
 	private static boolean ui = true;
 	/* блокировка управления */
@@ -748,24 +749,34 @@ public class Main extends JPanel {
 							String[] behaviorSplitted = behavior.split(" ");
 							
 							for(int i = 0; i < behaviorSplitted.length; i++) {
-								if(behaviorSplitted[i].split(":")[0].equals("move")) {
-									map[Integer.parseInt(behaviorSplitted[i].split(":")[2])] = map[Integer.parseInt(behaviorSplitted[i].split(":")[1])];
-									map[Integer.parseInt(behaviorSplitted[i].split(":")[1])] = '.';
-								} else if(behaviorSplitted[i].split(":")[0].equals("copy")) {
-									map[Integer.parseInt(behaviorSplitted[i].split(":")[2])] = map[Integer.parseInt(behaviorSplitted[i].split(":")[1])];
-								} else if(behaviorSplitted[i].split(":")[0].equals("replace")) {
-									map[Integer.parseInt(behaviorSplitted[i].split(":")[1])] = behaviorSplitted[i].split(":")[2].toCharArray()[0];
-								} else if(behaviorSplitted[i].split(":")[0].equals("sleep")) {
-									Thread.sleep(Integer.parseInt(behaviorSplitted[i].split(":")[1]));
-								} else if(behaviorSplitted[i].split(":")[0].equals("boom")) {
-									boom(Integer.parseInt(behaviorSplitted[i].split(":")[1]));
+								if(behaviorSplitted[i].split(":")[0].equals("select")) {
+									behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
+								} else if(behaviorSplitted[i].split(":")[0].equals("up")) {
+									map[behaviorSelected - WIDTH] = map[behaviorSelected];
+									map[behaviorSelected] = '.';
+									behaviorSelected -= WIDTH;
+								} else if(behaviorSplitted[i].split(":")[0].equals("down")) {
+									map[behaviorSelected + WIDTH] = map[behaviorSelected];
+									map[behaviorSelected] = '.';
+									behaviorSelected += WIDTH;
+								} else if(behaviorSplitted[i].split(":")[0].equals("right")) {
+									map[behaviorSelected + 1] = map[behaviorSelected];
+									map[behaviorSelected] = '.';
+									behaviorSelected++;
+								} else if(behaviorSplitted[i].split(":")[0].equals("left")) {
+									map[behaviorSelected - 1] = map[behaviorSelected];
+									map[behaviorSelected] = '.';
+									behaviorSelected--;
 								} else if(behaviorSplitted[i].split(":")[0].equals("fire")) {
-									fire(Integer.parseInt(behaviorSplitted[i].split(":")[1]));
+									fire(behaviorSelected);
 								} else if(behaviorSplitted[i].split(":")[0].equals("fire2")) {
-									fire2(Integer.parseInt(behaviorSplitted[i].split(":")[1]));
-								} else if(behaviorSplitted[i].split(":")[0].equals("stop")) {
-									behavior = "";
-									break;
+									fire2(behaviorSelected);
+								} else if(behaviorSplitted[i].split(":")[0].equals("boom")) {
+									boom(behaviorSelected);
+								} else if(behaviorSplitted[i].split(":")[0].equals("set")) {
+									map[behaviorSelected] = behaviorSplitted[i].split(":")[1].toCharArray()[0];
+								} else {
+									Thread.sleep(Integer.parseInt(behaviorSplitted[i]));
 								}
 							}
 						}
