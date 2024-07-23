@@ -749,7 +749,9 @@ public class Main extends JPanel {
 							String[] behaviorSplitted = behavior.split(" ");
 							
 							for(int i = 0; i < behaviorSplitted.length; i++) {
-								if(behaviorSplitted[i].split(":")[0].equals("select")) {
+								if(behaviorSplitted[i].isEmpty())
+									continue;
+								else if(behaviorSplitted[i].split(":")[0].equals("select")) {
 									behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
 								} else if(behaviorSplitted[i].split(":")[0].equals("up")) {
 									map[behaviorSelected - WIDTH] = map[behaviorSelected];
@@ -766,6 +768,18 @@ public class Main extends JPanel {
 								} else if(behaviorSplitted[i].split(":")[0].equals("left")) {
 									map[behaviorSelected - 1] = map[behaviorSelected];
 									map[behaviorSelected] = '.';
+									behaviorSelected--;
+								} else if(behaviorSplitted[i].split(":")[0].equals("copy_up")) {
+									map[behaviorSelected - WIDTH] = map[behaviorSelected];
+									behaviorSelected -= WIDTH;
+								} else if(behaviorSplitted[i].split(":")[0].equals("copy_down")) {
+									map[behaviorSelected + WIDTH] = map[behaviorSelected];
+									behaviorSelected += WIDTH;
+								} else if(behaviorSplitted[i].split(":")[0].equals("copy_right")) {
+									map[behaviorSelected + 1] = map[behaviorSelected];
+									behaviorSelected++;
+								} else if(behaviorSplitted[i].split(":")[0].equals("copy_left")) {
+									map[behaviorSelected - 1] = map[behaviorSelected];
 									behaviorSelected--;
 								} else if(behaviorSplitted[i].split(":")[0].equals("fire")) {
 									fire(behaviorSelected);
