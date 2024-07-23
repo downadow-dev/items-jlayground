@@ -776,7 +776,7 @@ public class Main extends JPanel {
 								} else if(behaviorSplitted[i].split(":")[0].equals("set")) {
 									map[behaviorSelected] = behaviorSplitted[i].split(":")[1].toCharArray()[0];
 								} else {
-									Thread.sleep(Integer.parseInt(behaviorSplitted[i]));
+									Thread.sleep(!slow ? Integer.parseInt(behaviorSplitted[i]) : Integer.parseInt(behaviorSplitted[i]) * 2);
 								}
 							}
 						}
