@@ -1214,7 +1214,7 @@ public class Main extends JPanel {
 				g.drawString("Введите символ...", 15, 20);
 			
 			g.setColor(new Color(255, 255, 255));
-			g.drawString("" + selectedBlockAddr(), 15, 50);
+			g.drawString("" + selectedBlockAddr(), 15, 40);
 			
 			g.setColor(new Color(250, 250, 250));
 			g.setFont(new Font("Monospaced", Font.BOLD, 20));
