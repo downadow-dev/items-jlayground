@@ -3,6 +3,8 @@ package downadow.items_jlayground.main;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Font;
@@ -19,6 +21,8 @@ public class Main extends JPanel {
 	private static char[] map = new char[WIDTH * HEIGHT];
 	
 	private static boolean[] forBoom = new boolean[WIDTH * HEIGHT];
+	
+	private static String behavior = "";
 	
 	private static boolean ui = true;
 	/* блокировка управления */
@@ -240,6 +244,46 @@ public class Main extends JPanel {
 						for(int i = selectedBlockAddr() - WIDTH; map[i] != '.'; i -= WIDTH)
 							map[i] = map[selectedBlockAddr()];
 						fill = false;
+						return;
+					}
+					/* изменение поведения */
+					else if(e.getKeyCode() == KeyEvent.VK_F5) {
+						JFrame sb_fr = new JFrame("set behavior");
+						sb_fr.setAlwaysOnTop(true);
+						sb_fr.setSize(320, 140);
+						sb_fr.setResizable(false);
+						sb_fr.setLocationRelativeTo(null);
+						JPanel sb_p = new JPanel();
+						sb_p.setBounds(0, 0, 320, 140);
+						sb_fr.setLayout(null);
+						JTextField sb_tf = new JTextField(25);
+						sb_tf.setText(behavior);
+						JButton sb_b = new JButton("OK");
+		
+						sb_tf.addKeyListener(new KeyListener() {
+							public void keyPressed(KeyEvent e) {
+								if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+									behavior = sb_tf.getText();
+									sb_fr.setVisible(false);
+								}
+							}
+							public void keyTyped(KeyEvent e) {}
+							public void keyReleased(KeyEvent e) {}
+						});
+		
+						sb_b.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								behavior = sb_tf.getText();
+								sb_fr.setVisible(false);
+							}
+							public void keyTyped(KeyEvent e) {}
+							public void keyReleased(KeyEvent e) {}
+						});
+		
+						sb_p.add(sb_tf);
+						sb_p.add(sb_b);
+						sb_fr.add(sb_p);
+						sb_fr.setVisible(true);
 						return;
 					}
 					
@@ -691,6 +735,45 @@ public class Main extends JPanel {
 				}
 			}
 		}.start();
+		
+		/* выполнение поведения */
+		new Thread() {
+			public void run() {
+				while(true) {
+					try {
+						if(!behavior.isEmpty()) {
+							String[] behaviorSplitted = behavior.split(" ");
+							
+							for(int i = 0; i < behaviorSplitted.length; i++) {
+								if(behaviorSplitted[i].split(":")[0].equals("move")) {
+									map[Integer.parseInt(behaviorSplitted[i].split(":")[2])] = map[Integer.parseInt(behaviorSplitted[i].split(":")[1])];
+									map[Integer.parseInt(behaviorSplitted[i].split(":")[1])] = '.';
+								} else if(behaviorSplitted[i].split(":")[0].equals("copy")) {
+									map[Integer.parseInt(behaviorSplitted[i].split(":")[2])] = map[Integer.parseInt(behaviorSplitted[i].split(":")[1])];
+								} else if(behaviorSplitted[i].split(":")[0].equals("replace")) {
+									map[Integer.parseInt(behaviorSplitted[i].split(":")[1])] = behaviorSplitted[i].split(":")[2].toCharArray()[0];
+								} else if(behaviorSplitted[i].split(":")[0].equals("sleep")) {
+									Thread.sleep(Integer.parseInt(behaviorSplitted[i].split(":")[1]));
+								} else if(behaviorSplitted[i].split(":")[0].equals("boom")) {
+									boom(Integer.parseInt(behaviorSplitted[i].split(":")[1]));
+								} else if(behaviorSplitted[i].split(":")[0].equals("fire")) {
+									fire(Integer.parseInt(behaviorSplitted[i].split(":")[1]));
+								} else if(behaviorSplitted[i].split(":")[0].equals("fire2")) {
+									fire2(Integer.parseInt(behaviorSplitted[i].split(":")[1]));
+								} else if(behaviorSplitted[i].split(":")[0].equals("stop")) {
+									behavior = "";
+									break;
+								}
+							}
+						}
+						
+						Thread.sleep(500);
+					} catch(Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}.start();
 	}
 	
 	public void paint(Graphics g) {
@@ -1127,6 +1210,9 @@ public class Main extends JPanel {
 			else
 				g.drawString("Введите символ...", 15, 20);
 			
+			g.setColor(new Color(255, 255, 255));
+			g.drawString("" + selectedBlockAddr(), 15, 50);
+			
 			g.setColor(new Color(250, 250, 250));
 			g.setFont(new Font("Monospaced", Font.BOLD, 20));
 			
@@ -1140,7 +1226,7 @@ public class Main extends JPanel {
 				
 				g.drawString("<стрелки>.......:  перемещение, но если нажато <F4>, то выбор стороны для заполнения/замены", 20, 20);
 				g.drawString("<F1>............:  скрыть/показать эту помощь", 20, 40);
-				
+				g.drawString("<F5>............:  изменить поведение", 20, 60);
 				g.drawString("<ESC>...........:  скрыть интерфейс и сохранить карту, либо показать интерфейс", 20, 80);
 				g.drawString("<Backspace>.....:  удалить объект под прицелом", 20, 100);
 				
