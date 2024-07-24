@@ -22,6 +22,8 @@ public class Main extends JPanel {
 	
 	private static boolean[] forBoom = new boolean[WIDTH * HEIGHT];
 	
+	private static boolean ph = true;
+	
 	private static String behavior = "";
 	private static int behaviorSelected = 0;
 	
@@ -287,6 +289,14 @@ public class Main extends JPanel {
 						sb_p.add(sb_b);
 						sb_fr.add(sb_p);
 						sb_fr.setVisible(true);
+						return;
+					}
+					/* включение/выключение "физики" */
+					else if(e.getKeyCode() == KeyEvent.VK_F6 && !ph) {
+						ph = true;
+						return;
+					} else if(e.getKeyCode() == KeyEvent.VK_F6 && ph) {
+						ph = false;
 						return;
 					}
 					
@@ -585,92 +595,94 @@ public class Main extends JPanel {
 					try {
 						/* "физика" и пр. */
 						for(int i = 0; i < map.length - WIDTH; i++) {
-							if(selected == -1 && (map[i] == '@' ||  map[i] == 's' || map[i] == '|' ||  map[i] == 'd' || map[i] == '#' ||
-							    map[i] == 'l' || map[i] == 'c' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`') && (map[i + WIDTH] == '.' || map[i + WIDTH] == 'W' || map[i + WIDTH] == 'b' || map[i + WIDTH] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - WIDTH] != 'z')) {
-								map[i + WIDTH] = map[i];
-								map[i] = '.';
+							if(ph) {
+								if(selected == -1 && (map[i] == '@' ||  map[i] == 's' || map[i] == '|' ||  map[i] == 'd' || map[i] == '#' ||
+									map[i] == 'l' || map[i] == 'c' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`') && (map[i + WIDTH] == '.' || map[i + WIDTH] == 'W' || map[i + WIDTH] == 'b' || map[i + WIDTH] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - WIDTH] != 'z')) {
+									map[i + WIDTH] = map[i];
+									map[i] = '.';
+							
+									if(!slow)
+										Thread.sleep(30);
+									else
+										Thread.sleep(110);
+								} else if(map[i] == 'W' && !noWater) {
+									if(map[i - 1] == 'f')
+										map[i - 1] = 'b';
+									if(map[i + 1] == 'f')
+										map[i + 1] = 'b';
+									if(map[i + WIDTH] == 'f')
+										map[i + WIDTH] = 'b';
+									if(map[i - WIDTH] == 'f')
+										map[i - WIDTH] = 'b';
+							
+									if((map[i + WIDTH] != '.' && map[i + WIDTH] != 'W') || i + WIDTH * 2 > map.length) {
+										if(map[i - 1] == '.' || map[i - 1] == 'd' || map[i - 1] == '|' || map[i - 1] == '#' || map[i - 1] == 'l') {
+											if(!slow)
+												Thread.sleep(160);
+											else
+												Thread.sleep(400);
+											map[i - 1] = 'W';
+										}
 								
-								if(!slow)
-									Thread.sleep(30);
-								else
-									Thread.sleep(110);
-							} else if(map[i] == 'W' && !noWater) {
-								if(map[i - 1] == 'f')
-									map[i - 1] = 'b';
-								if(map[i + 1] == 'f')
-									map[i + 1] = 'b';
-								if(map[i + WIDTH] == 'f')
-									map[i + WIDTH] = 'b';
-								if(map[i - WIDTH] == 'f')
-									map[i - WIDTH] = 'b';
-								
-								if((map[i + WIDTH] != '.' && map[i + WIDTH] != 'W') || i + WIDTH * 2 > map.length) {
-									if(map[i - 1] == '.' || map[i - 1] == 'd' || map[i - 1] == '|' || map[i - 1] == '#' || map[i - 1] == 'l') {
-										if(!slow)
-											Thread.sleep(160);
-										else
-											Thread.sleep(400);
-										map[i - 1] = 'W';
+										if(map[i + 1] == '.' || map[i + 1] == 'd' || map[i + 1] == '|' || map[i + 1] == '#' || map[i + 1] == 'l') {
+											if(!slow)
+												Thread.sleep(160);
+											else
+												Thread.sleep(400);
+											map[i + 1] = 'W';
+										}
 									}
-									
-									if(map[i + 1] == '.' || map[i + 1] == 'd' || map[i + 1] == '|' || map[i + 1] == '#' || map[i + 1] == 'l') {
-										if(!slow)
-											Thread.sleep(160);
-										else
-											Thread.sleep(400);
-										map[i + 1] = 'W';
-									}
+							
+									if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'd' || map[i + WIDTH] == '|' || map[i + WIDTH] == '#' || map[i + WIDTH] == 'l')
+										map[i + WIDTH] = 'W';
+							
+								} else if(noWater) {
+									for(int ii = 0; ii < map.length; ii++)
+										if(map[ii] == 'W')
+											map[ii] = '.';
+									noWater = false;
+								} else if(map[i] == '/' && map[i + WIDTH] == '.')
+									map[i] = 'i';
+								else if(map[i] == '\\' && map[i + WIDTH] == '.')
+									map[i] = 'I';
+								else if(map[i] == 'i')
+									map[i] = '/';
+								else if(map[i] == 'I')
+									map[i] = '\\';
+								else if(map[i] == 'A') {
+									if(map[i - 1] == '.' || map[i - 1] == 'f' || map[i - 1] == 'W')
+										map[i - 1] = 'A';
+									if(map[i + 1] == '.' || map[i + 1] == 'f' || map[i + 1] == 'W')
+										map[i + 1] = 'A';
+									if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'f' || map[i + WIDTH] == 'W')
+										map[i + WIDTH] = 'A';
+									if(map[i - WIDTH] == '.' || map[i - WIDTH] == 'f' || map[i - WIDTH] == 'W')
+										map[i - WIDTH] = 'A';
+							
+									Thread.sleep(!slow ? 50 : 500);
+								} else if(map[i] == ':' && (map[i - 1] == 'z' || map[i + 1] == 'z' || map[i - WIDTH] == 'z') || map[i + WIDTH] == 'z') {
+									continue;
+								} else if(map[i] == ':' && map[i - 1] == '.') {
+									map[i] = '.';
+									map[i - 1] = ':';
+									Thread.sleep(!slow ? 400 : 1000);
+								} else if(map[i] == ':'  && map[i - 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH - 1] == '.') {
+									map[i] = '.';
+									map[i - WIDTH - 1] = ':';
+									Thread.sleep(!slow ? 400 : 1000);
+								} else if(map[i] == ';'  && map[i + 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH + 1] == '.') {
+									map[i] = '.';
+									map[i - WIDTH + 1] = ';';
+									Thread.sleep(!slow ? 400 : 1000);
+								} else if(map[i] == ':') {
+									map[i] = ';';
+								} else if(map[i] == ';' && map[i + 1] == '.') {
+									map[i] = '.';
+									map[i + 1] = ';';
+									Thread.sleep(!slow ? 400 : 1000);
+								} else if(map[i] == ';') {
+									map[i] = ':';
 								}
-								
-								if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'd' || map[i + WIDTH] == '|' || map[i + WIDTH] == '#' || map[i + WIDTH] == 'l')
-									map[i + WIDTH] = 'W';
-								
-							} else if(noWater) {
-								for(int ii = 0; ii < map.length; ii++)
-									if(map[ii] == 'W')
-										map[ii] = '.';
-								noWater = false;
-							} else if(map[i] == '/' && map[i + WIDTH] == '.')
-								map[i] = 'i';
-							else if(map[i] == '\\' && map[i + WIDTH] == '.')
-								map[i] = 'I';
-							else if(map[i] == 'i')
-								map[i] = '/';
-							else if(map[i] == 'I')
-								map[i] = '\\';
-							else if(map[i] == 'A') {
-								if(map[i - 1] == '.' || map[i - 1] == 'f' || map[i - 1] == 'W')
-									map[i - 1] = 'A';
-								if(map[i + 1] == '.' || map[i + 1] == 'f' || map[i + 1] == 'W')
-									map[i + 1] = 'A';
-								if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'f' || map[i + WIDTH] == 'W')
-									map[i + WIDTH] = 'A';
-								if(map[i - WIDTH] == '.' || map[i - WIDTH] == 'f' || map[i - WIDTH] == 'W')
-									map[i - WIDTH] = 'A';
-								
-								Thread.sleep(!slow ? 50 : 500);
-							} else if(map[i] == ':' && (map[i - 1] == 'z' || map[i + 1] == 'z' || map[i - WIDTH] == 'z') || map[i + WIDTH] == 'z') {
-								continue;
-							} else if(map[i] == ':' && map[i - 1] == '.') {
-								map[i] = '.';
-								map[i - 1] = ':';
-								Thread.sleep(!slow ? 400 : 1000);
-							} else if(map[i] == ':'  && map[i - 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH - 1] == '.') {
-								map[i] = '.';
-								map[i - WIDTH - 1] = ':';
-								Thread.sleep(!slow ? 400 : 1000);
-							} else if(map[i] == ';'  && map[i + 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH + 1] == '.') {
-								map[i] = '.';
-								map[i - WIDTH + 1] = ';';
-								Thread.sleep(!slow ? 400 : 1000);
-							} else if(map[i] == ':') {
-								map[i] = ';';
-							} else if(map[i] == ';' && map[i + 1] == '.') {
-								map[i] = '.';
-								map[i + 1] = ';';
-								Thread.sleep(!slow ? 400 : 1000);
-							} else if(map[i] == ';') {
-								map[i] = ':';
 							}
 						}
 						Thread.sleep(30);
@@ -685,42 +697,44 @@ public class Main extends JPanel {
 			public void run() {
 				while(true) {
 					for(int i = 0; i < map.length; i++) {
-						try {
-							/* работа батута */
-							if(map[i] == '%' && (map[i - WIDTH] != '.' && map[i - WIDTH * 2] == '.' && map[i - WIDTH * 3] == '.' && map[i - WIDTH * 4] == '.')) {
-								map[i - WIDTH * 4] = map[i - WIDTH];
-								map[i - WIDTH] = '.';
-							}
-							/* работа порталов */
-							else if(map[i] == 'p') {
-								for(int ii = 0; ii < map.length - 1; ii++) {
-									if(map[ii] == 'P') {
-										if(map[i + 1] != '.')
-											map[ii - 1] = map[i + 1];
-										if(map[i - 1] != '.')
-											map[ii + 1] = map[i - 1];
-										if(map[i - WIDTH] != '.')
-											map[ii + WIDTH] = map[i - WIDTH];
-									
-										map[i - 1] = '.';
-										map[i + 1] = '.';
-										map[i - WIDTH] = '.';
-										break;
+						if(ph) {
+							try {
+								/* работа батута */
+								if(map[i] == '%' && (map[i - WIDTH] != '.' && map[i - WIDTH * 2] == '.' && map[i - WIDTH * 3] == '.' && map[i - WIDTH * 4] == '.')) {
+									map[i - WIDTH * 4] = map[i - WIDTH];
+									map[i - WIDTH] = '.';
+								}
+								/* работа порталов */
+								else if(map[i] == 'p') {
+									for(int ii = 0; ii < map.length - 1; ii++) {
+										if(map[ii] == 'P') {
+											if(map[i + 1] != '.')
+												map[ii - 1] = map[i + 1];
+											if(map[i - 1] != '.')
+												map[ii + 1] = map[i - 1];
+											if(map[i - WIDTH] != '.')
+												map[ii + WIDTH] = map[i - WIDTH];
+								
+											map[i - 1] = '.';
+											map[i + 1] = '.';
+											map[i - WIDTH] = '.';
+											break;
+										}
 									}
 								}
+								/* работа ускорения */
+								else if(map[i] == '~' && map[i - WIDTH] != '.' && map[i - WIDTH] != 'W' && map[i - WIDTH] != '~' && map[i - WIDTH + 1] == '.') {
+									map[i - WIDTH + 1] = map[i - WIDTH];
+									map[i - WIDTH] = '.';
+									Thread.sleep(!slow ? 200 : 500);
+								} else if(map[i] == ',' && map[i - WIDTH] != '.' && map[i - WIDTH] != 'W' && map[i - WIDTH] != '~' && map[i - WIDTH - 1] == '.') {
+									map[i - WIDTH - 1] = map[i - WIDTH];
+									map[i - WIDTH] = '.';
+									Thread.sleep(!slow ? 200 : 500);
+								}
+							} catch(Exception e) {
+								e.printStackTrace();
 							}
-							/* работа ускорения */
-							else if(map[i] == '~' && map[i - WIDTH] != '.' && map[i - WIDTH] != 'W' && map[i - WIDTH] != '~' && map[i - WIDTH + 1] == '.') {
-								map[i - WIDTH + 1] = map[i - WIDTH];
-								map[i - WIDTH] = '.';
-								Thread.sleep(!slow ? 200 : 500);
-							} else if(map[i] == ',' && map[i - WIDTH] != '.' && map[i - WIDTH] != 'W' && map[i - WIDTH] != '~' && map[i - WIDTH - 1] == '.') {
-								map[i - WIDTH - 1] = map[i - WIDTH];
-								map[i - WIDTH] = '.';
-								Thread.sleep(!slow ? 200 : 500);
-							}
-						} catch(Exception e) {
-							e.printStackTrace();
 						}
 					}
 					try {Thread.sleep(40);} catch(Exception e) {}
@@ -1283,7 +1297,7 @@ public class Main extends JPanel {
 				
 				g.drawString("<стрелки>.......:  перемещение, но если нажато <F4>, то выбор стороны для заполнения/замены", 20, 20);
 				g.drawString("<F1>............:  скрыть/показать эту помощь", 20, 40);
-				g.drawString("<F5>............:  изменить поведение", 20, 60);
+				g.drawString("<F5>............:  изменить поведение; <F6> выключает/включает \"физику\"", 20, 60);
 				g.drawString("<ESC>...........:  скрыть интерфейс и сохранить карту, либо показать интерфейс", 20, 80);
 				g.drawString("<Backspace>.....:  удалить объект под прицелом", 20, 100);
 				
