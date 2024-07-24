@@ -30,6 +30,7 @@ public class Main extends JPanel {
 	
 	private static String behavior = "";
 	private static int behaviorSelected = 0;
+	private static int[] behaviorSelectedArray = new int[128];
 	
 	private static boolean ui = true;
 	/* блокировка управления */
@@ -254,7 +255,7 @@ public class Main extends JPanel {
 						} else if(e.getKeyCode() == KeyEvent.VK_B) {
 							behavior += "boom ";
 						} else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
-							behavior += "select:" + selectedBlockAddr() + " ";
+							behavior += "sel:" + selectedBlockAddr() + " ";
 							behaviorSelected2 = selectedBlockAddr();
 						} else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 							select = true;
@@ -297,6 +298,43 @@ public class Main extends JPanel {
 							behavior = "";
 							for(int i = 0; i < behavior2.length - 1; i++)
 								behavior += behavior2[i] + " ";
+						} else if(e.getKeyCode() == KeyEvent.VK_INSERT) {
+							JFrame sb_fr = new JFrame("set behavior");
+							sb_fr.setAlwaysOnTop(true);
+							sb_fr.setSize(560, 140);
+							sb_fr.setResizable(false);
+							sb_fr.setLocationRelativeTo(null);
+							JPanel sb_p = new JPanel();
+							sb_p.setBounds(0, 0, 560, 140);
+							sb_fr.setLayout(null);
+							JTextField sb_tf = new JTextField(48);
+							sb_tf.setText(behavior);
+							JButton sb_b = new JButton("OK");
+		
+							sb_tf.addKeyListener(new KeyListener() {
+								public void keyPressed(KeyEvent e) {
+									if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+										behavior = sb_tf.getText();
+										sb_fr.setVisible(false);
+									}
+								}
+								public void keyTyped(KeyEvent e) {}
+								public void keyReleased(KeyEvent e) {}
+							});
+		
+							sb_b.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									behavior = sb_tf.getText();
+									sb_fr.setVisible(false);
+								}
+								public void keyTyped(KeyEvent e) {}
+								public void keyReleased(KeyEvent e) {}
+							});
+		
+							sb_p.add(sb_tf);
+							sb_p.add(sb_b);
+							sb_fr.add(sb_p);
+							sb_fr.setVisible(true);
 						}
 						
 						return;
@@ -836,13 +874,13 @@ public class Main extends JPanel {
 			public void run() {
 				while(true) {
 					try {
-						if(!behavior.isEmpty()) {
+						if(!behavior.isEmpty() && ph) {
 							String[] behaviorSplitted = behavior.split(" ");
 							
 							for(int i = 0; i < behaviorSplitted.length; i++) {
 								if(behaviorSplitted[i].isEmpty())
 									continue;
-								else if(behaviorSplitted[i].split(":")[0].equals("select")) {
+								else if(behaviorSplitted[i].split(":")[0].equals("sel")) {
 									behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
 								} else if(behaviorSplitted[i].split(":")[0].equals("up")) {
 									map[behaviorSelected - WIDTH] = map[behaviorSelected];
@@ -1363,7 +1401,7 @@ public class Main extends JPanel {
 				
 				iii = 0;
 				loop:
-				for(int i = 0; i < 11; i++) {
+				for(int i = 0; i < 8; i++) {
 					for(int ii = 0; ii < 120; ii++, iii++) {
 						try {
 							g.drawString("" + behavior2[iii], 15 + ii * 8, 80 + i * 20);
