@@ -202,7 +202,7 @@ public class Main extends JPanel {
 				try {
 					/* режим программирования поведения */
 					if(programmingMode) {
-						if(select && e.getKeyChar() != ' ' && e.getKeyChar() != ':') {
+						if(select && e.getKeyChar() != ' ' && e.getKeyChar() != ':' && e.getKeyChar() != (char)65535) {
 							behavior += "set:" + e.getKeyChar() + " ";
 							select = false;
 							return;
