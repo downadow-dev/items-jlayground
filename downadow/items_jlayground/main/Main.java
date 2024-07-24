@@ -40,7 +40,7 @@ public class Main extends JPanel {
 	
 	private static boolean noWater = false;
 	
-	private static boolean select = false;
+	private static boolean select = false, selectz = false;
 	
 	private static boolean fill = false;
 	
@@ -207,6 +207,22 @@ public class Main extends JPanel {
 							behavior += "set:" + e.getKeyChar() + " ";
 							select = false;
 							return;
+						} else if(selectz && e.getKeyCode() == KeyEvent.VK_W) {
+							behavior += "wait:up ";
+							selectz = false;
+							return;
+						} else if(selectz && e.getKeyCode() == KeyEvent.VK_S) {
+							behavior += "wait:down ";
+							selectz = false;
+							return;
+						} else if(selectz && e.getKeyCode() == KeyEvent.VK_A) {
+							behavior += "wait:left ";
+							selectz = false;
+							return;
+						} else if(selectz && e.getKeyCode() == KeyEvent.VK_D) {
+							behavior += "wait:right ";
+							selectz = false;
+							return;
 						}
 						
 						if(e.getKeyCode() == KeyEvent.VK_HOME) {
@@ -293,7 +309,11 @@ public class Main extends JPanel {
 							behavior += "~1000 ";
 						else if(e.getKeyCode() == KeyEvent.VK_MINUS)
 							behavior += "~5000 ";
-						else if(e.getKeyChar() == (char)24 /* Ctrl+X */)
+						else if(e.getKeyChar() == 'Z')
+							behavior += "wait ";
+						else if(e.getKeyChar() == 'z') {
+							selectz = true;
+						} else if(e.getKeyChar() == (char)24 /* Ctrl+X */)
 							behavior += "no_sel ";
 						else if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
 							String[] behavior2 = behavior.split(" ");
@@ -944,6 +964,24 @@ public class Main extends JPanel {
 									map[behaviorSelected] = behaviorSplitted[i].split(":")[1].toCharArray()[0];
 								} else if(behaviorSplitted[i].startsWith("~")) {
 									Thread.sleep(!slow ? Integer.parseInt(behaviorSplitted[i].replace("~", "")) : Integer.parseInt(behaviorSplitted[i].replace("~", "")) * 2);
+								} else if(behaviorSplitted[i].equals("wait:up")) {
+									while(map[behaviorSelected - WIDTH] == '.')
+										Thread.sleep(100);
+								} else if(behaviorSplitted[i].equals("wait:down")) {
+									while(map[behaviorSelected + WIDTH] == '.')
+										Thread.sleep(100);
+								} else if(behaviorSplitted[i].equals("wait:right")) {
+									while(map[behaviorSelected + 1] == '.')
+										Thread.sleep(100);
+								} else if(behaviorSplitted[i].equals("wait:left")) {
+									while(map[behaviorSelected - 1] == '.')
+										Thread.sleep(100);
+								} else if(behaviorSplitted[i].equals("wait")) {
+									while(map[behaviorSelected - 1] == '.'     &&
+									      map[behaviorSelected + 1] == '.'     &&
+									      map[behaviorSelected + WIDTH] == '.' &&
+									      map[behaviorSelected - WIDTH] == '.')
+										Thread.sleep(50);
 								}
 							}
 						}
@@ -1397,7 +1435,7 @@ public class Main extends JPanel {
 				iii = 0;
 				loop:
 				for(int i = 0; i < 8; i++) {
-					for(int ii = 0; ii < 120; ii++, iii++) {
+					for(int ii = 0; ii < 128; ii++, iii++) {
 						try {
 							g.drawString("" + behavior2[iii], 15 + ii * 7, 80 + i * 20);
 						} catch(ArrayIndexOutOfBoundsException e) {
