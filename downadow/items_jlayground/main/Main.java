@@ -229,16 +229,16 @@ public class Main extends JPanel {
 							behavior = "";
 							behaviorSelected2 = -1;
 						} else if(e.getKeyChar() == 'W') {
-							behavior += "copy_up ";
+							behavior += "up:copy ";
 							behaviorSelected2 -= WIDTH;
 						} else if(e.getKeyChar() == 'S') {
-							behavior += "copy_down ";
+							behavior += "down:copy ";
 							behaviorSelected2 += WIDTH;
 						} else if(e.getKeyChar() == 'A') {
-							behavior += "copy_left ";
+							behavior += "left:copy ";
 							behaviorSelected2--;
 						} else if(e.getKeyChar() == 'D') {
-							behavior += "copy_right ";
+							behavior += "right:copy ";
 							behaviorSelected2++;
 						} else if(e.getKeyCode() == KeyEvent.VK_W) {
 							behavior += "up ";
@@ -253,16 +253,16 @@ public class Main extends JPanel {
 							behavior += "right ";
 							behaviorSelected2++;
 						} else if(e.getKeyCode() == KeyEvent.VK_I) {
-							behavior += "move_up ";
+							behavior += "up:lift ";
 							behaviorSelected2 -= WIDTH;
 						} else if(e.getKeyCode() == KeyEvent.VK_K) {
-							behavior += "move_down ";
+							behavior += "down:lift ";
 							behaviorSelected2 += WIDTH;
 						} else if(e.getKeyCode() == KeyEvent.VK_J) {
-							behavior += "move_left ";
+							behavior += "left:lift ";
 							behaviorSelected2--;
 						} else if(e.getKeyCode() == KeyEvent.VK_L) {
-							behavior += "move_right ";
+							behavior += "right:lift ";
 							behaviorSelected2++;
 						} else if(e.getKeyChar() == 'f') {
 							behavior += "fire ";
@@ -906,52 +906,52 @@ public class Main extends JPanel {
 									behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
 								} else if(behaviorSplitted[i].split(":")[0].equals("no_sel")) {
 									behaviorSelected = 0;
-								} else if(behaviorSplitted[i].split(":")[0].equals("up")) {
+								} else if(behaviorSplitted[i].equals("up")) {
 									map[behaviorSelected - WIDTH] = map[behaviorSelected];
 									map[behaviorSelected] = '.';
 									behaviorSelected -= WIDTH;
-								} else if(behaviorSplitted[i].split(":")[0].equals("down")) {
+								} else if(behaviorSplitted[i].equals("down")) {
 									map[behaviorSelected + WIDTH] = map[behaviorSelected];
 									map[behaviorSelected] = '.';
 									behaviorSelected += WIDTH;
-								} else if(behaviorSplitted[i].split(":")[0].equals("right")) {
+								} else if(behaviorSplitted[i].equals("right")) {
 									map[behaviorSelected + 1] = map[behaviorSelected];
 									map[behaviorSelected] = '.';
 									behaviorSelected++;
-								} else if(behaviorSplitted[i].split(":")[0].equals("left")) {
+								} else if(behaviorSplitted[i].equals("left")) {
 									map[behaviorSelected - 1] = map[behaviorSelected];
 									map[behaviorSelected] = '.';
 									behaviorSelected--;
-								} else if(behaviorSplitted[i].split(":")[0].equals("move_up")) {
+								} else if(behaviorSplitted[i].equals("up:lift")) {
 									map[behaviorSelected - WIDTH * 2] = map[behaviorSelected - WIDTH];
 									map[behaviorSelected - WIDTH] = map[behaviorSelected];
 									map[behaviorSelected] = '.';
 									behaviorSelected -= WIDTH;
-								} else if(behaviorSplitted[i].split(":")[0].equals("move_down")) {
+								} else if(behaviorSplitted[i].equals("down:lift")) {
 									map[behaviorSelected + WIDTH * 2] = map[behaviorSelected + WIDTH];
 									map[behaviorSelected + WIDTH] = map[behaviorSelected];
 									map[behaviorSelected] = '.';
 									behaviorSelected += WIDTH;
-								} else if(behaviorSplitted[i].split(":")[0].equals("move_right")) {
+								} else if(behaviorSplitted[i].equals("right:lift")) {
 									map[behaviorSelected + 1] = map[behaviorSelected + 1];
 									map[behaviorSelected + 1] = map[behaviorSelected];
 									map[behaviorSelected] = '.';
 									behaviorSelected++;
-								} else if(behaviorSplitted[i].split(":")[0].equals("move_left")) {
+								} else if(behaviorSplitted[i].equals("left:lift")) {
 									map[behaviorSelected - 1] = map[behaviorSelected - 1];
 									map[behaviorSelected - 1] = map[behaviorSelected];
 									map[behaviorSelected] = '.';
 									behaviorSelected--;
-								} else if(behaviorSplitted[i].split(":")[0].equals("copy_up")) {
+								} else if(behaviorSplitted[i].equals("up:copy")) {
 									map[behaviorSelected - WIDTH] = map[behaviorSelected];
 									behaviorSelected -= WIDTH;
-								} else if(behaviorSplitted[i].split(":")[0].equals("copy_down")) {
+								} else if(behaviorSplitted[i].equals("down:copy")) {
 									map[behaviorSelected + WIDTH] = map[behaviorSelected];
 									behaviorSelected += WIDTH;
-								} else if(behaviorSplitted[i].split(":")[0].equals("copy_right")) {
+								} else if(behaviorSplitted[i].equals("right:copy")) {
 									map[behaviorSelected + 1] = map[behaviorSelected];
 									behaviorSelected++;
-								} else if(behaviorSplitted[i].split(":")[0].equals("copy_left")) {
+								} else if(behaviorSplitted[i].equals("left:copy")) {
 									map[behaviorSelected - 1] = map[behaviorSelected];
 									behaviorSelected--;
 								} else if(behaviorSplitted[i].split(":")[0].equals("fire")) {
