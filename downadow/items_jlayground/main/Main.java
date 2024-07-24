@@ -253,13 +253,13 @@ public class Main extends JPanel {
 					else if(e.getKeyCode() == KeyEvent.VK_F5) {
 						JFrame sb_fr = new JFrame("set behavior");
 						sb_fr.setAlwaysOnTop(true);
-						sb_fr.setSize(320, 140);
+						sb_fr.setSize(560, 140);
 						sb_fr.setResizable(false);
 						sb_fr.setLocationRelativeTo(null);
 						JPanel sb_p = new JPanel();
-						sb_p.setBounds(0, 0, 320, 140);
+						sb_p.setBounds(0, 0, 560, 140);
 						sb_fr.setLayout(null);
-						JTextField sb_tf = new JTextField(25);
+						JTextField sb_tf = new JTextField(48);
 						sb_tf.setText(behavior);
 						JButton sb_b = new JButton("OK");
 		
@@ -402,6 +402,9 @@ public class Main extends JPanel {
 						/* поставить танк */
 						else if(e.getKeyChar() == '=')
 							map[selectedBlockAddr()] = '(';
+						/* поставить зелёный блок */
+						else if(e.getKeyChar() == 'G')
+							map[selectedBlockAddr()] = 'G';
 						/* поставить стекло */
 						else if(e.getKeyCode() == KeyEvent.VK_G && map[selectedBlockAddr() + WIDTH] != '.')
 							map[selectedBlockAddr()] = 'g';
@@ -769,6 +772,26 @@ public class Main extends JPanel {
 									map[behaviorSelected - 1] = map[behaviorSelected];
 									map[behaviorSelected] = '.';
 									behaviorSelected--;
+								} else if(behaviorSplitted[i].split(":")[0].equals("move_up")) {
+									map[behaviorSelected - WIDTH * 2] = map[behaviorSelected - WIDTH];
+									map[behaviorSelected - WIDTH] = map[behaviorSelected];
+									map[behaviorSelected] = '.';
+									behaviorSelected -= WIDTH;
+								} else if(behaviorSplitted[i].split(":")[0].equals("move_down")) {
+									map[behaviorSelected + WIDTH * 2] = map[behaviorSelected + WIDTH];
+									map[behaviorSelected + WIDTH] = map[behaviorSelected];
+									map[behaviorSelected] = '.';
+									behaviorSelected += WIDTH;
+								} else if(behaviorSplitted[i].split(":")[0].equals("move_right")) {
+									map[behaviorSelected + 1] = map[behaviorSelected + 1];
+									map[behaviorSelected + 1] = map[behaviorSelected];
+									map[behaviorSelected] = '.';
+									behaviorSelected++;
+								} else if(behaviorSplitted[i].split(":")[0].equals("move_left")) {
+									map[behaviorSelected - 1] = map[behaviorSelected - 1];
+									map[behaviorSelected - 1] = map[behaviorSelected];
+									map[behaviorSelected] = '.';
+									behaviorSelected--;
 								} else if(behaviorSplitted[i].split(":")[0].equals("copy_up")) {
 									map[behaviorSelected - WIDTH] = map[behaviorSelected];
 									behaviorSelected -= WIDTH;
@@ -916,6 +939,9 @@ public class Main extends JPanel {
 						g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
 					} else if(map[iii] == 'v') {
 						g.setColor(new Color(255, 0, 0));
+						g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
+					} else if(map[iii] == 'G') {
+						g.setColor(new Color(0, 255, 0));
 						g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
 					} else if(map[iii] == 'b') {
 						g.setColor(new Color(20, 20, 20));
@@ -1162,6 +1188,8 @@ public class Main extends JPanel {
 					
 					else if(Main.map[iii] == 'v')
 						g.drawImage(new ImageIcon("res/red_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
+					else if(Main.map[iii] == 'G')
+						g.drawImage(new ImageIcon("res/green_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
 					
 					else if((int)Main.map[iii] > (int)'0' && (int)Main.map[iii] < (int)'9')
 						g.drawImage(new ImageIcon("res/boom" + Main.map[iii] + ".png").getImage(), ii * 60 - 60, i * 60 - 60, 180, 180, null);
@@ -1269,7 +1297,7 @@ public class Main extends JPanel {
 				g.drawString("E...............:  поставить решётку", 20, 260);
 				g.drawString("rR..............:  поставить кирпичный блок", 20, 280);
 				g.drawString("L...............:  поставить лестницу", 20, 300);
-				g.drawString("G...............:  поставить стекло", 20, 320);
+				g.drawString("Gg..............:  поставить зелёный блок или стекло", 20, 320);
 				g.drawString("T...............:  поставить камень", 20, 340);
 				g.drawString("Y...............:  поставить золотой блок", 20, 360);
 				g.drawString("S...............:  поставить песок", 20, 380);
@@ -1285,7 +1313,7 @@ public class Main extends JPanel {
 				g.drawString("fF..............:  огонь; '$' --- радужный блок; '%' --- блок-батут", 20, 580);
 				g.drawString("<запятая>.......:  вода, для удаления всей воды нажмите '.'", 20, 600);
 				g.drawString("*...............:  бомба, которая не работает", 20, 620);
-				g.drawString("Z...............:  слизь (зелёный блок); '~' --- блок ускорения", 20, 640);
+				g.drawString("Z...............:  слизь; '~' --- блок ускорения", 20, 640);
 				
 				g.drawString("<F3>............:  тёмный/светлый режим; '+' для вставки буквы или других доступных символов; ';' --- ???", 20, 670);
 			}
