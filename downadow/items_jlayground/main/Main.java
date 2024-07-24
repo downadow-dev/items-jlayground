@@ -272,27 +272,29 @@ public class Main extends JPanel {
 							programmingMode = false;
 						
 						else if(e.getKeyCode() == KeyEvent.VK_0)
-							behavior += "50 ";
+							behavior += "~50 ";
 						else if(e.getKeyCode() == KeyEvent.VK_1)
-							behavior += "90 ";
+							behavior += "~100 ";
 						else if(e.getKeyCode() == KeyEvent.VK_2)
-							behavior += "200 ";
+							behavior += "~200 ";
 						else if(e.getKeyCode() == KeyEvent.VK_3)
-							behavior += "300 ";
+							behavior += "~300 ";
 						else if(e.getKeyCode() == KeyEvent.VK_4)
-							behavior += "400 ";
+							behavior += "~400 ";
 						else if(e.getKeyCode() == KeyEvent.VK_5)
-							behavior += "500 ";
+							behavior += "~500 ";
 						else if(e.getKeyCode() == KeyEvent.VK_6)
-							behavior += "600 ";
+							behavior += "~600 ";
 						else if(e.getKeyCode() == KeyEvent.VK_7)
-							behavior += "700 ";
+							behavior += "~700 ";
 						else if(e.getKeyCode() == KeyEvent.VK_8)
-							behavior += "800 ";
+							behavior += "~800 ";
 						else if(e.getKeyCode() == KeyEvent.VK_9)
-							behavior += "1000 ";
+							behavior += "~1000 ";
 						else if(e.getKeyCode() == KeyEvent.VK_MINUS)
-							behavior += "5000 ";
+							behavior += "~5000 ";
+						else if(e.getKeyChar() == (char)24 /* Ctrl+X */)
+							behavior += "no_sel ";
 						else if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
 							String[] behavior2 = behavior.split(" ");
 							behavior = "";
@@ -880,8 +882,10 @@ public class Main extends JPanel {
 							for(int i = 0; i < behaviorSplitted.length; i++) {
 								if(behaviorSplitted[i].isEmpty())
 									continue;
-								else if(behaviorSplitted[i].split(":")[0].equals("sel")) {
+								else if(behaviorSplitted[i].split(":")[0].equals("sel") && behaviorSelected == 0) {
 									behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
+								} else if(behaviorSplitted[i].split(":")[0].equals("no_sel")) {
+									behaviorSelected = 0;
 								} else if(behaviorSplitted[i].split(":")[0].equals("up")) {
 									map[behaviorSelected - WIDTH] = map[behaviorSelected];
 									map[behaviorSelected] = '.';
@@ -938,8 +942,8 @@ public class Main extends JPanel {
 									boom(behaviorSelected);
 								} else if(behaviorSplitted[i].split(":")[0].equals("set")) {
 									map[behaviorSelected] = behaviorSplitted[i].split(":")[1].toCharArray()[0];
-								} else {
-									Thread.sleep(!slow ? Integer.parseInt(behaviorSplitted[i]) : Integer.parseInt(behaviorSplitted[i]) * 2);
+								} else if(behaviorSplitted[i].startsWith("~")) {
+									Thread.sleep(!slow ? Integer.parseInt(behaviorSplitted[i].replace("~", "")) : Integer.parseInt(behaviorSplitted[i].replace("~", "")) * 2);
 								}
 							}
 						}
@@ -1087,19 +1091,8 @@ public class Main extends JPanel {
 					else if(map[iii] == 'N')
 						g.drawImage(new ImageIcon("res/block0.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'J') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
-							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
-						
-						g.drawImage(new ImageIcon("res/block1.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.setColor(new Color(0, 0, 0));
+						g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
 					} else if(map[iii] == 'O')
 						g.drawImage(new ImageIcon("res/block2.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'L')
@@ -1316,6 +1309,8 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("res/red_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
 					else if(Main.map[iii] == 'G')
 						g.drawImage(new ImageIcon("res/green_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
+					else if(Main.map[iii] == 'J')
+						g.drawImage(new ImageIcon("res/black_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
 					
 					else if((int)Main.map[iii] > (int)'0' && (int)Main.map[iii] < (int)'9')
 						g.drawImage(new ImageIcon("res/boom" + Main.map[iii] + ".png").getImage(), ii * 60 - 60, i * 60 - 60, 180, 180, null);
@@ -1404,7 +1399,7 @@ public class Main extends JPanel {
 				for(int i = 0; i < 8; i++) {
 					for(int ii = 0; ii < 120; ii++, iii++) {
 						try {
-							g.drawString("" + behavior2[iii], 15 + ii * 8, 80 + i * 20);
+							g.drawString("" + behavior2[iii], 15 + ii * 7, 80 + i * 20);
 						} catch(ArrayIndexOutOfBoundsException e) {
 							break loop;
 						}
