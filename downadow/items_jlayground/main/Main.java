@@ -24,6 +24,10 @@ public class Main extends JPanel {
 	
 	private static boolean ph = true;
 	
+	private static int behaviorSelected2 = -1;
+	
+	private static boolean programmingMode = false;
+	
 	private static String behavior = "";
 	private static int behaviorSelected = 0;
 	
@@ -196,6 +200,107 @@ public class Main extends JPanel {
 		fr.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				try {
+					/* режим программирования поведения */
+					if(programmingMode) {
+						if(select && e.getKeyChar() != ' ' && e.getKeyChar() != ':') {
+							behavior += "set:" + e.getKeyChar() + " ";
+							select = false;
+							return;
+						}
+						
+						if(e.getKeyCode() == KeyEvent.VK_HOME) {
+							behavior = "";
+							behaviorSelected2 = -1;
+						} else if(e.getKeyChar() == 'W') {
+							behavior += "copy_up ";
+							behaviorSelected2 -= WIDTH;
+						} else if(e.getKeyChar() == 'S') {
+							behavior += "copy_down ";
+							behaviorSelected2 += WIDTH;
+						} else if(e.getKeyChar() == 'A') {
+							behavior += "copy_left ";
+							behaviorSelected2--;
+						} else if(e.getKeyChar() == 'D') {
+							behavior += "copy_right ";
+							behaviorSelected2++;
+						} else if(e.getKeyCode() == KeyEvent.VK_W) {
+							behavior += "up ";
+							behaviorSelected2 -= WIDTH;
+						} else if(e.getKeyCode() == KeyEvent.VK_S) {
+							behavior += "down ";
+							behaviorSelected2 += WIDTH;
+						} else if(e.getKeyCode() == KeyEvent.VK_A) {
+							behavior += "left ";
+							behaviorSelected2--;
+						} else if(e.getKeyCode() == KeyEvent.VK_D) {
+							behavior += "right ";
+							behaviorSelected2++;
+						} else if(e.getKeyCode() == KeyEvent.VK_I) {
+							behavior += "move_up ";
+							behaviorSelected2 -= WIDTH;
+						} else if(e.getKeyCode() == KeyEvent.VK_K) {
+							behavior += "move_down ";
+							behaviorSelected2 += WIDTH;
+						} else if(e.getKeyCode() == KeyEvent.VK_J) {
+							behavior += "move_left ";
+							behaviorSelected2--;
+						} else if(e.getKeyCode() == KeyEvent.VK_L) {
+							behavior += "move_right ";
+							behaviorSelected2++;
+						} else if(e.getKeyChar() == 'f') {
+							behavior += "fire ";
+						} else if(e.getKeyCode() == KeyEvent.VK_F) {
+							behavior += "fire2 ";
+						} else if(e.getKeyCode() == KeyEvent.VK_B) {
+							behavior += "boom ";
+						} else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+							behavior += "select:" + selectedBlockAddr() + " ";
+							behaviorSelected2 = selectedBlockAddr();
+						} else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+							select = true;
+						}
+						else if(e.getKeyCode() == KeyEvent.VK_UP)
+							cameraStart -= WIDTH;
+						else if(e.getKeyCode() == KeyEvent.VK_DOWN)
+							cameraStart += WIDTH;
+						else if(e.getKeyCode() == KeyEvent.VK_RIGHT)
+							cameraStart++;
+						else if(e.getKeyCode() == KeyEvent.VK_LEFT)
+							cameraStart--;
+						else if(e.getKeyCode() == KeyEvent.VK_F5)
+							programmingMode = false;
+						
+						else if(e.getKeyCode() == KeyEvent.VK_0)
+							behavior += "50 ";
+						else if(e.getKeyCode() == KeyEvent.VK_1)
+							behavior += "90 ";
+						else if(e.getKeyCode() == KeyEvent.VK_2)
+							behavior += "200 ";
+						else if(e.getKeyCode() == KeyEvent.VK_3)
+							behavior += "300 ";
+						else if(e.getKeyCode() == KeyEvent.VK_4)
+							behavior += "400 ";
+						else if(e.getKeyCode() == KeyEvent.VK_5)
+							behavior += "500 ";
+						else if(e.getKeyCode() == KeyEvent.VK_6)
+							behavior += "600 ";
+						else if(e.getKeyCode() == KeyEvent.VK_7)
+							behavior += "700 ";
+						else if(e.getKeyCode() == KeyEvent.VK_8)
+							behavior += "800 ";
+						else if(e.getKeyCode() == KeyEvent.VK_9)
+							behavior += "1000 ";
+						else if(e.getKeyCode() == KeyEvent.VK_MINUS)
+							behavior += "5000 ";
+						else if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+							String[] behavior2 = behavior.split(" ");
+							behavior = "";
+							for(int i = 0; i < behavior2.length - 1; i++)
+								behavior += behavior2[i] + " ";
+						}
+						
+						return;
+					}
 					if(select && e.getKeyChar() != 65535) {
 						map[selectedBlockAddr()] = e.getKeyChar();
 						select = false;
@@ -251,44 +356,13 @@ public class Main extends JPanel {
 						fill = false;
 						return;
 					}
-					/* изменение поведения */
-					else if(e.getKeyCode() == KeyEvent.VK_F5) {
-						JFrame sb_fr = new JFrame("set behavior");
-						sb_fr.setAlwaysOnTop(true);
-						sb_fr.setSize(560, 140);
-						sb_fr.setResizable(false);
-						sb_fr.setLocationRelativeTo(null);
-						JPanel sb_p = new JPanel();
-						sb_p.setBounds(0, 0, 560, 140);
-						sb_fr.setLayout(null);
-						JTextField sb_tf = new JTextField(48);
-						sb_tf.setText(behavior);
-						JButton sb_b = new JButton("OK");
-		
-						sb_tf.addKeyListener(new KeyListener() {
-							public void keyPressed(KeyEvent e) {
-								if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-									behavior = sb_tf.getText();
-									sb_fr.setVisible(false);
-								}
-							}
-							public void keyTyped(KeyEvent e) {}
-							public void keyReleased(KeyEvent e) {}
-						});
-		
-						sb_b.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-								behavior = sb_tf.getText();
-								sb_fr.setVisible(false);
-							}
-							public void keyTyped(KeyEvent e) {}
-							public void keyReleased(KeyEvent e) {}
-						});
-		
-						sb_p.add(sb_tf);
-						sb_p.add(sb_b);
-						sb_fr.add(sb_p);
-						sb_fr.setVisible(true);
+					/* включить/выключить режим изменения поведения */
+					else if(e.getKeyCode() == KeyEvent.VK_F5 && !programmingMode) {
+						programmingMode = true;
+						return;
+					}
+					else if(e.getKeyCode() == KeyEvent.VK_F5 && programmingMode) {
+						programmingMode = false;
 						return;
 					}
 					/* включение/выключение "физики" */
@@ -1261,10 +1335,11 @@ public class Main extends JPanel {
 			for(int i = 0; i < HEIGHT; i++) {
 				for(int ii = 0; ii < WIDTH; ii++) {
 					try {
-						if(forBoom[iii]) {
+						if(forBoom[iii] && !programmingMode) {
 							g.drawImage(new ImageIcon("res/red.png").getImage(), ii * 60 - 60, i * 60, 180, 60, null);
 							g.drawImage(new ImageIcon("res/red.png").getImage(), ii * 60, i * 60 - 60, 60, 180, null);
-						}
+						} else if(behaviorSelected2 != -1 && iii == behaviorSelected2 && programmingMode)
+							g.drawImage(new ImageIcon("res/red.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} catch(ArrayIndexOutOfBoundsException e) {}
 					iii++;
 				}
@@ -1279,6 +1354,25 @@ public class Main extends JPanel {
 				g.drawString("" + fill((System.currentTimeMillis() - startTime) / 60000, 2) + ":" + fill((System.currentTimeMillis() - startTime) / 1000 % 60, 2), 15, 20);
 			else
 				g.drawString("Введите символ...", 15, 20);
+			
+			
+			if(programmingMode) {
+				g.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 11));
+				g.drawString("Режим программирования", 15, 60);
+				char[] behavior2 = behavior.toCharArray();
+				
+				iii = 0;
+				loop:
+				for(int i = 0; i < 11; i++) {
+					for(int ii = 0; ii < 120; ii++, iii++) {
+						try {
+							g.drawString("" + behavior2[iii], 15 + ii * 8, 80 + i * 20);
+						} catch(ArrayIndexOutOfBoundsException e) {
+							break loop;
+						}
+					}
+				}
+			}
 			
 			g.setColor(new Color(255, 255, 255));
 			g.drawString("" + selectedBlockAddr(), 15, 40);
