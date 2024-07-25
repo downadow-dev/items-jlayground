@@ -528,6 +528,9 @@ public class Main extends JPanel {
 						/* поставить блок-батут */
 						else if(e.getKeyChar() == '%')
 							map[selectedBlockAddr()] = '%';
+						/* поставить синий блок */
+						else if(e.getKeyChar() == 'E' && selected == -1)
+							map[selectedBlockAddr()] = 'E';
 						/* поставить решётку */
 						else if(e.getKeyCode() == KeyEvent.VK_E && selected == -1)
 							map[selectedBlockAddr()] = '#';
@@ -1172,6 +1175,10 @@ public class Main extends JPanel {
 						g.setColor(new Color(10, 10, 255));
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						g.drawRect(ii * 60 , i * 60, 60, 60);
+					} else if(map[iii] == 'E') {
+						g.setColor(new Color(0, 0, 255));
+						g.fillRect(ii * 60, i * 60, 60, 60);
+						g.drawRect(ii * 60 , i * 60, 60, 60);
 					} else if(map[iii] == 'z') {
 						g.setColor(new Color(0, 225, 0));
 						g.fillRect(ii * 60, i * 60, 60, 60);
@@ -1354,6 +1361,8 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("res/green_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
 					else if(Main.map[iii] == 'J')
 						g.drawImage(new ImageIcon("res/black_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
+					else if(Main.map[iii] == 'E')
+						g.drawImage(new ImageIcon("res/blue.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
 					
 					else if((int)Main.map[iii] > (int)'0' && (int)Main.map[iii] < (int)'9')
 						g.drawImage(new ImageIcon("res/boom" + Main.map[iii] + ".png").getImage(), ii * 60 - 60, i * 60 - 60, 180, 180, null);
@@ -1478,7 +1487,7 @@ public class Main extends JPanel {
 				
 				g.drawString("B...............:  поставить коричневый блок", 20, 220);
 				g.drawString("Xx..............:  поставить ящик", 20, 240);
-				g.drawString("E...............:  поставить решётку", 20, 260);
+				g.drawString("Ee..............:  поставить синий блок или решётку", 20, 260);
 				g.drawString("rR..............:  поставить кирпичный блок", 20, 280);
 				g.drawString("L...............:  поставить лестницу", 20, 300);
 				g.drawString("Gg..............:  поставить зелёный блок или стекло", 20, 320);
