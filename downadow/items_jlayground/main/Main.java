@@ -358,6 +358,11 @@ public class Main extends JPanel {
 							sb_fr.add(sb_p);
 							sb_fr.setVisible(true);
 						}
+						/* показать/скрыть помощь */
+						else if(e.getKeyCode() == KeyEvent.VK_F1 && !help && ui)
+							help = true;
+						else if(e.getKeyCode() == KeyEvent.VK_F1 && help && ui)
+							help = false;
 						
 						return;
 					}
@@ -1457,11 +1462,11 @@ public class Main extends JPanel {
 			
 			g.setFont(new Font("Monospaced", Font.PLAIN, 15));
 			
-			if(help) {
+			if(help && !programmingMode) {
 				g.drawImage(new ImageIcon("res/black.png").getImage(), 0, 0, 1024, 728, null);
 				
 				g.drawString("<стрелки>.......:  перемещение, но если нажато <F4>, то выбор стороны для заполнения/замены", 20, 20);
-				g.drawString("<F1>............:  скрыть/показать эту помощь", 20, 40);
+				g.drawString("<F1>............:  скрыть/показать эту помощь; для режима программирования другая помощь", 20, 40);
 				g.drawString("<F5>............:  изменить поведение; <F6> выключает/включает \"физику\"", 20, 60);
 				g.drawString("<ESC>...........:  скрыть интерфейс и сохранить карту, либо показать интерфейс", 20, 80);
 				g.drawString("<Backspace>.....:  удалить объект под прицелом", 20, 100);
@@ -1495,6 +1500,26 @@ public class Main extends JPanel {
 				g.drawString("Z...............:  слизь; '~' --- блок ускорения", 20, 640);
 				
 				g.drawString("<F3>............:  тёмный/светлый режим; '+' для вставки буквы или других доступных символов; ';' --- ???", 20, 670);
+			} else if(help && programmingMode) {
+				g.drawImage(new ImageIcon("res/black.png").getImage(), 0, 0, 1024, 728, null);
+				
+				g.drawString("<стрелки>.......:  перемещение", 20, 20);
+				g.drawString("wasd............:  up, left, down, right", 20, 40);
+				g.drawString("WASD............:  up:copy, left:copy, down:copy, right:copy", 20, 60);
+				g.drawString("ijkl............:  up:lift, left:lift, down:lift, right:lift", 20, 80);
+				g.drawString("fF..............:  fire, fire2", 20, 100);
+				g.drawString("b...............:  boom", 20, 120);
+				g.drawString("<Home>..........:  стереть весь код", 20, 140);
+				g.drawString("<Backspace>.....:  стереть последний блок кода", 20, 160);
+				g.drawString("<пробел>........:  sel:<...> (выбрать блок под прицелом)", 20, 180);
+				g.drawString("<Ctrl+X>........:  no_sel (убрать выделение)", 20, 200);
+				g.drawString("<Enter>.........:  set:<след. клавиша>", 20, 220);
+				g.drawString("<Insert>........:  изменение кода в текстовом режиме", 20, 240);
+				g.drawString("0123456789-.....:  ~<...> (приостановить выполнение на 50/100/200/.../1000/5000 миллисекунд", 20, 260);
+				g.drawString("Z...............:  wait (ждать любого столкновения)", 20, 280);
+				g.drawString("<z+w/a/s/d>.....:  wait:up/left/down/right (ждать столкновения в оперделённой стороне)", 20, 300);
+				g.drawString("<F5>............:  выход из режима программирования", 20, 320);
+				g.drawString("<F1>............:  скрыть/показать эту помощь", 20, 340);
 			}
 		}
 	}
