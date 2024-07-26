@@ -501,7 +501,7 @@ public class Main extends JPanel {
 						else if(e.getKeyCode() == KeyEvent.VK_F9) {
 							for(int i = map.length - WIDTH - 1; i > 0; i--) {
 								map[i + WIDTH] = map[i];
-								map[i] = 0;
+								map[i] = '.';
 							}
 						}
 						/*******************************/
