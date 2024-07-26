@@ -146,6 +146,27 @@ public class Main extends JPanel {
 						if(map[saved - 1] != 'R')     map[saved - 1] = '.';
 						if(map[saved + WIDTH] != 'R') map[saved + WIDTH] = '.';
 						if(map[saved - WIDTH] != 'R') map[saved - WIDTH] = '.';
+						
+						if(!(map[saved - 1 - WIDTH] >= '0' && map[saved - 1 - WIDTH] <= '9') && map[saved - 1 - WIDTH] != 'R' && map[saved - 1 - WIDTH] != '.') {
+							map[saved - 2 - WIDTH * 2] = map[saved - 1 - WIDTH];
+							map[saved - 1 - WIDTH] = '.';
+						}
+						
+						if(!(map[saved + 1 - WIDTH] >= '0' && map[saved + 1 - WIDTH] <= '9') && map[saved + 1 - WIDTH] != 'R' && map[saved + 1 - WIDTH] != '.') {
+							map[saved + 2 - WIDTH * 2] = map[saved + 1 - WIDTH];
+							map[saved + 1 - WIDTH] = '.';
+						}
+						
+						if(!(map[saved + 1 + WIDTH] >= '0' && map[saved + 1 + WIDTH] <= '9') && map[saved + 1 + WIDTH] != 'R' && map[saved + 1 + WIDTH] != '.') {
+							map[saved + 2 + WIDTH * 2] = map[saved + 1 + WIDTH];
+							map[saved + 1 + WIDTH] = '.';
+						}
+						
+						if(!(map[saved - 1 + WIDTH] >= '0' && map[saved - 1 + WIDTH] <= '9') && map[saved - 1 + WIDTH] != 'R' && map[saved - 1 + WIDTH] != '.') {
+							map[saved - 2 + WIDTH * 2] = map[saved - 1 + WIDTH];
+							map[saved - 1 + WIDTH] = '.';
+						}
+						
 						fire(saved - 2);
 						fire(saved + 2);
 						fire(saved + WIDTH * 2);
