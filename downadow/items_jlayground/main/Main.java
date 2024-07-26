@@ -858,7 +858,7 @@ public class Main extends JPanel {
 									map[i] = ':';
 								}
 								/* блоки в воздухе падают! */
-								else if(map[i] != '№' && map[i] != '.' && (map[i - 1] == '.' && map[i + 1] == '.' && map[i - WIDTH] == '.' && map[i + WIDTH] == '.' && map[i + WIDTH - 1] == '.' && map[i + WIDTH + 1] == '.' && map[i - WIDTH - 1] == '.' &&  map[i - WIDTH + 1] == '.')) {
+								else if(map[i] != '№' && selected == -1 && map[i] != '.' && map[i] != 'f' && map[i] != 'F' && !(map[i] >= '0' && map[i] <= '9') && (map[i - 1] == '.' && map[i + 1] == '.' && map[i - WIDTH] == '.' && map[i + WIDTH] == '.' && map[i + WIDTH - 1] == '.' && map[i + WIDTH + 1] == '.' && map[i - WIDTH - 1] == '.' && map[i - WIDTH + 1] == '.')) {
 									map[i + WIDTH] = map[i];
 									map[i] = '.';
 									
