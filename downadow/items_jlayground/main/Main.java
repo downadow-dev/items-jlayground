@@ -22,7 +22,7 @@ public class Main extends JPanel {
 	
 	private static boolean[] forBoom = new boolean[WIDTH * HEIGHT];
 	
-	private static boolean ph = true;
+	private static boolean ph = true, following = false;
 	
 	private static int behaviorSelected2 = -1;
 	
@@ -436,6 +436,14 @@ public class Main extends JPanel {
 						return;
 					} else if(e.getKeyCode() == KeyEvent.VK_F6 && ph) {
 						ph = false;
+						return;
+					}
+					/* включение/выключение следования за объектом */
+					else if(e.getKeyCode() == KeyEvent.VK_F7 && !following) {
+						following = true;
+						return;
+					}else if(e.getKeyCode() == KeyEvent.VK_F7 && following) {
+						following = false;
 						return;
 					}
 					
@@ -893,6 +901,12 @@ public class Main extends JPanel {
 					try {
 						if(selected != -1 && (map[selected] == '.' || map[selected] == 'W' || map[selected] == 'R'))
 							selected = -1;
+						
+						if(following && selected != -1)
+							cameraStart = selected - 8 - 5 * WIDTH;
+						else if(following && selected == -1)
+							following = false;
+						
 						fr.repaint();
 						Thread.sleep(30);
 					} catch(Exception e) {
@@ -1410,7 +1424,7 @@ public class Main extends JPanel {
 					}
 					
 					/* подсветка выбранного блока */
-					if(iii == selected && ui) {
+					if(iii == selected && ui && !following) {
 						g.setColor(new Color(0, 255, 0));
 						g.drawRect(ii * 60, i * 60, 60, 60);
 					}
@@ -1483,7 +1497,7 @@ public class Main extends JPanel {
 				g.drawString("<F1>............:  скрыть/показать эту помощь; для режима программирования другая помощь", 20, 40);
 				g.drawString("<F5>............:  изменить поведение; <F6> выключает/включает \"физику\"", 20, 60);
 				g.drawString("<ESC>...........:  скрыть интерфейс и сохранить карту, либо показать интерфейс", 20, 80);
-				g.drawString("<Backspace>.....:  удалить объект под прицелом", 20, 100);
+				g.drawString("<Backspace>.....:  удалить объект под прицелом; <F7> включает/выключает следование за выдел. объектом", 20, 100);
 				
 				g.drawString("<Delete>........:  удалить выделенный объект", 20, 130);
 				g.drawString("<Space>.........:  выделить объект под прицелом, либо убрать выделение", 20, 150);
