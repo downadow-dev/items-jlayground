@@ -65,7 +65,7 @@ public class Main extends JPanel {
 	private static void fire(int addr) {
 		final int saved = addr;
 		if(map[saved] == 'B' || map[saved] == 'l' || map[saved] == '|' ||
-		   map[saved] == '@' || map[saved] == 'd' || map[saved] == 'w' ||
+		   map[saved] == '@' || map[saved] == 'd' || map[saved] == 'w' || map[saved] == 'M' || map[saved] == 'm' ||
 		   map[saved] == 'c' || map[saved] == 'C' || map[saved] == 'L' || map[saved] == 'X') {
 			map[saved] = 'f';
 
@@ -77,19 +77,19 @@ public class Main extends JPanel {
 							if(map[saved] != 'f')
 								return;
 							if(map[saved - 1] == 'B' || map[saved - 1] == 'l' || map[saved - 1] == '|' ||
-							   map[saved - 1] == '@' || map[saved - 1] == 'd' || map[saved - 1] == 'w' ||
+							   map[saved - 1] == '@' || map[saved - 1] == 'd' || map[saved - 1] == 'w' || map[saved - 1] == 'M' || map[saved - 1] == 'm' ||
 							   map[saved - 1] == 'c' || map[saved - 1] == 'C' || map[saved - 1] == 'L' || map[saved - 1] == 'X')
 								fire(saved - 1);
 							if(map[saved + 1] == 'B' || map[saved + 1] == 'l' || map[saved + 1] == '|' ||
-							   map[saved + 1] == '@' || map[saved + 1] == 'd' || map[saved + 1] == 'w' ||
+							   map[saved + 1] == '@' || map[saved + 1] == 'd' || map[saved + 1] == 'w' || map[saved + 1] == 'M' || map[saved + 1] == 'm' ||
 							   map[saved + 1] == 'c' || map[saved + 1] == 'C' || map[saved + 1] == 'L' || map[saved + 1] == 'X')
 								fire(saved + 1);
 							if(map[saved + WIDTH] == 'B' || map[saved + WIDTH] == 'l' || map[saved + WIDTH] == '|' ||
-							   map[saved + WIDTH] == '@' || map[saved + WIDTH] == 'd' || map[saved + WIDTH] == 'w' ||
+							   map[saved + WIDTH] == '@' || map[saved + WIDTH] == 'd' || map[saved + WIDTH] == 'w' || map[saved + WIDTH] == 'm' || map[saved + WIDTH] == 'M' ||
 							   map[saved + WIDTH] == 'c' || map[saved + WIDTH] == 'C' || map[saved + WIDTH] == 'L' || map[saved + WIDTH] == 'X')
 								fire(saved + WIDTH);
 							if(map[saved - WIDTH] == 'B' || map[saved - WIDTH] == 'l' || map[saved - WIDTH] == '|' ||
-							   map[saved - WIDTH] == '@' || map[saved - WIDTH] == 'd' || map[saved - WIDTH] == 'w' ||
+							   map[saved - WIDTH] == '@' || map[saved - WIDTH] == 'd' || map[saved - WIDTH] == 'w' || map[saved - WIDTH] == 'm' || map[saved - WIDTH] == 'M' ||
 							   map[saved - WIDTH] == 'c' || map[saved - WIDTH] == 'C' || map[saved - WIDTH] == 'L' || map[saved - WIDTH] == 'X')
 								fire(saved - WIDTH);
 						}
@@ -342,7 +342,7 @@ public class Main extends JPanel {
 							for(int i = 0; i < behavior2.length - 1; i++)
 								behavior += behavior2[i] + " ";
 						} else if(e.getKeyCode() == KeyEvent.VK_INSERT) {
-							JFrame sb_fr = new JFrame("set behavior");
+							JFrame sb_fr = new JFrame("изменить поведение");
 							sb_fr.setAlwaysOnTop(true);
 							sb_fr.setSize(560, 140);
 							sb_fr.setResizable(false);
@@ -545,6 +545,9 @@ public class Main extends JPanel {
 						/* поставить воду */
 						else if(e.getKeyCode() == KeyEvent.VK_COMMA)
 							map[selectedBlockAddr()] = 'W';
+						/* поставить стул */
+						else if(e.getKeyCode() == KeyEvent.VK_M)
+							map[selectedBlockAddr()] = 'M';
 						/* поставить слизь */
 						else if(e.getKeyCode() == KeyEvent.VK_Z)
 							map[selectedBlockAddr()] = 'z';
@@ -695,6 +698,10 @@ public class Main extends JPanel {
 							map[selected] = ',';
 						else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == ',')
 							map[selected] = '~';
+						else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == 'M')
+							map[selected] = 'm';
+						else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == 'm')
+							map[selected] = 'M';
 						/* взрыв */
 						else if(e.getKeyCode() == KeyEvent.VK_ENTER && selected == -1 && ((int)map[selectedBlockAddr()] > (int)'9' || (int)map[selectedBlockAddr()] < (int)'0')) {
 							new Thread() {
@@ -783,7 +790,7 @@ public class Main extends JPanel {
 						for(int i = 0; i < map.length - WIDTH; i++) {
 							if(ph) {
 								if(selected == -1 && (map[i] == '@' ||  map[i] == 's' || map[i] == '|' ||  map[i] == 'd' || map[i] == '#' ||
-									map[i] == 'l' || map[i] == 'c' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`') && (map[i + WIDTH] == '.' || map[i + WIDTH] == 'W' || map[i + WIDTH] == 'b' || map[i + WIDTH] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - WIDTH] != 'z')) {
+									map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`') && (map[i + WIDTH] == '.' || map[i + WIDTH] == 'W' || map[i + WIDTH] == 'b' || map[i + WIDTH] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - WIDTH] != 'z')) {
 									map[i + WIDTH] = map[i];
 									map[i] = '.';
 							
@@ -1448,6 +1455,10 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("res/portal0.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
 					} else if(map[iii] == 'P') {
 						g.drawImage(new ImageIcon("res/portal1.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
+					} else if(map[iii] == 'M') {
+						g.drawImage(new ImageIcon("res/l_stul.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
+					} else if(map[iii] == 'm') {
+						g.drawImage(new ImageIcon("res/r_stul.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
 					} else if(map[iii] == 'z') {
 						g.drawImage(new ImageIcon("res/green.png").getImage(), ii * 60 - 15, i * 60 - 15, 90, 90, null);
 					} else if((map[iii] >= 'а' && map[iii] <= 'я') || (map[iii] >= 'А' && map[iii] <= 'Я') || map[iii] == '-' || map[iii] == '!' || map[iii] == '?' || map[iii] == 'ё' || map[iii] == 'Ё') {
@@ -1546,7 +1557,7 @@ public class Main extends JPanel {
 				g.drawString("T...............:  поставить камень; 'v' --- поставить невидимый блок", 20, 340);
 				g.drawString("Y...............:  поставить золотой блок", 20, 360);
 				g.drawString("S...............:  поставить песок", 20, 380);
-				g.drawString("N...............:  поставить кровать", 20, 400);
+				g.drawString("N...............:  поставить кровать; 'm' --- стул", 20, 400);
 				g.drawString("dD..............:  поставить палку (можете называть и дверью)", 20, 420);
 				g.drawString("O...............:  поставить лампу; pP для установки входного/выходного портала", 20, 440);
 				g.drawString("<Enter>.........:  сделать взрыв пом. клавишей <Insert> или активировать выдел. объект, '-' для уд. выд.", 20, 460);
