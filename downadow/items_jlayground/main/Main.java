@@ -595,6 +595,9 @@ public class Main extends JPanel {
 						/* поставить минералку */
 						else if(e.getKeyChar() == '`')
 							map[selectedBlockAddr()] = '`';
+						/* поставить невидимый блок */
+						else if(e.getKeyCode() == KeyEvent.VK_V)
+							map[selectedBlockAddr()] = '№';
 						/* поставить "ещё какие-то блоки" */
 						else if(e.getKeyCode() == KeyEvent.VK_1)
 							map[selectedBlockAddr()] = 'N';
@@ -1325,6 +1328,8 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("res/voda.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '$') {
 						g.drawImage(new ImageIcon("res/rainbow.png").getImage(), ii * 60, i * 60, 60, 60, null);
+					} else if(map[iii] == '№' && ui) {
+						g.drawImage(new ImageIcon("res/p.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -1491,7 +1496,7 @@ public class Main extends JPanel {
 				g.drawString("rR..............:  поставить кирпичный блок", 20, 280);
 				g.drawString("L...............:  поставить лестницу", 20, 300);
 				g.drawString("Gg..............:  поставить зелёный блок или стекло", 20, 320);
-				g.drawString("T...............:  поставить камень", 20, 340);
+				g.drawString("T...............:  поставить камень; 'v' --- поставить невидимый блок", 20, 340);
 				g.drawString("Y...............:  поставить золотой блок", 20, 360);
 				g.drawString("S...............:  поставить песок", 20, 380);
 				g.drawString("N...............:  поставить кровать", 20, 400);
