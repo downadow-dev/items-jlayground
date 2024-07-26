@@ -857,6 +857,16 @@ public class Main extends JPanel {
 								} else if(map[i] == ';') {
 									map[i] = ':';
 								}
+								/* блоки в воздухе падают! */
+								else if(map[i] != '№' && map[i] != '.' && (map[i - 1] == '.' && map[i + 1] == '.' && map[i - WIDTH] == '.' && map[i + WIDTH] == '.' && map[i + WIDTH - 1] == '.' && map[i + WIDTH + 1] == '.' && map[i - WIDTH - 1] == '.' &&  map[i - WIDTH + 1] == '.')) {
+									map[i + WIDTH] = map[i];
+									map[i] = '.';
+									
+									if(!slow)
+										Thread.sleep(30);
+									else
+										Thread.sleep(110);
+								}
 							}
 						}
 						Thread.sleep(30);
