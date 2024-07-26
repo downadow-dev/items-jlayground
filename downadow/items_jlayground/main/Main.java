@@ -493,6 +493,18 @@ public class Main extends JPanel {
 						else if(e.getKeyCode() == KeyEvent.VK_F2 && slow)
 							slow = false;
 						/*******************************/
+						else if(e.getKeyCode() == KeyEvent.VK_F8) {
+							for(int i = 0; i < map.length; i++)
+								if(map[i] != '.' && map[i] != 's')
+									map[i] = 's';
+						}
+						else if(e.getKeyCode() == KeyEvent.VK_F9) {
+							for(int i = map.length - WIDTH - 1; i > 0; i--) {
+								map[i + WIDTH] = map[i];
+								map[i] = 0;
+							}
+						}
+						/*******************************/
 						
 						else if(e.getKeyCode() == KeyEvent.VK_ESCAPE && ui) {
 							// сохранение карты
@@ -1520,9 +1532,9 @@ public class Main extends JPanel {
 				g.drawString("<ESC>...........:  скрыть интерфейс и сохранить карту, либо показать интерфейс", 20, 80);
 				g.drawString("<Backspace>.....:  удалить объект под прицелом; <F7> включает/выключает следование за выдел. объектом", 20, 100);
 				
-				g.drawString("<Delete>........:  удалить выделенный объект", 20, 130);
+				g.drawString("<Delete>........:  удалить выделенный объект; <F8> превращает всё построенное в песок", 20, 130);
 				g.drawString("<Space>.........:  выделить объект под прицелом, либо убрать выделение", 20, 150);
-				g.drawString("WASD............:  перемещение выделенного объекта", 20, 170);
+				g.drawString("WASD............:  перемещение выделенного объекта; <F9> \"опускает\" карту", 20, 170);
 				g.drawString("QE..............:  отразить выделенный объект (не для всех)", 20, 190);
 				
 				g.drawString("B...............:  поставить коричневый блок", 20, 220);
