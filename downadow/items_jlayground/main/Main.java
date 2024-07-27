@@ -30,7 +30,6 @@ public class Main extends JPanel {
 	
 	private static String behavior = "";
 	private static int behaviorSelected = 0;
-	private static int[] behaviorSelectedArray = new int[128];
 	
 	private static boolean ui = true;
 	/* блокировка управления */
