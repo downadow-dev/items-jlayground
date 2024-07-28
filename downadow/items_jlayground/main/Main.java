@@ -566,8 +566,12 @@ public class Main extends JPanel {
 						else if(e.getKeyCode() == KeyEvent.VK_B)
 							map[selectedBlockAddr()] = 'B';
 						/* поставить коробку */
-						else if(e.getKeyChar() == 'x')
+						else if(e.getKeyChar() == 'x') {
+							map[selectedBlockAddr() - 1] = '|';
+							map[selectedBlockAddr() - 1 - WIDTH] = '|';
+							map[selectedBlockAddr() - WIDTH] = '|';
 							map[selectedBlockAddr()] = '@';
+						}
 						
 						else if(e.getKeyChar() == 'X')
 							map[selectedBlockAddr()] = 'X';
