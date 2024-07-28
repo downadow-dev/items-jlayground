@@ -917,28 +917,6 @@ public class Main extends JPanel {
 										map[i - WIDTH] = 'A';
 							
 									Thread.sleep(!slow ? 50 : 500);
-								} else if(map[i] == ':' && (map[i - 1] == 'z' || map[i + 1] == 'z' || map[i - WIDTH] == 'z') || map[i + WIDTH] == 'z') {
-									continue;
-								} else if(map[i] == ':' && map[i - 1] == '.') {
-									map[i] = '.';
-									map[i - 1] = ':';
-									Thread.sleep(!slow ? 400 : 1000);
-								} else if(map[i] == ':'  && map[i - 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH - 1] == '.') {
-									map[i] = '.';
-									map[i - WIDTH - 1] = ':';
-									Thread.sleep(!slow ? 400 : 1000);
-								} else if(map[i] == ';'  && map[i + 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH + 1] == '.') {
-									map[i] = '.';
-									map[i - WIDTH + 1] = ';';
-									Thread.sleep(!slow ? 400 : 1000);
-								} else if(map[i] == ':') {
-									map[i] = ';';
-								} else if(map[i] == ';' && map[i + 1] == '.') {
-									map[i] = '.';
-									map[i + 1] = ';';
-									Thread.sleep(!slow ? 400 : 1000);
-								} else if(map[i] == ';') {
-									map[i] = ':';
 								}
 							}
 						}
@@ -1016,6 +994,39 @@ public class Main extends JPanel {
 					} catch(Exception e) {
 						e.printStackTrace();
 					}
+				}
+			}
+		}.start();
+		
+		/* логика стрелок */
+		new Thread() {
+			public void run() {
+				while(true) {
+						for(int i = 0; i < map.length; i++) {
+							try {
+								if(map[i] == ':' && (map[i - 1] == 'z' || map[i + 1] == 'z' || map[i - WIDTH] == 'z') || map[i + WIDTH] == 'z') {
+									continue;
+								} else if(map[i] == ':' && map[i - 1] == '.') {
+									map[i] = '.';
+									map[i - 1] = ':';
+								} else if(map[i] == ':' && map[i - 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH - 1] == '.') {
+									map[i] = '.';
+									map[i - WIDTH - 1] = ':';
+								} else if(map[i] == ';' && map[i + 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH + 1] == '.') {
+									map[i] = '.';
+									map[i - WIDTH + 1] = ';';
+								} else if(map[i] == ':') {
+									map[i] = ';';
+								} else if(map[i] == ';' && map[i + 1] == '.') {
+									map[i] = '.';
+									map[i + 1] = ';';
+									i++;
+								} else if(map[i] == ';') {
+									map[i] = ':';
+								}
+							} catch(Exception e) {}
+						}
+						try {Thread.sleep(!slow ? 400 : 1000);} catch(Exception e) {}
 				}
 			}
 		}.start();
