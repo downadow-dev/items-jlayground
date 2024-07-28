@@ -742,9 +742,17 @@ public class Main extends JPanel {
 						else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == '(') {
 							map[selected] = '<';
 							boom(selected + 8 - WIDTH);
+							for(int i = 1; i < 8; i++) {
+								map[selected + i] = '.';
+								map[selected + i - WIDTH] = '.';
+							}
 						} else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == ')') {
 							map[selected] = '>';
 							boom(selected - 8 - WIDTH);
+							for(int i = 1; i < 8; i++) {
+								map[selected - i] = '.';
+								map[selected - i - WIDTH] = '.';
+							}
 						}
 						/* операции с выделенным блоком */
 						else if(e.getKeyCode() == KeyEvent.VK_W && selected != -1 && (map[selected - WIDTH] == '.' || map[selected - WIDTH] == 'g' || map[selected - WIDTH] == 'W') && map[selected] != 'f') {
