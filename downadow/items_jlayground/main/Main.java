@@ -1389,8 +1389,6 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("current/res/voda.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '$') {
 						g.drawImage(new ImageIcon("current/res/rainbow.png").getImage(), ii * 60, i * 60, 60, 60, null);
-					} else if(map[iii] == '№' && ui) {
-						g.drawImage(new ImageIcon("current/res/p.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else {
 						g.setColor(bgColor);
 						
@@ -1468,6 +1466,8 @@ public class Main extends JPanel {
 						g.setColor(new Color(255, 255, 255));
 						g.setFont(new Font("Monospaced", Font.PLAIN, 60));
 						g.drawString("" + map[iii], ii * 60 + 15, i * 60 + 60);
+					} else if(map[iii] == '№' && ui) {
+						g.drawImage(new ImageIcon("current/res/p.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					}
 					
 					/* подсветка выбранного блока */
