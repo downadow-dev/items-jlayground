@@ -1138,7 +1138,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1148,7 +1148,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1158,7 +1158,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1168,7 +1168,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1178,7 +1178,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1188,7 +1188,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 					
@@ -1198,7 +1198,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1241,7 +1241,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1251,7 +1251,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1281,7 +1281,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1291,7 +1291,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1301,7 +1301,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1312,7 +1312,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1322,7 +1322,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1332,7 +1332,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1360,7 +1360,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1371,7 +1371,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 						
@@ -1385,7 +1385,7 @@ public class Main extends JPanel {
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
-							g.setColor(new Color(140, 140, 140));
+							g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
 					}
