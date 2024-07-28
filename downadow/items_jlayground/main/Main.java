@@ -24,7 +24,7 @@ public class Main extends JPanel {
 	
 	private static boolean ph = true, following = false;
 	
-	private static Color bgColor = new Color(70, 70, 70);
+	private static Color bgColor = new Color(80, 80, 80);
 	
 	private static int behaviorSelected2 = -1;
 	
