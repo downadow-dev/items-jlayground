@@ -24,6 +24,8 @@ public class Main extends JPanel {
 	
 	private static boolean ph = true, following = false;
 	
+	private static Color bgColor = new Color(70, 70, 70);
+	
 	private static int behaviorSelected2 = -1;
 	
 	private static boolean programmingMode = false;
@@ -50,9 +52,6 @@ public class Main extends JPanel {
 	private static boolean help = true;
 	
 	private static String helpMessage = "";
-	
-	/* тёмный режим */
-	private static boolean darkMode = false;
 	
 	private static JFrame fr;
 	
@@ -195,6 +194,8 @@ public class Main extends JPanel {
 			
 			Scanner sc = new Scanner(new File("current/map"));
 			behavior = sc.nextLine();
+			String bgColorNew = sc.nextLine();
+			bgColor = new Color(Integer.parseInt(bgColorNew.split(" ")[0]), Integer.parseInt(bgColorNew.split(" ")[1]), Integer.parseInt(bgColorNew.split(" ")[2]));
 			
 			int ii = 0;
 			while(sc.hasNextLine()) {
@@ -518,6 +519,7 @@ public class Main extends JPanel {
 							Files.deleteIfExists(Paths.get("current/map"));
 							FileWriter fw = new FileWriter("current/map");
 							fw.write(behavior + "\n");
+							fw.write("" + bgColor.getRed() + " " + bgColor.getGreen() + " " + bgColor.getBlue() + "\n");
 							int iii = 0;
 							for(int i = 0; i < HEIGHT; i++) {
 								for(int ii = 0; ii < WIDTH; ii++) {
@@ -770,10 +772,66 @@ public class Main extends JPanel {
 							noWater = true;
 						}
 						
-						else if(e.getKeyCode() == KeyEvent.VK_F3 && !darkMode)
-							darkMode = true;
-						else if(e.getKeyCode() == KeyEvent.VK_F3 && darkMode)
-							darkMode = false;
+						else if(e.getKeyCode() == KeyEvent.VK_F3) {
+							JFrame setbg_fr = new JFrame("изменить цвет фона");
+							setbg_fr.setAlwaysOnTop(true);
+							setbg_fr.setSize(320, 140);
+							setbg_fr.setResizable(false);
+							setbg_fr.setLocationRelativeTo(null);
+							JPanel setbg_p = new JPanel();
+							setbg_p.setBounds(0, 0, 320, 140);
+							setbg_fr.setLayout(null);
+							JTextField setbg_tfR = new JTextField(8), setbg_tfG = new JTextField(8),
+								setbg_tfB = new JTextField(8);
+							setbg_tfR.setText("" + bgColor.getRed());
+							setbg_tfG.setText("" + bgColor.getGreen());
+							setbg_tfB.setText("" + bgColor.getBlue());
+							JButton setbg_b = new JButton("OK");
+		
+							setbg_tfR.addKeyListener(new KeyListener() {
+								public void keyPressed(KeyEvent e) {
+									if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+										bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+										setbg_fr.setVisible(false);
+									}
+								}
+								public void keyTyped(KeyEvent e) {}
+								public void keyReleased(KeyEvent e) {}
+							});
+							setbg_tfG.addKeyListener(new KeyListener() {
+								public void keyPressed(KeyEvent e) {
+									if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+										bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+										setbg_fr.setVisible(false);
+									}
+								}
+								public void keyTyped(KeyEvent e) {}
+								public void keyReleased(KeyEvent e) {}
+							});
+							setbg_tfB.addKeyListener(new KeyListener() {
+								public void keyPressed(KeyEvent e) {
+									if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+										bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+										setbg_fr.setVisible(false);
+									}
+								}
+								public void keyTyped(KeyEvent e) {}
+								public void keyReleased(KeyEvent e) {}
+							});
+							setbg_b.addActionListener(new java.awt.event.ActionListener() {
+								public void actionPerformed(java.awt.event.ActionEvent e) {
+									bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+									setbg_fr.setVisible(false);
+								}
+							});
+		
+							setbg_p.add(setbg_tfR);
+							setbg_p.add(setbg_tfG);
+							setbg_p.add(setbg_tfB);
+							setbg_p.add(setbg_b);
+							setbg_fr.add(setbg_p);
+							setbg_fr.setVisible(true);
+						}
 						
 					}
 				} catch(Exception ex) {
@@ -1076,101 +1134,73 @@ public class Main extends JPanel {
 			for(int ii = 0; ii < WIDTH; ii++) {
 				try {
 					if(map[iii] == '#') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/reshetka.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'l') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/lestnica.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'g') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/glass.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '|') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/door_or_stick.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '&') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/stick2.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'Y') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
-					
+						g.setColor(bgColor);
+						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 					
 						g.drawImage(new ImageIcon("current/res/door2.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'd') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/bed.png").getImage(), ii * 60 - 60, i * 60, 120, 60, null);
 					} else if(map[iii] == '^') {
@@ -1207,31 +1237,23 @@ public class Main extends JPanel {
 					else if(map[iii] == 'L')
 						g.drawImage(new ImageIcon("current/res/block3.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'K') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/block4.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'U') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/pautina.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'W') {
@@ -1255,88 +1277,64 @@ public class Main extends JPanel {
 						g.drawRect(ii * 60, i * 60, 60, 60);
 						g.drawRect(ii * 60 + 1, i * 60 + 1, 58, 58);
 					} else if(map[iii] == '[') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/gun0_0.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'V') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/B2.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '{') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/gun0_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
 						map[iii] = '[';
 					} else if(map[iii] == ']') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/gun1_0.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == ':') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/left.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == ';') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/right.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'A') {
@@ -1358,32 +1356,24 @@ public class Main extends JPanel {
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 					} else if(map[iii] == '}') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/gun1_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
 						map[iii] = ']';
 					} else if(map[iii] == '`') {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 						
 						g.drawImage(new ImageIcon("current/res/voda.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '$') {
@@ -1391,17 +1381,13 @@ public class Main extends JPanel {
 					} else if(map[iii] == '№' && ui) {
 						g.drawImage(new ImageIcon("current/res/p.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else {
-						if(!darkMode)
-							g.setColor(new Color(80, 80, 80));
-						else
-							g.setColor(new Color(35, 35, 35));
+						g.setColor(bgColor);
 						
 						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(!darkMode)
+						if(ui) {
 							g.setColor(new Color(140, 140, 140));
-						else
-							g.setColor(new Color(70, 70, 70));
-						g.drawRect(ii * 60 , i * 60, 60, 60);
+							g.drawRect(ii * 60 , i * 60, 60, 60);
+						}
 					}
 				} catch(ArrayIndexOutOfBoundsException e) {}
 				iii++;
