@@ -49,6 +49,8 @@ public class Main extends JPanel {
 	/* вывести помощь */
 	private static boolean help = true;
 	
+	private static String helpMessage = "";
+	
 	/* тёмный режим */
 	private static boolean darkMode = false;
 	
@@ -189,9 +191,9 @@ public class Main extends JPanel {
 	
 	public static void main(String[] args) {
 		try {
-			/* загрузка карты и поведения */
+			/* загрузка карты, поведения и текста помощи */
 			
-			Scanner sc = new Scanner(new File(".map"));
+			Scanner sc = new Scanner(new File("current/map"));
 			behavior = sc.nextLine();
 			
 			int ii = 0;
@@ -200,6 +202,11 @@ public class Main extends JPanel {
 				for(int i = 0; i < WIDTH; i++)
 					map[ii++] = line[i];
 			}
+			sc.close();
+			
+			sc = new Scanner(new File("current/help"));
+			while(sc.hasNextLine())
+				helpMessage += sc.nextLine() + "\n";
 			sc.close();
 			
 			/******************/
@@ -508,8 +515,8 @@ public class Main extends JPanel {
 						else if(e.getKeyCode() == KeyEvent.VK_ESCAPE && ui) {
 							// сохранение карты
 							
-							Files.deleteIfExists(Paths.get(".map"));
-							FileWriter fw = new FileWriter(".map");
+							Files.deleteIfExists(Paths.get("current/map"));
+							FileWriter fw = new FileWriter("current/map");
 							fw.write(behavior + "\n");
 							int iii = 0;
 							for(int i = 0; i < HEIGHT; i++) {
@@ -553,7 +560,7 @@ public class Main extends JPanel {
 						/* поставить "бомбу" */
 						else if(e.getKeyChar() == '*')
 							map[selectedBlockAddr()] = '"';
-						/* поставить res/b.png */
+						/* поставить current/res/b.png */
 						else if(e.getKeyCode() == KeyEvent.VK_B)
 							map[selectedBlockAddr()] = 'B';
 						/* поставить коробку */
@@ -577,7 +584,7 @@ public class Main extends JPanel {
 						/* поставить решётку */
 						else if(e.getKeyCode() == KeyEvent.VK_E && selected == -1)
 							map[selectedBlockAddr()] = '#';
-						/* поставить res/bricks.png */
+						/* поставить current/res/bricks.png */
 						else if(e.getKeyChar() == 'r')
 							map[selectedBlockAddr()] = 'r';
 						/* поставить портал */
@@ -585,7 +592,7 @@ public class Main extends JPanel {
 							map[selectedBlockAddr()] = 'p';
 						else if(e.getKeyChar() == 'P')
 							map[selectedBlockAddr()] = 'P';
-						/* поставить res/superbricks.png */
+						/* поставить current/res/superbricks.png */
 						else if(e.getKeyChar() == 'R')
 							map[selectedBlockAddr()] = 'R';
 						/* поставить лестницу */
@@ -603,10 +610,10 @@ public class Main extends JPanel {
 						/* поставить стекло */
 						else if(e.getKeyCode() == KeyEvent.VK_G && map[selectedBlockAddr() + WIDTH] != '.')
 							map[selectedBlockAddr()] = 'g';
-						/* поставить res/stone.png */
+						/* поставить current/res/stone.png */
 						else if(e.getKeyCode() == KeyEvent.VK_T)
 							map[selectedBlockAddr()] = 't';
-						/* поставить res/W.png */
+						/* поставить current/res/W.png */
 						else if(e.getKeyCode() == KeyEvent.VK_W && selected == -1)
 							map[selectedBlockAddr()] = 'w';
 						/* поставить жёлтый блок */
@@ -618,7 +625,7 @@ public class Main extends JPanel {
 						/* поставить огнестрельное оружие */
 						else if(e.getKeyCode() == KeyEvent.VK_U)
 							map[selectedBlockAddr()] = '[';
-						/* поставить res/sand.png */
+						/* поставить current/res/sand.png */
 						else if(e.getKeyCode() == KeyEvent.VK_S && selected == -1)
 							map[selectedBlockAddr()] = 's';
 						/* поставить кровать */
@@ -1081,7 +1088,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/reshetka.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/reshetka.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'l') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -1095,7 +1102,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/lestnica.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/lestnica.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'g') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -1109,7 +1116,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/glass.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/glass.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '|') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -1123,7 +1130,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/door_or_stick.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/door_or_stick.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '&') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -1137,7 +1144,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/stick2.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/stick2.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'Y') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -1151,7 +1158,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 					
-						g.drawImage(new ImageIcon("res/door2.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/door2.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'd') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -1165,7 +1172,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/bed.png").getImage(), ii * 60 - 60, i * 60, 120, 60, null);
+						g.drawImage(new ImageIcon("current/res/bed.png").getImage(), ii * 60 - 60, i * 60, 120, 60, null);
 					} else if(map[iii] == '^') {
 						g.setColor(new Color(255, 255, 255));
 						g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
@@ -1179,26 +1186,26 @@ public class Main extends JPanel {
 						g.setColor(new Color(20, 20, 20));
 						g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
 					} else if(map[iii] == 'B')
-						g.drawImage(new ImageIcon("res/B.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/B.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 's')
-						g.drawImage(new ImageIcon("res/sand.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/sand.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 't')
-						g.drawImage(new ImageIcon("res/stone.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/stone.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'r')
-						g.drawImage(new ImageIcon("res/bricks.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/bricks.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'R')
-						g.drawImage(new ImageIcon("res/superbricks.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/superbricks.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'w')
-						g.drawImage(new ImageIcon("res/W.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/W.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'N')
-						g.drawImage(new ImageIcon("res/block0.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/block0.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'J') {
 						g.setColor(new Color(0, 0, 0));
 						g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
 					} else if(map[iii] == 'O')
-						g.drawImage(new ImageIcon("res/block2.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/block2.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'L')
-						g.drawImage(new ImageIcon("res/block3.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/block3.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'K') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -1212,7 +1219,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/block4.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/block4.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'U') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -1226,7 +1233,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/pautina.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/pautina.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'W') {
 						g.setColor(new Color(10, 10, 255));
 						g.fillRect(ii * 60, i * 60, 60, 60);
@@ -1240,7 +1247,7 @@ public class Main extends JPanel {
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 					} else if(map[iii] == '@')
-						g.drawImage(new ImageIcon("res/box.png").getImage(), ii * 60 - 60, i * 60 - 60, 120, 120, null);
+						g.drawImage(new ImageIcon("current/res/box.png").getImage(), ii * 60 - 60, i * 60 - 60, 120, 120, null);
 					else if(map[iii] == 'y') {
 						g.setColor(new Color(255, 255, 0));
 						g.fillRect(ii * 60, i * 60, 60, 60);
@@ -1260,7 +1267,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/gun0_0.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/gun0_0.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'V') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -1274,7 +1281,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/B2.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/B2.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '{') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -1288,7 +1295,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/gun0_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/gun0_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
 						map[iii] = '[';
 					} else if(map[iii] == ']') {
 						if(!darkMode)
@@ -1303,7 +1310,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/gun1_0.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/gun1_0.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == ':') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -1317,7 +1324,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/left.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/left.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == ';') {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -1331,7 +1338,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/right.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/right.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'A') {
 						g.setColor(new Color(0, 0, 0));
 						g.fillRect(ii * 60, i * 60, 60, 60);
@@ -1345,7 +1352,7 @@ public class Main extends JPanel {
 						g.drawRect(ii * 60 + 20, i * 60 + 20, 20, 20);
 						
 						if(ui)
-							g.drawImage(new ImageIcon("res/" + (map[iii] == '~' ? "right" : "left") + ".png").getImage(), ii * 60, i * 60, 60, 60, null);
+							g.drawImage(new ImageIcon("current/res/" + (map[iii] == '~' ? "right" : "left") + ".png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '%') {
 						g.setColor(new Color(255, 150, 0));
 						g.fillRect(ii * 60, i * 60, 60, 60);
@@ -1363,7 +1370,7 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/gun1_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/gun1_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
 						map[iii] = ']';
 					} else if(map[iii] == '`') {
 						if(!darkMode)
@@ -1378,11 +1385,11 @@ public class Main extends JPanel {
 							g.setColor(new Color(70, 70, 70));
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 						
-						g.drawImage(new ImageIcon("res/voda.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/voda.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '$') {
-						g.drawImage(new ImageIcon("res/rainbow.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/rainbow.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '№' && ui) {
-						g.drawImage(new ImageIcon("res/p.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/p.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else {
 						if(!darkMode)
 							g.setColor(new Color(80, 80, 80));
@@ -1406,60 +1413,60 @@ public class Main extends JPanel {
 			for(int ii = 0; ii < WIDTH; ii++) {
 				try {
 					if(Main.map[iii] == 'f')
-						g.drawImage(new ImageIcon("res/fire.png").getImage(), ii * 60 - 30, i * 60 - 100, 180, 200, null);
+						g.drawImage(new ImageIcon("current/res/fire.png").getImage(), ii * 60 - 30, i * 60 - 100, 180, 200, null);
 					else if(Main.map[iii] == 'F')
-						g.drawImage(new ImageIcon("res/fire2.png").getImage(), ii * 60 - 30, i * 60 - 100, 180, 200, null);
+						g.drawImage(new ImageIcon("current/res/fire2.png").getImage(), ii * 60 - 30, i * 60 - 100, 180, 200, null);
 					/* подсветка света */
 					else if(Main.map[iii] == '^')
-						g.drawImage(new ImageIcon("res/white.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
+						g.drawImage(new ImageIcon("current/res/white.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
 					
 					else if(Main.map[iii] == 'v')
-						g.drawImage(new ImageIcon("res/red_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
+						g.drawImage(new ImageIcon("current/res/red_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
 					else if(Main.map[iii] == 'G')
-						g.drawImage(new ImageIcon("res/green_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
+						g.drawImage(new ImageIcon("current/res/green_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
 					else if(Main.map[iii] == 'J')
-						g.drawImage(new ImageIcon("res/black_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
+						g.drawImage(new ImageIcon("current/res/black_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
 					else if(Main.map[iii] == 'E')
-						g.drawImage(new ImageIcon("res/blue.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
+						g.drawImage(new ImageIcon("current/res/blue.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
 					
 					else if((int)Main.map[iii] > (int)'0' && (int)Main.map[iii] < (int)'9')
-						g.drawImage(new ImageIcon("res/boom" + Main.map[iii] + ".png").getImage(), ii * 60 - 60, i * 60 - 60, 180, 180, null);
+						g.drawImage(new ImageIcon("current/res/boom" + Main.map[iii] + ".png").getImage(), ii * 60 - 60, i * 60 - 60, 180, 180, null);
 					else if(map[iii] == 'c')
-						g.drawImage(new ImageIcon("res/car0.png").getImage(), ii * 60 - 60, i * 60 - 20, 180, 80, null);
+						g.drawImage(new ImageIcon("current/res/car0.png").getImage(), ii * 60 - 60, i * 60 - 20, 180, 80, null);
 					else if(map[iii] == 'C')
-						g.drawImage(new ImageIcon("res/car1.png").getImage(), ii * 60 - 60, i * 60 - 20, 180, 80, null);
+						g.drawImage(new ImageIcon("current/res/car1.png").getImage(), ii * 60 - 60, i * 60 - 20, 180, 80, null);
 					else if(map[iii] == '/')
-						g.drawImage(new ImageIcon("res/helicopter_00.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
+						g.drawImage(new ImageIcon("current/res/helicopter_00.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
 					else if(map[iii] == '\\')
-						g.drawImage(new ImageIcon("res/helicopter_10.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
+						g.drawImage(new ImageIcon("current/res/helicopter_10.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
 					else if(map[iii] == 'i')
-						g.drawImage(new ImageIcon("res/helicopter_01.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
+						g.drawImage(new ImageIcon("current/res/helicopter_01.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
 					else if(map[iii] == 'I')
-						g.drawImage(new ImageIcon("res/helicopter_11.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
+						g.drawImage(new ImageIcon("current/res/helicopter_11.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
 					else if(map[iii] == '(')
-						g.drawImage(new ImageIcon("res/tank0_0.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
+						g.drawImage(new ImageIcon("current/res/tank0_0.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
 					else if(map[iii] == ')')
-						g.drawImage(new ImageIcon("res/tank1_0.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
+						g.drawImage(new ImageIcon("current/res/tank1_0.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
 					else if(map[iii] == 'X')
-						g.drawImage(new ImageIcon("res/box2.png").getImage(), ii * 60 - 60, i * 60 + 60, 120, 60, null);
+						g.drawImage(new ImageIcon("current/res/box2.png").getImage(), ii * 60 - 60, i * 60 + 60, 120, 60, null);
 					else if(map[iii] == '<') {
-						g.drawImage(new ImageIcon("res/tank0_1.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
+						g.drawImage(new ImageIcon("current/res/tank0_1.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
 						map[iii] = '(';
 					} else if(map[iii] == '>') {
-						g.drawImage(new ImageIcon("res/tank1_1.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
+						g.drawImage(new ImageIcon("current/res/tank1_1.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
 						map[iii] = ')';
 					} else if(map[iii] == '"') {
-						g.drawImage(new ImageIcon("res/bomb.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
+						g.drawImage(new ImageIcon("current/res/bomb.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
 					} else if(map[iii] == 'p') {
-						g.drawImage(new ImageIcon("res/portal0.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
+						g.drawImage(new ImageIcon("current/res/portal0.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
 					} else if(map[iii] == 'P') {
-						g.drawImage(new ImageIcon("res/portal1.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
+						g.drawImage(new ImageIcon("current/res/portal1.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
 					} else if(map[iii] == 'M') {
-						g.drawImage(new ImageIcon("res/l_stul.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
+						g.drawImage(new ImageIcon("current/res/l_stul.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
 					} else if(map[iii] == 'm') {
-						g.drawImage(new ImageIcon("res/r_stul.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
+						g.drawImage(new ImageIcon("current/res/r_stul.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
 					} else if(map[iii] == 'z') {
-						g.drawImage(new ImageIcon("res/green.png").getImage(), ii * 60 - 15, i * 60 - 15, 90, 90, null);
+						g.drawImage(new ImageIcon("current/res/green.png").getImage(), ii * 60 - 15, i * 60 - 15, 90, 90, null);
 					} else if((map[iii] >= 'а' && map[iii] <= 'я') || (map[iii] >= 'А' && map[iii] <= 'Я') || map[iii] == '-' || map[iii] == '!' || map[iii] == '?' || map[iii] == 'ё' || map[iii] == 'Ё') {
 						g.setColor(new Color(255, 255, 255));
 						g.setFont(new Font("Monospaced", Font.PLAIN, 60));
@@ -1483,17 +1490,17 @@ public class Main extends JPanel {
 				for(int ii = 0; ii < WIDTH; ii++) {
 					try {
 						if(forBoom[iii] && !programmingMode) {
-							g.drawImage(new ImageIcon("res/red.png").getImage(), ii * 60 - 60, i * 60, 180, 60, null);
-							g.drawImage(new ImageIcon("res/red.png").getImage(), ii * 60, i * 60 - 60, 60, 180, null);
+							g.drawImage(new ImageIcon("current/res/red.png").getImage(), ii * 60 - 60, i * 60, 180, 60, null);
+							g.drawImage(new ImageIcon("current/res/red.png").getImage(), ii * 60, i * 60 - 60, 60, 180, null);
 						} else if(behaviorSelected2 != -1 && iii == behaviorSelected2 && programmingMode)
-							g.drawImage(new ImageIcon("res/red.png").getImage(), ii * 60, i * 60, 60, 60, null);
+							g.drawImage(new ImageIcon("current/res/red.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} catch(ArrayIndexOutOfBoundsException e) {}
 					iii++;
 				}
 			}
 			
-			g.drawImage(new ImageIcon("res/pricel.png").getImage(), 1024 / 2 - 7, 700 / 2 - 20, 12, 8, null);
-			g.drawImage(new ImageIcon("res/vignette.png").getImage(), 0, 0, 1024, 728, null);
+			g.drawImage(new ImageIcon("current/res/pricel.png").getImage(), 1024 / 2 - 7, 700 / 2 - 20, 12, 8, null);
+			g.drawImage(new ImageIcon("current/res/vignette.png").getImage(), 0, 0, 1024, 728, null);
 			
 			g.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 14));
 			g.setColor(new Color(255, 255, 0));
@@ -1531,48 +1538,18 @@ public class Main extends JPanel {
 			if(slow)
 				g.drawString("~", 970, 20);
 			
-			g.setFont(new Font("Monospaced", Font.PLAIN, 15));
+			g.setFont(new Font("Monospaced", Font.PLAIN, 14));
 			
 			if(help && !programmingMode) {
-				g.drawImage(new ImageIcon("res/black.png").getImage(), 0, 0, 1024, 728, null);
+				g.drawImage(new ImageIcon("current/res/black.png").getImage(), 0, 0, 1024, 728, null);
 				
-				g.drawString("<стрелки>.......:  перемещение, но если нажато <F4>, то выбор стороны для заполнения/замены", 20, 20);
-				g.drawString("<F1>............:  скрыть/показать эту помощь; для режима программирования другая помощь", 20, 40);
-				g.drawString("<F5>............:  изменить поведение; <F6> выключает/включает \"физику\"", 20, 60);
-				g.drawString("<ESC>...........:  скрыть интерфейс и сохранить карту, либо показать интерфейс", 20, 80);
-				g.drawString("<Backspace>.....:  удалить объект под прицелом; <F7> включает/выключает следование за выдел. объектом", 20, 100);
-				
-				g.drawString("<Delete>........:  удалить выделенный объект; <F8> превращает всё построенное в песок", 20, 130);
-				g.drawString("<Space>.........:  выделить объект под прицелом, либо убрать выделение", 20, 150);
-				g.drawString("WASD............:  перемещение выделенного объекта; <F9> \"опускает\" карту", 20, 170);
-				g.drawString("QE..............:  отразить выделенный объект (не для всех)", 20, 190);
-				
-				g.drawString("B...............:  поставить коричневый блок", 20, 220);
-				g.drawString("Xx..............:  поставить ящик", 20, 240);
-				g.drawString("Ee..............:  поставить синий блок или решётку", 20, 260);
-				g.drawString("rR..............:  поставить кирпичный блок", 20, 280);
-				g.drawString("L...............:  поставить лестницу", 20, 300);
-				g.drawString("Gg..............:  поставить зелёный блок или стекло", 20, 320);
-				g.drawString("T...............:  поставить камень; 'v' --- поставить невидимый блок", 20, 340);
-				g.drawString("Y...............:  поставить золотой блок", 20, 360);
-				g.drawString("S...............:  поставить песок", 20, 380);
-				g.drawString("N...............:  поставить кровать; 'm' --- стул", 20, 400);
-				g.drawString("dD..............:  поставить палку (можете называть и дверью)", 20, 420);
-				g.drawString("O...............:  поставить лампу; pP для установки входного/выходного портала", 20, 440);
-				g.drawString("<Enter>.........:  сделать взрыв пом. клавишей <Insert> или активировать выдел. объект, '-' для уд. выд.", 20, 460);
-				g.drawString("<F2>............:  включить/выключить замедление времени (оно работает не во всех случаях)", 20, 480);
-				g.drawString("W1234567890.....:  (ещё какие-то блоки, включая ковёр и паутину)", 20, 500);
-				g.drawString("C...............:  поставить автомобиль, 'i' для вертолёта", 20, 520);
-				g.drawString("U...............:  поставить огнестрельное оружие; '`' ставит минералку", 20, 540);
-				g.drawString("=...............:  поставить танк", 20, 560);
-				g.drawString("fF..............:  огонь; '$' --- радужный блок; '%' --- блок-батут", 20, 580);
-				g.drawString("<запятая>.......:  вода, для удаления всей воды нажмите '.'", 20, 600);
-				g.drawString("*...............:  бомба, которая не работает", 20, 620);
-				g.drawString("Z...............:  слизь; '~' --- блок ускорения", 20, 640);
-				
-				g.drawString("<F3>............:  тёмный/светлый режим; '+' для вставки буквы или других доступных символов; ';' --- ???", 20, 670);
+				String[] helpMessageSplitted = helpMessage.split("\n");
+				for(int i = 0; i < helpMessageSplitted.length; i++)
+					g.drawString(helpMessageSplitted[i], 15, (i + 1) * 18);
 			} else if(help && programmingMode) {
-				g.drawImage(new ImageIcon("res/black.png").getImage(), 0, 0, 1024, 728, null);
+				g.drawImage(new ImageIcon("current/res/black.png").getImage(), 0, 0, 1024, 728, null);
+				
+				g.setFont(new Font("Monospaced", Font.PLAIN, 15));
 				
 				g.drawString("<стрелки>.......:  перемещение", 20, 20);
 				g.drawString("wasd............:  up, left, down, right", 20, 40);
