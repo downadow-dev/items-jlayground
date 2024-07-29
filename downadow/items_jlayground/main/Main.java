@@ -296,6 +296,9 @@ public class Main extends JPanel {
 							behavior += "fire ";
 						} else if(e.getKeyCode() == KeyEvent.VK_F) {
 							behavior += "fire2 ";
+						} else if(e.getKeyCode() == KeyEvent.VK_T) {
+							behavior += "tp:" + selectedBlockAddr() + " ";
+							behaviorSelected2 = selectedBlockAddr();
 						} else if(e.getKeyCode() == KeyEvent.VK_B) {
 							behavior += "boom ";
 						} else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
@@ -651,7 +654,7 @@ public class Main extends JPanel {
 						/* поставить минералку */
 						else if(e.getKeyChar() == '`')
 							map[selectedBlockAddr()] = '`';
-						/* поставить невидимый блок */
+						/* поставить полублок */
 						else if(e.getKeyCode() == KeyEvent.VK_V)
 							map[selectedBlockAddr()] = '№';
 						/* поставить "ещё какие-то блоки" */
@@ -1120,22 +1123,26 @@ public class Main extends JPanel {
 									Thread.sleep(!slow ? Integer.parseInt(behaviorSplitted[i].replace("~", "")) : Integer.parseInt(behaviorSplitted[i].replace("~", "")) * 2);
 								} else if(behaviorSplitted[i].equals("wait:up")) {
 									while(map[behaviorSelected - WIDTH] == '.')
-										Thread.sleep(100);
+										Thread.sleep(40);
 								} else if(behaviorSplitted[i].equals("wait:down")) {
 									while(map[behaviorSelected + WIDTH] == '.')
-										Thread.sleep(100);
+										Thread.sleep(40);
 								} else if(behaviorSplitted[i].equals("wait:right")) {
 									while(map[behaviorSelected + 1] == '.')
-										Thread.sleep(100);
+										Thread.sleep(40);
 								} else if(behaviorSplitted[i].equals("wait:left")) {
 									while(map[behaviorSelected - 1] == '.')
-										Thread.sleep(100);
+										Thread.sleep(40);
 								} else if(behaviorSplitted[i].equals("wait")) {
 									while(map[behaviorSelected - 1] == '.'     &&
 									      map[behaviorSelected + 1] == '.'     &&
 									      map[behaviorSelected + WIDTH] == '.' &&
 									      map[behaviorSelected - WIDTH] == '.')
-										Thread.sleep(50);
+										Thread.sleep(40);
+								} else if(behaviorSplitted[i].startsWith("tp:")) {
+									map[Integer.parseInt(behaviorSplitted[i].split(":")[1])] = map[behaviorSelected];
+									map[behaviorSelected] = '.';
+									behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
 								}
 							}
 						}
@@ -1480,9 +1487,8 @@ public class Main extends JPanel {
 						g.setColor(new Color(255, 255, 255));
 						g.setFont(new Font("Monospaced", Font.PLAIN, 60));
 						g.drawString("" + map[iii], ii * 60 + 15, i * 60 + 60);
-					} else if(map[iii] == '№' && ui) {
-						g.drawImage(new ImageIcon("current/res/p.png").getImage(), ii * 60, i * 60, 60, 60, null);
-					}
+					} else if(map[iii] == '№')
+						g.drawImage(new ImageIcon("current/res/B2.png").getImage(), ii * 60, i * 60 - 30, 60, 60, null);
 					
 					/* подсветка выбранного блока */
 					if(iii == selected && ui && !following) {
@@ -1579,6 +1585,7 @@ public class Main extends JPanel {
 				g.drawString("<z+w/a/s/d>.....:  wait:up/left/down/right (ждать столкновения в определённой стороне)", 20, 300);
 				g.drawString("<F5>............:  выход из режима программирования", 20, 320);
 				g.drawString("<F1>............:  скрыть/показать эту помощь", 20, 340);
+				g.drawString("T...............:  tp:<адрес блока под прицелом>", 20, 360);
 			}
 		}
 	}
