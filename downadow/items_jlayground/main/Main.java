@@ -970,24 +970,24 @@ public class Main extends JPanel {
 												map[ii - 1] = map[i + 1];
 											if(map[i - 1] != '.')
 												map[ii + 1] = map[i - 1];
-											if(map[i - WIDTH] != '.')
-												map[ii + WIDTH] = map[i - WIDTH];
+											if(map[i - physics] != '.')
+												map[ii + physics] = map[i - physics];
 								
 											map[i - 1] = '.';
 											map[i + 1] = '.';
-											map[i - WIDTH] = '.';
+											map[i - physics] = '.';
 											break;
 										}
 									}
 								}
 								/* работа ускорения */
-								else if(map[i] == '~' && map[i - WIDTH] != '.' && map[i - WIDTH] != 'W' && map[i - WIDTH] != '~' && map[i - WIDTH + 1] == '.') {
-									map[i - WIDTH + 1] = map[i - WIDTH];
-									map[i - WIDTH] = '.';
+								else if(map[i] == '~' && map[i - physics] != '.' && map[i - physics] != 'W' && map[i - physics] != '~' && map[i - physics + 1] == '.') {
+									map[i - physics + 1] = map[i - physics];
+									map[i - physics] = '.';
 									Thread.sleep(!slow ? 200 : 500);
-								} else if(map[i] == ',' && map[i - WIDTH] != '.' && map[i - WIDTH] != 'W' && map[i - WIDTH] != '~' && map[i - WIDTH - 1] == '.') {
-									map[i - WIDTH - 1] = map[i - WIDTH];
-									map[i - WIDTH] = '.';
+								} else if(map[i] == ',' && map[i - physics] != '.' && map[i - physics] != 'W' && map[i - physics] != '~' && map[i - physics - 1] == '.') {
+									map[i - physics - 1] = map[i - physics];
+									map[i - physics] = '.';
 									Thread.sleep(!slow ? 200 : 500);
 								}
 							} catch(Exception e) {
@@ -1027,17 +1027,17 @@ public class Main extends JPanel {
 				while(true) {
 						for(int i = 0; i < map.length; i++) {
 							try {
-								if(map[i] == ':' && (map[i - 1] == 'z' || map[i + 1] == 'z' || map[i - WIDTH] == 'z') || map[i + WIDTH] == 'z') {
+								if(map[i] == ':' && (map[i - 1] == 'z' || map[i + 1] == 'z' || map[i - physics] == 'z') || map[i + physics] == 'z') {
 									continue;
 								} else if(map[i] == ':' && map[i - 1] == '.') {
 									map[i] = '.';
 									map[i - 1] = ':';
-								} else if(map[i] == ':' && map[i - 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH - 1] == '.') {
+								} else if(map[i] == ':' && map[i - 1] != '.' && map[i - physics] == '.' && map[i - physics - 1] == '.') {
 									map[i] = '.';
-									map[i - WIDTH - 1] = ':';
-								} else if(map[i] == ';' && map[i + 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH + 1] == '.') {
+									map[i - physics - 1] = ':';
+								} else if(map[i] == ';' && map[i + 1] != '.' && map[i - physics] == '.' && map[i - physics + 1] == '.') {
 									map[i] = '.';
-									map[i - WIDTH + 1] = ';';
+									map[i - physics + 1] = ';';
 								} else if(map[i] == ':') {
 									map[i] = ';';
 								} else if(map[i] == ';' && map[i + 1] == '.') {
