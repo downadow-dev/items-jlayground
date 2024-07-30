@@ -1488,7 +1488,7 @@ public class Main extends JPanel {
 						g.setFont(new Font("Monospaced", Font.PLAIN, 60));
 						g.drawString("" + map[iii], ii * 60 + 15, i * 60 + 60);
 					} else if(map[iii] == '№')
-						g.drawImage(new ImageIcon("current/res/B2.png").getImage(), ii * 60, i * 60 - 30, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/B2.png").getImage(), ii * 60, i * 60 - 33, 60, 60, null);
 					
 					/* подсветка выбранного блока */
 					if(iii == selected && ui && !following) {
