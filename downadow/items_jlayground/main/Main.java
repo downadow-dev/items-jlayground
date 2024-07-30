@@ -51,6 +51,8 @@ public class Main extends JPanel {
 	/* вывести помощь */
 	private static boolean help = true;
 	
+	private static int physics = WIDTH;
+	
 	private static String helpMessage = "";
 	
 	private static JFrame fr;
@@ -514,6 +516,10 @@ public class Main extends JPanel {
 								map[i] = '.';
 							}
 						}
+						else if(e.getKeyCode() == KeyEvent.VK_F10 && physics == WIDTH)
+							physics = -WIDTH;
+						else if(e.getKeyCode() == KeyEvent.VK_F10 && physics == -WIDTH)
+							physics = WIDTH;
 						/*******************************/
 						
 						else if(e.getKeyCode() == KeyEvent.VK_ESCAPE && ui) {
@@ -868,11 +874,11 @@ public class Main extends JPanel {
 				while(true) {
 					try {
 						/* "физика" и пр. */
-						for(int i = 0; i < map.length - WIDTH; i++) {
+						for(int i = WIDTH; i < map.length - WIDTH; i++) {
 							if(ph) {
 								if(selected == -1 && (map[i] == '@' ||  map[i] == 's' || map[i] == '|' ||  map[i] == 'd' || map[i] == '#' ||
-									map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`') && (map[i + WIDTH] == '.' || map[i + WIDTH] == 'W' || map[i + WIDTH] == 'b' || map[i + WIDTH] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - WIDTH] != 'z')) {
-									map[i + WIDTH] = map[i];
+									map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`') && (map[i + physics] == '.' || map[i + physics] == 'W' || map[i + physics] == 'b' || map[i + physics] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - physics] != 'z')) {
+									map[i + physics] = map[i];
 									map[i] = '.';
 							
 									if(!slow)
@@ -884,12 +890,12 @@ public class Main extends JPanel {
 										map[i - 1] = 'b';
 									if(map[i + 1] == 'f')
 										map[i + 1] = 'b';
-									if(map[i + WIDTH] == 'f')
-										map[i + WIDTH] = 'b';
-									if(map[i - WIDTH] == 'f')
-										map[i - WIDTH] = 'b';
+									if(map[i + physics] == 'f')
+										map[i + physics] = 'b';
+									if(map[i - physics] == 'f')
+										map[i - physics] = 'b';
 							
-									if((map[i + WIDTH] != '.' && map[i + WIDTH] != 'W') || i + WIDTH * 2 > map.length) {
+									if((map[i + physics] != '.' && map[i + physics] != 'W') || i + physics * 2 > map.length) {
 										if(map[i - 1] == '.' || map[i - 1] == 'd' || map[i - 1] == '|' || map[i - 1] == '#' || map[i - 1] == 'l') {
 											if(!slow)
 												Thread.sleep(160);
@@ -907,17 +913,17 @@ public class Main extends JPanel {
 										}
 									}
 							
-									if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'd' || map[i + WIDTH] == '|' || map[i + WIDTH] == '#' || map[i + WIDTH] == 'l')
-										map[i + WIDTH] = 'W';
+									if(map[i + physics] == '.' || map[i + physics] == 'd' || map[i + physics] == '|' || map[i + physics] == '#' || map[i + physics] == 'l')
+										map[i + physics] = 'W';
 							
 								} else if(noWater) {
 									for(int ii = 0; ii < map.length; ii++)
 										if(map[ii] == 'W')
 											map[ii] = '.';
 									noWater = false;
-								} else if(map[i] == '/' && map[i + WIDTH] == '.')
+								} else if(map[i] == '/' && map[i + physics] == '.')
 									map[i] = 'i';
-								else if(map[i] == '\\' && map[i + WIDTH] == '.')
+								else if(map[i] == '\\' && map[i + physics] == '.')
 									map[i] = 'I';
 								else if(map[i] == 'i')
 									map[i] = '/';
@@ -952,9 +958,9 @@ public class Main extends JPanel {
 						if(ph) {
 							try {
 								/* работа батута */
-								if(map[i] == '%' && (map[i - WIDTH] != '.' && map[i - WIDTH * 2] == '.' && map[i - WIDTH * 3] == '.' && map[i - WIDTH * 4] == '.')) {
-									map[i - WIDTH * 4] = map[i - WIDTH];
-									map[i - WIDTH] = '.';
+								if(map[i] == '%' && (map[i - physics] != '.' && map[i - physics * 2] == '.' && map[i - physics * 3] == '.' && map[i - physics * 4] == '.')) {
+									map[i - physics * 4] = map[i - physics];
+									map[i - physics] = '.';
 								}
 								/* работа порталов */
 								else if(map[i] == 'p') {
