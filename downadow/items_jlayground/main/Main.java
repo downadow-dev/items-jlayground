@@ -1165,75 +1165,28 @@ public class Main extends JPanel {
 		for(int i = 0; i < HEIGHT; i++) {
 			for(int ii = 0; ii < WIDTH; ii++) {
 				try {
-					if(map[iii] == '#') {
+					if(iii < map.length) {
 						g.setColor(bgColor);
-						
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
 							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
 							g.drawRect(ii * 60 , i * 60, 60, 60);
 						}
-						
+					}
+					
+					if(map[iii] == '#') {
 						g.drawImage(new ImageIcon("current/res/reshetka.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'l') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-						
 						g.drawImage(new ImageIcon("current/res/lestnica.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'g') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-						
 						g.drawImage(new ImageIcon("current/res/glass.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '|') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-						
 						g.drawImage(new ImageIcon("current/res/door_or_stick.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '&') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-						
 						g.drawImage(new ImageIcon("current/res/stick2.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'Y') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-					
 						g.drawImage(new ImageIcon("current/res/door2.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'd') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-						
 						g.drawImage(new ImageIcon("current/res/bed.png").getImage(), ii * 60 - 60, i * 60, 120, 60, null);
 					} else if(map[iii] == '^') {
 						g.setColor(new Color(255, 255, 255));
@@ -1269,24 +1222,8 @@ public class Main extends JPanel {
 					else if(map[iii] == 'L')
 						g.drawImage(new ImageIcon("current/res/block3.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					else if(map[iii] == 'K') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-						
 						g.drawImage(new ImageIcon("current/res/block4.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'U') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-						
 						g.drawImage(new ImageIcon("current/res/pautina.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'W') {
 						g.setColor(new Color(10, 10, 255));
@@ -1309,65 +1246,17 @@ public class Main extends JPanel {
 						g.drawRect(ii * 60, i * 60, 60, 60);
 						g.drawRect(ii * 60 + 1, i * 60 + 1, 58, 58);
 					} else if(map[iii] == '[') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-						
 						g.drawImage(new ImageIcon("current/res/gun0_0.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'V') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-						
 						g.drawImage(new ImageIcon("current/res/B2.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '{') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-						
 						g.drawImage(new ImageIcon("current/res/gun0_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
 						map[iii] = '[';
 					} else if(map[iii] == ']') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-						
 						g.drawImage(new ImageIcon("current/res/gun1_0.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == ':') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-						
 						g.drawImage(new ImageIcon("current/res/left.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == ';') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-						
 						g.drawImage(new ImageIcon("current/res/right.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'A') {
 						g.setColor(new Color(0, 0, 0));
@@ -1388,36 +1277,12 @@ public class Main extends JPanel {
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						g.drawRect(ii * 60 , i * 60, 60, 60);
 					} else if(map[iii] == '}') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-						
 						g.drawImage(new ImageIcon("current/res/gun1_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
 						map[iii] = ']';
 					} else if(map[iii] == '`') {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
-						
 						g.drawImage(new ImageIcon("current/res/voda.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '$') {
 						g.drawImage(new ImageIcon("current/res/rainbow.png").getImage(), ii * 60, i * 60, 60, 60, null);
-					} else {
-						g.setColor(bgColor);
-						
-						g.fillRect(ii * 60, i * 60, 60, 60);
-						if(ui) {
-							try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
-							g.drawRect(ii * 60 , i * 60, 60, 60);
-						}
 					}
 				} catch(ArrayIndexOutOfBoundsException e) {}
 				iii++;
