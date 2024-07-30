@@ -1165,7 +1165,7 @@ public class Main extends JPanel {
 		for(int i = 0; i < HEIGHT; i++) {
 			for(int ii = 0; ii < WIDTH; ii++) {
 				try {
-					if(iii < map.length) {
+					if(iii < map.length && iii >= 0) {
 						g.setColor(bgColor);
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						if(ui) {
