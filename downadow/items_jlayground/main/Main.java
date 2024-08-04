@@ -599,6 +599,9 @@ public class Main extends JPanel {
 						/* поставить решётку */
 						else if(e.getKeyCode() == KeyEvent.VK_E && selected == -1)
 							map[selectedBlockAddr()] = '#';
+						/* поставить машину */
+						else if(e.getKeyCode() == KeyEvent.VK_Q && selected == -1)
+							map[selectedBlockAddr()] = 'q';
 						/* поставить current/res/bricks.png */
 						else if(e.getKeyChar() == 'r')
 							map[selectedBlockAddr()] = 'r';
@@ -723,6 +726,10 @@ public class Main extends JPanel {
 							map[selected] = 'm';
 						else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == 'm')
 							map[selected] = 'M';
+						else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == 'q')
+							map[selected] = 'Q';
+						else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == 'Q')
+							map[selected] = 'q';
 						/* взрыв */
 						else if(e.getKeyCode() == KeyEvent.VK_ENTER && selected == -1 && ((int)map[selectedBlockAddr()] > (int)'9' || (int)map[selectedBlockAddr()] < (int)'0')) {
 							new Thread() {
@@ -877,7 +884,7 @@ public class Main extends JPanel {
 						for(int i = WIDTH; i < map.length - WIDTH; i++) {
 							if(ph) {
 								if(selected == -1 && (map[i] == '@' ||  map[i] == 's' || map[i] == '|' ||  map[i] == 'd' || map[i] == '#' ||
-									map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`') && (map[i + physics] == '.' || map[i + physics] == 'W' || map[i + physics] == 'b' || map[i + physics] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - physics] != 'z')) {
+									map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' || map[i] == 'Q') && (map[i + physics] == '.' || map[i + physics] == 'W' || map[i + physics] == 'b' || map[i + physics] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - physics] != 'z')) {
 									map[i + physics] = map[i];
 									map[i] = '.';
 							
@@ -1322,6 +1329,10 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("current/res/car0.png").getImage(), ii * 60 - 60, i * 60 - 20, 180, 80, null);
 					else if(map[iii] == 'C')
 						g.drawImage(new ImageIcon("current/res/car1.png").getImage(), ii * 60 - 60, i * 60 - 20, 180, 80, null);
+					else if(map[iii] == 'q')
+						g.drawImage(new ImageIcon("current/res/car2_0.png").getImage(), ii * 60 - 75, i * 60 - 30, 200, 90, null);
+					else if(map[iii] == 'Q')
+						g.drawImage(new ImageIcon("current/res/car2_1.png").getImage(), ii * 60 - 75, i * 60 - 30, 200, 90, null);
 					else if(map[iii] == '/')
 						g.drawImage(new ImageIcon("current/res/helicopter_00.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
 					else if(map[iii] == '\\')
