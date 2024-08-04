@@ -1096,12 +1096,12 @@ public class Main extends JPanel {
 									map[behaviorSelected] = '.';
 									behaviorSelected += WIDTH;
 								} else if(behaviorSplitted[i].equals("right:lift")) {
-									map[behaviorSelected + 1] = map[behaviorSelected + 1];
+									map[behaviorSelected + 2] = map[behaviorSelected + 1];
 									map[behaviorSelected + 1] = map[behaviorSelected];
 									map[behaviorSelected] = '.';
 									behaviorSelected++;
 								} else if(behaviorSplitted[i].equals("left:lift")) {
-									map[behaviorSelected - 1] = map[behaviorSelected - 1];
+									map[behaviorSelected - 2] = map[behaviorSelected - 1];
 									map[behaviorSelected - 1] = map[behaviorSelected];
 									map[behaviorSelected] = '.';
 									behaviorSelected--;
