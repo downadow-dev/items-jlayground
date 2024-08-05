@@ -258,6 +258,9 @@ public class Main extends JPanel {
 						if(e.getKeyCode() == KeyEvent.VK_HOME) {
 							behavior = "";
 							behaviorSelected2 = -1;
+						} else if(e.getKeyChar() == 'x') {
+							behavior += "sel:selectedBlockAddr() ";
+							behaviorSelected2 = selectedBlockAddr();
 						} else if(e.getKeyChar() == 'W') {
 							behavior += "up:copy ";
 							behaviorSelected2 -= WIDTH;
@@ -1070,6 +1073,7 @@ public class Main extends JPanel {
 							String[] behaviorSplitted = behavior.split(" ");
 							
 							for(int i = 0; i < behaviorSplitted.length; i++) {
+							    behaviorSplitted[i] = behaviorSplitted[i].replace("selectedBlockAddr()", "" + selectedBlockAddr());
 								if(behaviorSplitted[i].isEmpty())
 									continue;
 								else if(behaviorSplitted[i].split(":")[0].equals("sel") && behaviorSelected == 0) {
@@ -1468,6 +1472,7 @@ public class Main extends JPanel {
 				g.drawString("<F5>............:  выход из режима программирования", 20, 320);
 				g.drawString("<F1>............:  скрыть/показать эту помощь", 20, 340);
 				g.drawString("T...............:  tp:<адрес блока под прицелом>", 20, 360);
+				g.drawString("x...............:  sel:selectedBlockAddr()", 20, 380);
 			}
 		}
 	}
