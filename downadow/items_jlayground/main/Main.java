@@ -756,17 +756,17 @@ public class Main extends JPanel {
 						else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == ']')
 							map[selected] = '}';
 						else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == '(') {
-							map[selected] = '<';
 							for(int i = 1; i < 16; i++) {
-								if(map[selected + i - WIDTH] != '.' || map[selected + i] != '.') {
+								if((map[selected + i - WIDTH] != '.' && !(map[selected + i - WIDTH] >= '0' && map[selected + i - WIDTH] <= '9')) || (map[selected + i] != '.' && !(map[selected + i] >= '0' && map[selected + i] <= '9'))) {
+							        map[selected] = '<';
 									boom(selected + i - WIDTH);
 									break;
 								}
 							}
 						} else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == ')') {
-							map[selected] = '>';
 							for(int i = 1; i < 16; i++) {
-								if(map[selected - i - WIDTH] != '.' || map[selected - i] != '.') {
+								if((map[selected - i - WIDTH] != '.' && !(map[selected - i - WIDTH] >= '0' && map[selected - i - WIDTH] <= '9')) || (map[selected - i] != '.' && !(map[selected - i] >= '0' && map[selected - i] <= '9'))) {
+							        map[selected] = '>';
 									boom(selected - i - WIDTH);
 									break;
 								}
