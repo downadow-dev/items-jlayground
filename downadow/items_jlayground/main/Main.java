@@ -16,7 +16,7 @@ import java.io.FileWriter;
 
 public class Main extends JPanel {
 	/* ширина и высота карты в объектах */
-	private static final int WIDTH = 100, HEIGHT = 50;
+	private static final int WIDTH = 200, HEIGHT = 50;
 	/* карта */
 	private static char[] map = new char[WIDTH * HEIGHT];
 	
