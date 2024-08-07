@@ -887,14 +887,15 @@ public class Main extends JPanel {
 									map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' || map[i] == 'Q') && (map[i + physics] == '.' || map[i + physics] == 'W' || map[i + physics] == 'b' || map[i + physics] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - physics] != 'z')) {
 									map[i + physics] = map[i];
 									map[i] = '.';
-							
-									if(!slow)
-										Thread.sleep(30);
-									else
-										Thread.sleep(110);
+									i += physics;
 								}
 							}
 						}
+						
+						if(!slow)
+							Thread.sleep(30);
+						else
+							Thread.sleep(110);
 					} catch(Exception e) {}
 				}
 			}
