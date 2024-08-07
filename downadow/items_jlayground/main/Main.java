@@ -1323,7 +1323,7 @@ public class Main extends JPanel {
 					else if(Main.map[iii] == 'E')
 						g.drawImage(new ImageIcon("current/res/blue.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
 					
-					else if((int)Main.map[iii] > (int)'0' && (int)Main.map[iii] < (int)'9')
+					else if((int)Main.map[iii] >= (int)'0' && (int)Main.map[iii] <= (int)'9')
 						g.drawImage(new ImageIcon("current/res/boom" + Main.map[iii] + ".png").getImage(), ii * 60 - 60, i * 60 - 60, 180, 180, null);
 					else if(map[iii] == 'c')
 						g.drawImage(new ImageIcon("current/res/car0.png").getImage(), ii * 60 - 60, i * 60 - 20, 180, 80, null);
