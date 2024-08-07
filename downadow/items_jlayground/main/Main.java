@@ -1032,6 +1032,7 @@ public class Main extends JPanel {
 			}
 		}.start();
 		
+		/* обновление экрана и пр. */
 		new Thread() {
 			public void run() {
 				while(true) {
@@ -1045,7 +1046,7 @@ public class Main extends JPanel {
 							following = false;
 						
 						fr.repaint();
-						Thread.sleep(30);
+						Thread.sleep(20);
 					} catch(Exception e) {
 						e.printStackTrace();
 					}
