@@ -876,11 +876,11 @@ public class Main extends JPanel {
 		fr.setVisible(true);
 		startTime = System.currentTimeMillis();
 		
+		/* "физика" и пр. */
 		new Thread() {
 			public void run() {
 				while(true) {
 					try {
-						/* "физика" и пр. */
 						for(int i = WIDTH; i < map.length - WIDTH; i++) {
 							if(ph) {
 								if(selected == -1 && (map[i] == '@' ||  map[i] == 's' || map[i] == '|' ||  map[i] == 'd' || map[i] == '#' ||
@@ -892,7 +892,20 @@ public class Main extends JPanel {
 										Thread.sleep(30);
 									else
 										Thread.sleep(110);
-								} else if(map[i] == 'W' && !noWater) {
+								}
+							}
+						}
+					} catch(Exception e) {}
+				}
+			}
+		}.start();
+		new Thread() {
+			public void run() {
+				while(true) {
+					try {
+						for(int i = WIDTH; i < map.length - WIDTH; i++) {
+							if(ph) {
+								if(map[i] == 'W' && !noWater) {
 									if(map[i - 1] == 'f')
 										map[i - 1] = 'b';
 									if(map[i + 1] == 'f')
