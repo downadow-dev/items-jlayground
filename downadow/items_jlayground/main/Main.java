@@ -1428,10 +1428,12 @@ public class Main extends JPanel {
 			
 			g.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 14));
 			g.setColor(new Color(255, 255, 0));
-			if(!select)
+			if(!select && !fill)
 				g.drawString("" + fill((System.currentTimeMillis() - startTime) / 60000, 2) + ":" + fill((System.currentTimeMillis() - startTime) / 1000 % 60, 2), 15, 20);
-			else
+			else if(select && !fill)
 				g.drawString("Введите символ...", 15, 20);
+			else if(!select && fill)
+				g.drawString("Выберите сторону...", 15, 20);
 			
 			
 			if(programmingMode) {
@@ -1489,7 +1491,7 @@ public class Main extends JPanel {
 				g.drawString("<Insert>........:  изменение кода в текстовом режиме", 20, 240);
 				g.drawString("0123456789-.....:  ~<...> (приостановить выполнение на 50/100/200/.../1000/5000 миллисекунд", 20, 260);
 				g.drawString("Z...............:  wait (ждать любого столкновения)", 20, 280);
-				g.drawString("<z+w/a/s/d>.....:  wait:up/left/down/right (ждать столкновения в определённой стороне)", 20, 300);
+				g.drawString("   'z', а после 'w'/'a'/'s'/'d' --- wait:up/left/down/right (ждать столкновения в опр. стороне)", 20, 300);
 				g.drawString("<F5>............:  выход из режима программирования", 20, 320);
 				g.drawString("<F1>............:  скрыть/показать эту помощь", 20, 340);
 				g.drawString("T...............:  tp:<адрес блока под прицелом>", 20, 360);
