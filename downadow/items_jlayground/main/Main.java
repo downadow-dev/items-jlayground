@@ -599,6 +599,9 @@ public class Main extends JPanel {
 						/* поставить решётку */
 						else if(e.getKeyCode() == KeyEvent.VK_E && selected == -1)
 							map[selectedBlockAddr()] = '#';
+						/* поставить компьютер */
+						else if(e.getKeyCode() == KeyEvent.VK_H)
+							map[selectedBlockAddr()] = 'h';
 						/* поставить машину */
 						else if(e.getKeyCode() == KeyEvent.VK_Q && selected == -1)
 							map[selectedBlockAddr()] = 'q';
@@ -1322,6 +1325,8 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("current/res/voda.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '$') {
 						g.drawImage(new ImageIcon("current/res/rainbow.png").getImage(), ii * 60, i * 60, 60, 60, null);
+					} else if(map[iii] == 'h') {
+						g.drawImage(new ImageIcon("current/res/computer.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					}
 				} catch(ArrayIndexOutOfBoundsException e) {}
 				iii++;
