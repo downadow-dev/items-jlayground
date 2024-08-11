@@ -190,56 +190,6 @@ public class Main extends JPanel {
 		}.start();
 	}
 	
-	private static void shootRight(int addr) {
-	    new Thread() {
-	        public void run() {
-	            try {
-	                while(!ph) {
-	                    Thread.sleep(15);
-	                    continue;
-                    }
-	                int i;
-	                int ii = 0;
-	                for(i = addr; map[i + 1] == '.' && ii < 45; i++, ii++) {
-	                    map[i + 1] = map[i];
-	                    map[i] = '.';
-	                    Thread.sleep(!slow ? 25 : 60);
-	                }
-	                if(map[i + 1] != '.')
-	                    map[i] = '.';
-	                if(map[i + 1] != 'f' && map[i + 1] != 'F' && map[i + 1] != 'R')
-	                    map[i + 1] = '.';
-	            } catch(Exception e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }.start();
-	}
-	private static void shootLeft(int addr) {
-	    new Thread() {
-	        public void run() {
-	            try {
-	                while(!ph) {
-	                    Thread.sleep(15);
-	                    continue;
-                    }
-	                int i;
-	                int ii = 0;
-	                for(i = addr; map[i - 1] == '.' && ii < 45; i--, ii++) {
-	                    map[i - 1] = map[i];
-	                    map[i] = '.';
-	                    Thread.sleep(!slow ? 25 : 60);
-	                }
-	                map[i] = '.';
-	                if(map[i - 1] != 'f' && map[i - 1] != 'F' && map[i - 1] != 'R')
-	                    map[i - 1] = '.';
-	            } catch(Exception e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }.start();
-	}
-	
 	public static void main(String[] args) {
 		try {
 			/* загрузка карты, поведения и текста помощи */
@@ -750,11 +700,6 @@ public class Main extends JPanel {
 						else if(e.getKeyChar() == '+') {
 							select = true;
 						}
-						/* бросать блок */
-						else if(e.getKeyCode() == KeyEvent.VK_F11 && selected == -1)
-						    shootLeft(selectedBlockAddr());
-						else if(e.getKeyCode() == KeyEvent.VK_F12 && selected == -1)
-						    shootRight(selectedBlockAddr());
 						/* отражение объектов */
 						else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == 'c')
 							map[selected] = 'C';
