@@ -205,7 +205,8 @@ public class Main extends JPanel {
 	                    map[i] = '.';
 	                    Thread.sleep(!slow ? 25 : 60);
 	                }
-	                map[i] = '.';
+	                if(map[i + 1] != '.')
+	                    map[i] = '.';
 	                if(map[i + 1] != 'f' && map[i + 1] != 'F' && map[i + 1] != 'R')
 	                    map[i + 1] = '.';
 	            } catch(Exception e) {
@@ -749,11 +750,11 @@ public class Main extends JPanel {
 						else if(e.getKeyChar() == '+') {
 							select = true;
 						}
-						/* бросать выделенный блок */
-						else if(e.getKeyChar() == 'Q' && selected != -1)
-						    shootLeft(selected);
-						else if(e.getKeyChar() == 'E' && selected != -1)
-						    shootRight(selected);
+						/* бросать блок */
+						else if(e.getKeyCode() == KeyEvent.VK_F11 && selected == -1)
+						    shootLeft(selectedBlockAddr());
+						else if(e.getKeyCode() == KeyEvent.VK_F12 && selected == -1)
+						    shootRight(selectedBlockAddr());
 						/* отражение объектов */
 						else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == 'c')
 							map[selected] = 'C';
