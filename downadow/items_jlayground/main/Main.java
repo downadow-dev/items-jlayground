@@ -190,6 +190,57 @@ public class Main extends JPanel {
 		}.start();
 	}
 	
+	private static void shootRight(int addr) {
+	    new Thread() {
+	        public void run() {
+	            try {
+	                while(!ph) {
+	                    Thread.sleep(15);
+	                    continue;
+                    }
+	                int i;
+	                int ii = 0;
+	                for(i = addr; map[i + 1] == '.' && ii < 45; i++, ii++) {
+	                    map[i + 1] = map[i];
+	                    map[i] = '.';
+	                    Thread.sleep(!slow ? 25 : 60);
+	                }
+	                if(map[i + 1] != '.')
+	                    map[i] = '.';
+	                if(map[i + 1] != 'f' && map[i + 1] != 'F' && map[i + 1] != 'R')
+	                    map[i + 1] = '.';
+	            } catch(Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }.start();
+	}
+	private static void shootLeft(int addr) {
+	    new Thread() {
+	        public void run() {
+	            try {
+	                while(!ph) {
+	                    Thread.sleep(15);
+	                    continue;
+                    }
+	                int i;
+	                int ii = 0;
+	                for(i = addr; map[i - 1] == '.' && ii < 45; i--, ii++) {
+	                    map[i - 1] = map[i];
+	                    map[i] = '.';
+	                    Thread.sleep(!slow ? 25 : 60);
+	                }
+	                if(map[i - 1] != '.')
+	                    map[i] = '.';
+	                if(map[i - 1] != 'f' && map[i - 1] != 'F' && map[i - 1] != 'R')
+	                    map[i - 1] = '.';
+	            } catch(Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }.start();
+	}
+	
 	public static void main(String[] args) {
 		try {
 			/* загрузка карты, поведения и текста помощи */
@@ -282,6 +333,8 @@ public class Main extends JPanel {
 						} else if(e.getKeyCode() == KeyEvent.VK_D) {
 							behavior += "right ";
 							behaviorSelected2++;
+						} else if(e.getKeyCode() == KeyEvent.VK_F10) {
+							behavior += "-physics ";
 						} else if(e.getKeyCode() == KeyEvent.VK_I) {
 							behavior += "up:lift ";
 							behaviorSelected2 -= WIDTH;
@@ -700,6 +753,11 @@ public class Main extends JPanel {
 						else if(e.getKeyChar() == '+') {
 							select = true;
 						}
+						/* бросать блок */
+						else if(e.getKeyCode() == KeyEvent.VK_F11 && selected == -1)
+						    shootLeft(selectedBlockAddr());
+						else if(e.getKeyCode() == KeyEvent.VK_F12 && selected == -1)
+						    shootRight(selectedBlockAddr());
 						/* отражение объектов */
 						else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == 'c')
 							map[selected] = 'C';
@@ -1185,7 +1243,10 @@ public class Main extends JPanel {
 									map[Integer.parseInt(behaviorSplitted[i].split(":")[1])] = map[behaviorSelected];
 									map[behaviorSelected] = '.';
 									behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
-								}
+								} else if(behaviorSplitted[i].equals("-physics") && physics == WIDTH)
+							        physics = -WIDTH;
+						        else if(behaviorSplitted[i].equals("-physics"))
+							        physics = WIDTH;
 							}
 						}
 						
@@ -1501,6 +1562,7 @@ public class Main extends JPanel {
 				g.drawString("<F5>............:  выход из режима программирования", 20, 320);
 				g.drawString("<F1>............:  скрыть/показать эту помощь", 20, 340);
 				g.drawString("T...............:  tp:<адрес блока под прицелом>", 20, 360);
+				g.drawString("<F10>...........:  -physics", 20, 380);
 			}
 		}
 	}
