@@ -194,7 +194,10 @@ public class Main extends JPanel {
 	    new Thread() {
 	        public void run() {
 	            try {
-	                ph = false;
+	                while(!ph) {
+	                    Thread.sleep(15);
+	                    continue;
+                    }
 	                int i;
 	                int ii = 0;
 	                for(i = addr; map[i + 1] == '.' && ii < 45; i++, ii++) {
@@ -205,19 +208,20 @@ public class Main extends JPanel {
 	                map[i] = '.';
 	                if(map[i + 1] != 'f' && map[i + 1] != 'F' && map[i + 1] != 'R')
 	                    map[i + 1] = '.';
-                    ph = true;
 	            } catch(Exception e) {
 	                e.printStackTrace();
 	            }
 	        }
 	    }.start();
-	    ph = true;
 	}
 	private static void shootLeft(int addr) {
 	    new Thread() {
 	        public void run() {
 	            try {
-	                ph = false;
+	                while(!ph) {
+	                    Thread.sleep(15);
+	                    continue;
+                    }
 	                int i;
 	                int ii = 0;
 	                for(i = addr; map[i - 1] == '.' && ii < 45; i--, ii++) {
@@ -228,13 +232,11 @@ public class Main extends JPanel {
 	                map[i] = '.';
 	                if(map[i - 1] != 'f' && map[i - 1] != 'F' && map[i - 1] != 'R')
 	                    map[i - 1] = '.';
-                    ph = true;
 	            } catch(Exception e) {
 	                e.printStackTrace();
 	            }
 	        }
 	    }.start();
-	    ph = true;
 	}
 	
 	public static void main(String[] args) {
