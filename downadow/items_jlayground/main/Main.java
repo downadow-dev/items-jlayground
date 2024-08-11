@@ -190,6 +190,53 @@ public class Main extends JPanel {
 		}.start();
 	}
 	
+	private static void shootRight(int addr) {
+	    new Thread() {
+	        public void run() {
+	            try {
+	                ph = false;
+	                int i;
+	                int ii = 0;
+	                for(i = addr; map[i + 1] == '.' && ii < 45; i++, ii++) {
+	                    map[i + 1] = map[i];
+	                    map[i] = '.';
+	                    Thread.sleep(!slow ? 25 : 60);
+	                }
+	                map[i] = '.';
+	                if(map[i + 1] != 'f' && map[i + 1] != 'F' && map[i + 1] != 'R')
+	                    map[i + 1] = '.';
+                    ph = true;
+	            } catch(Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }.start();
+	    ph = true;
+	}
+	private static void shootLeft(int addr) {
+	    new Thread() {
+	        public void run() {
+	            try {
+	                ph = false;
+	                int i;
+	                int ii = 0;
+	                for(i = addr; map[i - 1] == '.' && ii < 45; i--, ii++) {
+	                    map[i - 1] = map[i];
+	                    map[i] = '.';
+	                    Thread.sleep(!slow ? 25 : 60);
+	                }
+	                map[i] = '.';
+	                if(map[i - 1] != 'f' && map[i - 1] != 'F' && map[i - 1] != 'R')
+	                    map[i - 1] = '.';
+                    ph = true;
+	            } catch(Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }.start();
+	    ph = true;
+	}
+	
 	public static void main(String[] args) {
 		try {
 			/* загрузка карты, поведения и текста помощи */
@@ -700,6 +747,11 @@ public class Main extends JPanel {
 						else if(e.getKeyChar() == '+') {
 							select = true;
 						}
+						/* бросать выделенный блок */
+						else if(e.getKeyChar() == 'Q' && selected != -1)
+						    shootLeft(selected);
+						else if(e.getKeyChar() == 'E' && selected != -1)
+						    shootRight(selected);
 						/* отражение объектов */
 						else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == 'c')
 							map[selected] = 'C';
