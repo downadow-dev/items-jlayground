@@ -812,10 +812,26 @@ public class Main extends JPanel {
 								forBoom[i] = false;
 						}
 						/* активация объектов */
-						else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == '[')
-							map[selected] = '{';
-						else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == ']')
-							map[selected] = '}';
+						else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == '[') {
+						    map[selected + 1] = '.';
+						    map[selected + 1 - WIDTH] = '.';
+						    for(int i = 1; i < 8; i++) {
+						        fire(selected + i);
+						        fire(selected + i - WIDTH);
+						    }
+						}
+						else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == ']') {
+						    map[selected - 1] = '.';
+						    map[selected - 1 - WIDTH] = '.';
+						    for(int i = 1; i < 8; i++) {
+						        fire(selected - i);
+						        fire(selected - i - WIDTH);
+						    }
+						}
+						/* ^         ^
+						   | огнемёт |
+						   *         * */
+					    
 						else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == '(') {
 							for(int i = 1; i < 16; i++) {
 								if((map[selected + i - WIDTH] != '.' && !(map[selected + i - WIDTH] >= '0' && map[selected + i - WIDTH] <= '9')) || (map[selected + i] != '.' && !(map[selected + i] >= '0' && map[selected + i] <= '9'))) {
@@ -1349,14 +1365,11 @@ public class Main extends JPanel {
 						g.drawRect(ii * 60, i * 60, 60, 60);
 						g.drawRect(ii * 60 + 1, i * 60 + 1, 58, 58);
 					} else if(map[iii] == '[') {
-						g.drawImage(new ImageIcon("current/res/gun0_0.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/flamethrower0.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'V') {
 						g.drawImage(new ImageIcon("current/res/B2.png").getImage(), ii * 60, i * 60, 60, 60, null);
-					} else if(map[iii] == '{') {
-						g.drawImage(new ImageIcon("current/res/gun0_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
-						map[iii] = '[';
 					} else if(map[iii] == ']') {
-						g.drawImage(new ImageIcon("current/res/gun1_0.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						g.drawImage(new ImageIcon("current/res/flamethrower1.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == ':') {
 						g.drawImage(new ImageIcon("current/res/left.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == ';') {
@@ -1379,9 +1392,6 @@ public class Main extends JPanel {
 						g.setColor(new Color(255, 150, 0));
 						g.fillRect(ii * 60, i * 60, 60, 60);
 						g.drawRect(ii * 60 , i * 60, 60, 60);
-					} else if(map[iii] == '}') {
-						g.drawImage(new ImageIcon("current/res/gun1_1.png").getImage(), ii * 60, i * 60, 60, 60, null);
-						map[iii] = ']';
 					} else if(map[iii] == '`') {
 						g.drawImage(new ImageIcon("current/res/voda.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == '$') {
