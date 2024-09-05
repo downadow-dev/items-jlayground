@@ -696,7 +696,10 @@ public class Main extends JPanel {
 						/* поставить радужный блок */
 						else if(e.getKeyChar() == '$')
 							map[selectedBlockAddr()] = '$';
-						/* поставить огнестрельное оружие */
+						/* поставить специальный блок */
+						else if(e.getKeyChar() == 'k')
+							map[selectedBlockAddr()] = 'k';
+						/* поставить огнемёт */
 						else if(e.getKeyCode() == KeyEvent.VK_U)
 							map[selectedBlockAddr()] = '[';
 						/* поставить current/res/sand.png */
@@ -850,25 +853,25 @@ public class Main extends JPanel {
 							}
 						}
 						/* операции с выделенным блоком */
-						else if(e.getKeyCode() == KeyEvent.VK_W && selected != -1 && (map[selected - WIDTH] == '.' || map[selected - WIDTH] == 'g' || map[selected - WIDTH] == 'W') && map[selected] != 'f') {
+						else if(e.getKeyCode() == KeyEvent.VK_W && selected != -1 && ((map[selected - WIDTH] == '.' || map[selected - WIDTH] == 'g' || map[selected - WIDTH] == 'W') || map[selected] == 'k') && map[selected] != 'f') {
 							if(slow)
 								Thread.sleep(50);
 							map[selected - WIDTH] = map[selected];
 							map[selected] = '.';
 							selected -= WIDTH;
-						} else if(e.getKeyCode() == KeyEvent.VK_S && selected != -1 && (map[selected + WIDTH] == '.' || map[selected + WIDTH] == 'g' || map[selected + WIDTH] == 'W') && map[selected] != 'f') {
+						} else if(e.getKeyCode() == KeyEvent.VK_S && selected != -1 && ((map[selected + WIDTH] == '.' || map[selected + WIDTH] == 'g' || map[selected + WIDTH] == 'W') || map[selected] == 'k') && map[selected] != 'f') {
 							if(slow)
 								Thread.sleep(50);
 							map[selected + WIDTH] = map[selected];
 							map[selected] = '.';
 							selected += WIDTH;
-						} else if(e.getKeyCode() == KeyEvent.VK_A && selected != -1 && (map[selected - 1] == '.' || map[selected - 1] == 'g' || map[selected - 1] == 'W') && map[selected] != 'f') {
+						} else if(e.getKeyCode() == KeyEvent.VK_A && selected != -1 && ((map[selected - 1] == '.' || map[selected - 1] == 'g' || map[selected - 1] == 'W') || map[selected] == 'k') && map[selected] != 'f') {
 							if(slow)
 								Thread.sleep(50);
 							map[selected - 1] = map[selected];
 							map[selected] = '.';
 							selected--;
-						} else if(e.getKeyCode() == KeyEvent.VK_D && selected != -1 && (map[selected + 1] == '.' || map[selected + 1] == 'g' || map[selected + 1] == 'W') && map[selected] != 'f') {
+						} else if(e.getKeyCode() == KeyEvent.VK_D && selected != -1 && ((map[selected + 1] == '.' || map[selected + 1] == 'g' || map[selected + 1] == 'W') || map[selected] == 'k') && map[selected] != 'f') {
 							if(slow)
 								Thread.sleep(50);
 							map[selected + 1] = map[selected];
@@ -961,9 +964,17 @@ public class Main extends JPanel {
 					    if(physics == -WIDTH) {
 						    for(int i = WIDTH; i < map.length - WIDTH; i++) {
 							    if(ph) {
-								    if(selected == -1 && (map[i] == '@' ||  map[i] == 's' || map[i] == '|' ||  map[i] == 'd' || map[i] == '#' ||
-									    map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' || map[i] == 'Q') && (map[i + physics] == '.' || map[i + physics] == 'W' || map[i + physics] == 'b' || map[i + physics] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - physics] != 'z')) {
+								    if(selected == -1 && (map[i] == '@' || map[i] == 's' || map[i] == '|' || map[i] == 'd' ||
+								    map[i] == '#' || map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' ||
+								    map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' ||
+								    map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' ||
+								    map[i] == 'Q') && (map[i + physics] == '.' || map[i + physics] == 'W' ||
+								    map[i + physics] == 'b' || map[i + physics] == 'g') &&
+								    (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - physics] != 'z')) {
 									    map[i + physics] = map[i];
+									    map[i] = '.';
+								    } else if((map[i] == '@' || map[i] == 's' || map[i] == '|' || map[i] == 'd' || map[i] == '#' ||
+									    map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' || map[i] == 'Q') && map[i + physics] == 'k') {
 									    map[i] = '.';
 								    }
 							    }
@@ -974,6 +985,9 @@ public class Main extends JPanel {
 								    if(selected == -1 && (map[i] == '@' ||  map[i] == 's' || map[i] == '|' ||  map[i] == 'd' || map[i] == '#' ||
 									    map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' || map[i] == 'Q') && (map[i + physics] == '.' || map[i + physics] == 'W' || map[i + physics] == 'b' || map[i + physics] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - physics] != 'z')) {
 									    map[i + physics] = map[i];
+									    map[i] = '.';
+								    } else if((map[i] == '@' || map[i] == 's' || map[i] == '|' || map[i] == 'd' || map[i] == '#' ||
+									    map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' || map[i] == 'Q') && map[i + physics] == 'k') {
 									    map[i] = '.';
 								    }
 							    }
@@ -1398,6 +1412,8 @@ public class Main extends JPanel {
 						g.drawImage(new ImageIcon("current/res/rainbow.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					} else if(map[iii] == 'h') {
 						g.drawImage(new ImageIcon("current/res/computer.png").getImage(), ii * 60, i * 60, 60, 60, null);
+					} else if(map[iii] == 'k') {
+						g.drawImage(new ImageIcon("current/res/X.png").getImage(), ii * 60, i * 60, 60, 60, null);
 					}
 				} catch(ArrayIndexOutOfBoundsException e) {}
 				iii++;
