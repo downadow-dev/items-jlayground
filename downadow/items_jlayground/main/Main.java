@@ -521,7 +521,7 @@ public class Main extends JPanel {
 						                    selected -= WIDTH;
 						                    map[selected] = map[selected + WIDTH];
 						                    map[selected + WIDTH] = '.';
-						                    Thread.sleep(120);
+						                    Thread.sleep(150);
 						                }
 						            }
 						            
