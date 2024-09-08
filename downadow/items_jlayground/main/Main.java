@@ -28,6 +28,8 @@ public class Main extends JPanel {
 	
 	private static int behaviorSelected2 = -1;
 	
+	private static boolean jump = false;
+	
 	private static boolean programmingMode = false;
 	
 	private static String behavior = "";
@@ -512,6 +514,8 @@ public class Main extends JPanel {
 						new Thread() {
 						    public void run() {
 						        try {
+						            jump = true;
+						            
 						            if(map[selected + WIDTH] != '.') {
 						                for(int i = 0; i < 3; i++) {
 						                    selected -= WIDTH;
@@ -521,12 +525,7 @@ public class Main extends JPanel {
 						                }
 						            }
 						            
-						            while(selected > WIDTH && map[selected + WIDTH] == '.') {
-						                selected += WIDTH;
-						                map[selected] = map[selected - WIDTH];
-						                map[selected - WIDTH] = '.';
-						                Thread.sleep(90);
-						            }
+						            jump = false;
 					            } catch(Exception e) {}
 						    }
 						}.start();
@@ -1161,6 +1160,15 @@ public class Main extends JPanel {
 							cameraStart = selected - 8 - 5 * WIDTH;
 						else if(following && selected == -1)
 							following = false;
+						
+						while(following && !jump && selected > WIDTH && map[selected + WIDTH] == '.') {
+			                selected += WIDTH;
+			                cameraStart = selected - 8 - 5 * WIDTH;
+			                map[selected] = map[selected - WIDTH];
+			                map[selected - WIDTH] = '.';
+			                fr.repaint();
+			                Thread.sleep(90);
+			            }
 						
 						fr.repaint();
 						Thread.sleep(20);
