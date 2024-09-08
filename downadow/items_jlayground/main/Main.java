@@ -507,6 +507,32 @@ public class Main extends JPanel {
 						fill = false;
 						return;
 					}
+					/* "прыжок" */
+					else if(e.getKeyCode() == KeyEvent.VK_SPACE && selected != -1 && following) {
+						new Thread() {
+						    public void run() {
+						        try {
+						            if(map[selected + WIDTH] != '.') {
+						                for(int i = 0; i < 3; i++) {
+						                    selected -= WIDTH;
+						                    map[selected] = map[selected + WIDTH];
+						                    map[selected + WIDTH] = '.';
+						                    Thread.sleep(120);
+						                }
+						            }
+						            
+						            while(selected > WIDTH && map[selected + WIDTH] == '.') {
+						                selected += WIDTH;
+						                map[selected] = map[selected - WIDTH];
+						                map[selected - WIDTH] = '.';
+						                Thread.sleep(90);
+						            }
+					            } catch(Exception e) {}
+						    }
+						}.start();
+						
+						return;
+					}
 					/* включить/выключить режим изменения поведения */
 					else if(e.getKeyCode() == KeyEvent.VK_F5 && !programmingMode) {
 						programmingMode = true;
