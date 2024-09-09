@@ -24,6 +24,7 @@ fi
 if [[ "$1" == '-c' ]]; then
     # загрузка ресурспака
     echo -n 'Downloading resourcepack... '
+    curl --no-progress-meter -o current/help "$2/current/help"
     for t in $(ls current/res/*); do
         curl --no-progress-meter -o "$t" "$2/$t"
     done
