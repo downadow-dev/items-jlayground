@@ -24,9 +24,9 @@ fi
 if [[ "$1" == '-c' ]]; then
     # загрузка ресурспака
     echo -n 'Downloading resourcepack... '
-    curl --no-progress-meter -o current/help "$2/current/help"
+    curl -o current/help "$2/current/help" 2> /dev/null
     for t in $(ls current/res/*); do
-        curl --no-progress-meter -o "$t" "$2/$t"
+        curl -o "$t" "$2/$t" 2> /dev/null
     done
     echo 'DONE'
     ######################
@@ -38,8 +38,8 @@ if [[ "$1" == '-c' ]]; then
     echo 'Multiplayer game.'
     
     while true; do
-        curl --no-progress-meter -o current/map "$2/current/map"
-        curl --no-progress-meter -o current/adminPos "$2/current/adminPos"
+        curl -o current/map "$2/current/map" 2> /dev/null
+        curl -o current/adminPos "$2/current/adminPos" 2> /dev/null
         sleep 0.5
     done
 fi
