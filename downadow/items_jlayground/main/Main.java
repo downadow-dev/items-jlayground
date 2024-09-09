@@ -59,6 +59,14 @@ public class Main extends JPanel {
 	
 	private static JFrame fr;
 	
+	/* 0   одиночная игра
+	 * 1   сервер
+	 * 2   клиент
+	 */
+	private static int gameState = 0;
+	
+	private static int adminPos = 0;
+	
 	/* возвращает адрес блока, на который указывает прицел */
 	private static int selectedBlockAddr() {
 		return cameraStart + 8 + 5 * WIDTH;
@@ -244,6 +252,11 @@ public class Main extends JPanel {
 	}
 	
 	public static void main(String[] args) {
+	    if(args.length > 0 && args[0].equals("--server"))
+	        gameState = 1;
+	    else if(args.length > 0 && args[0].equals("--client"))
+	        gameState = 2;
+	    
 		try {
 			/* загрузка карты, поведения и текста помощи */
 			
@@ -1321,6 +1334,76 @@ public class Main extends JPanel {
 				}
 			}
 		}.start();
+		
+		/* для многопользовательской игры */
+		
+		if(gameState == 1) {
+		    new Thread() {
+		        public void run() {
+		            while(true) {
+		                try {
+		                    FileWriter fw = new FileWriter("current/map");
+					        fw.write(behavior + "\n");
+					        fw.write("" + bgColor.getRed() + " " + bgColor.getGreen() + " " + bgColor.getBlue() + "\n");
+					        int iii = 0;
+					        for(int i = 0; i < HEIGHT; i++) {
+						        for(int ii = 0; ii < WIDTH; ii++) {
+							        fw.write(map[iii]);
+							        iii++;
+						        }
+						        fw.write("\n");
+					        }
+					        fw.close();
+					        
+					        fw = new FileWriter("current/adminPos");
+					        fw.write("" + selectedBlockAddr());
+					        fw.close();
+					        
+					        Thread.sleep(500);
+					    } catch(Exception ex) {
+					        ex.printStackTrace();
+					    }
+				    }
+		        }
+		    }.start();
+		} else if(gameState == 2) {
+		    new Thread() {
+		        public void run() {
+		            while(true) {
+		                try {
+		                    /* загрузка карты, поведения и позиции хоста */
+			                
+			                if(selected == -1) {
+			                    Scanner sc = new Scanner(new File("current/map"));
+			                    behavior = sc.nextLine();
+			                    String bgColorNew = sc.nextLine();
+			                    bgColor = new Color(Integer.parseInt(bgColorNew.split(" ")[0]), Integer.parseInt(bgColorNew.split(" ")[1]), Integer.parseInt(bgColorNew.split(" ")[2]));
+			                    
+			                    int ii = 0;
+			                    while(sc.hasNextLine()) {
+				                    char[] line = sc.nextLine().toCharArray();
+				                    for(int i = 0; i < WIDTH; i++)
+					                    map[ii++] = line[i];
+			                    }
+			                    sc.close();
+			                    
+			                    try {
+			                        sc = new Scanner(new File("current/adminPos"));
+			                        adminPos = Integer.parseInt(sc.nextLine());
+			                        sc.close();
+			                    } catch(Exception e) {}
+			                }
+			                
+			                /******************/
+					        
+					        Thread.sleep(500);
+					    } catch(Exception ex) {
+					        ex.printStackTrace();
+					    }
+				    }
+		        }
+		    }.start();
+		}
 	}
 	
 	public void paint(Graphics g) {
@@ -1545,12 +1628,15 @@ public class Main extends JPanel {
 							g.drawImage(new ImageIcon("current/res/red.png").getImage(), ii * 60, i * 60 - 60, 60, 180, null);
 						} else if(behaviorSelected2 != -1 && iii == behaviorSelected2 && programmingMode)
 							g.drawImage(new ImageIcon("current/res/red.png").getImage(), ii * 60, i * 60, 60, 60, null);
+						else if(gameState == 2 && iii == adminPos)
+			                g.drawImage(new ImageIcon("current/res/pricel.png").getImage(), ii * 60 + 25, i * 60 + 25, 20, 10, null);
 					} catch(ArrayIndexOutOfBoundsException e) {}
 					iii++;
 				}
 			}
 			
-			g.drawImage(new ImageIcon("current/res/pricel.png").getImage(), 1024 / 2 - 7, 700 / 2 - 20, 12, 8, null);
+			if(gameState != 2)
+			    g.drawImage(new ImageIcon("current/res/pricel.png").getImage(), 1024 / 2 - 7, 700 / 2 - 20, 12, 8, null);
 			g.drawImage(new ImageIcon("current/res/vignette.png").getImage(), 0, 0, 1024, 728, null);
 			
 			g.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 14));
