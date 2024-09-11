@@ -1420,6 +1420,23 @@ public class Main extends JPanel {
 					            Scanner sc = new Scanner(new File("current/msg"));
 					            message = sc.nextLine();
 					            sc.close();
+					            
+					            /* выполнение команд */
+					            if(serverAllowCreators && message.split("> ")[1].startsWith("/")) {
+					                String[] command = message.split("> /")[1].split(" ");
+					                
+					                if(command[0].startsWith("c")) {
+					                    map[Integer.parseInt(command[1])] = command[2].toCharArray()[0];
+					                } else if(command[0].startsWith("d")) {
+					                    map[Integer.parseInt(command[1])] = '.';
+					                } else if(command[0].startsWith("f")) {
+					                    fire(Integer.parseInt(command[1]));
+					                } else if(command[0].startsWith("F")) {
+					                    fire2(Integer.parseInt(command[1]));
+					                } else if(command[0].startsWith("b")) {
+					                    boom(Integer.parseInt(command[1]));
+					                }
+					            }
 					        } catch(Exception ex) {}
 					        
 					        Thread.sleep(500);
@@ -1701,8 +1718,7 @@ public class Main extends JPanel {
 				}
 			}
 			
-			if(gameState != 2)
-			    g.drawImage(new ImageIcon("current/res/pricel.png").getImage(), 1024 / 2 - 7, 700 / 2 - 20, 12, 8, null);
+			g.drawImage(new ImageIcon("current/res/pricel.png").getImage(), 1024 / 2 - 7, 700 / 2 - 20, 12, 8, null);
 			g.drawImage(new ImageIcon("current/res/vignette.png").getImage(), 0, 0, 1024, 728, null);
 			
 			g.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 14));
