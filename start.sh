@@ -12,16 +12,16 @@ if [[ "$1" == "" ]]; then
 fi
 ##################
 
-# проверка curl
-curl --version > /dev/null
-if [[ "$?" != '0' ]]; then
-    echo 'Please install curl!'
-    exit 1
-fi
-#################
-
 # подключение
 if [[ "$1" == '-c' ]]; then
+    # проверка curl
+    curl --version > /dev/null
+    if [[ "$?" != '0' ]]; then
+        echo 'Please install curl!'
+        exit 1
+    fi
+    #################
+    
     # загрузка ресурспака
     echo -n 'Downloading resourcepack... '
     curl -o current/help "$2/current/help" 2> /dev/null
@@ -49,6 +49,14 @@ if [[ "$1" == '-c' ]]; then
 fi
 
 if [[ "$1" == '-s' || "$1" == '-S' ]]; then
+    # проверка php
+    php --version > /dev/null
+    if [[ "$?" != '0' ]]; then
+        echo 'Please install php!'
+        exit 1
+    fi
+    #################
+    
     if [[ "$1" == '-S' ]]; then
         java downadow.items_jlayground.main.Main --server &
     else

@@ -1767,7 +1767,7 @@ public class Main extends JPanel {
 			
 			g.setFont(new Font("Monospaced", Font.PLAIN, 14));
 			
-			if(gameState != 0) g.drawString(message, 15, 60);
+			if(gameState == 1) g.drawString(message, 15, 60);
 			
 			if(help && !programmingMode) {
 				g.drawImage(new ImageIcon("current/res/black.png").getImage(), 0, 0, 1024, 728, null);
