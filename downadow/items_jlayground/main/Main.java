@@ -1436,6 +1436,12 @@ public class Main extends JPanel {
 					                } else if(command[0].startsWith("b")) {
 					                    boom(Integer.parseInt(command[1]));
 					                }
+					                
+					                message = "";
+					                
+					                fw = new FileWriter("current/msg");
+					                fw.write("");
+					                fw.close();
 					            }
 					        } catch(Exception ex) {}
 					        
