@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ "$1" == "--help" ]]; then
-    echo 'usage: ./start.sh [--help] [-c <address>:<port>]|[-s <port>]'
+    echo 'usage: ./start.sh [--help] [{-c <address>:<port>}|{{-s|-S} <address>:<port>}]'
     exit 1
 fi
 
@@ -40,12 +40,21 @@ if [[ "$1" == '-c' ]]; then
     while true; do
         curl -o current/map "$2/current/map" 2> /dev/null
         curl -o current/adminPos "$2/current/adminPos" 2> /dev/null
+        if [[ "$(cat current/msg)" != "" ]]; then
+            curl "$2/msg.php?m=$(php -r 'echo urlencode(file_get_contents("current/msg"));')" 2> /dev/null
+            : > current/msg
+        fi
         sleep 0.5
     done
 fi
 
-if [[ "$1" == '-s' ]]; then
-    java downadow.items_jlayground.main.Main --server &
-    python3 -m http.server "$2"
+if [[ "$1" == '-s' || "$1" == '-S' ]]; then
+    if [[ "$1" == '-S' ]]; then
+        java downadow.items_jlayground.main.Main --server &
+    else
+        java downadow.items_jlayground.main.Main --server-no-creators &
+    fi
+    
+    php -S "$2"
 fi
 

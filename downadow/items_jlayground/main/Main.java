@@ -65,6 +65,11 @@ public class Main extends JPanel {
 	 */
 	private static int gameState = 0;
 	
+	/* могут ли клиенты выполнять команды? */
+	private static boolean serverAllowCreators = false;
+	
+	private static String message = "";
+	
 	private static int adminPos = 0;
 	
 	/* возвращает адрес блока, на который указывает прицел */
@@ -252,10 +257,15 @@ public class Main extends JPanel {
 	}
 	
 	public static void main(String[] args) {
-	    if(args.length > 0 && args[0].equals("--server"))
+	    if(args.length > 0 && args[0].equals("--server")) {
 	        gameState = 1;
-	    else if(args.length > 0 && args[0].equals("--client"))
+	        serverAllowCreators = true;
+	    } else if(args.length > 0 && args[0].equals("--server-no-creators")) {
+	        gameState = 1;
+	        serverAllowCreators = false;
+        } else if(args.length > 0 && args[0].equals("--client")) {
 	        gameState = 2;
+	    }
 	    
 		try {
 			/* загрузка карты, поведения и текста помощи */
@@ -613,7 +623,54 @@ public class Main extends JPanel {
 							physics = WIDTH;
 						/*******************************/
 						
-						else if(e.getKeyCode() == KeyEvent.VK_ESCAPE && ui) {
+						else if(e.getKeyCode() == KeyEvent.VK_ESCAPE && gameState == 2) {
+						    JFrame chat_fr = new JFrame("написать сообщение");
+							chat_fr.setAlwaysOnTop(true);
+							chat_fr.setSize(320, 140);
+							chat_fr.setResizable(false);
+							chat_fr.setLocationRelativeTo(null);
+							JPanel chat_p = new JPanel();
+							chat_p.setBounds(0, 0, 320, 140);
+							chat_fr.setLayout(null);
+							JTextField chat_tf = new JTextField(25);
+							JButton chat_b = new JButton("Отправить");
+		
+							chat_tf.addKeyListener(new KeyListener() {
+								public void keyPressed(KeyEvent e) {
+									if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+										try {
+										    FileWriter fw = new FileWriter("current/msg");
+										    fw.write(chat_tf.getText());
+										    fw.close();
+										    
+										    chat_fr.setVisible(false);
+										} catch(Exception ex) {
+										    ex.printStackTrace();
+										}
+									}
+								}
+								public void keyTyped(KeyEvent e) {}
+								public void keyReleased(KeyEvent e) {}
+							});
+							chat_b.addActionListener(new java.awt.event.ActionListener() {
+								public void actionPerformed(java.awt.event.ActionEvent e) {
+									try {
+									    FileWriter fw = new FileWriter("current/msg");
+									    fw.write(chat_tf.getText());
+									    fw.close();
+									    
+										chat_fr.setVisible(false);
+									} catch(Exception ex) {
+									    ex.printStackTrace();
+									}
+								}
+							});
+		
+							chat_p.add(chat_tf);
+							chat_p.add(chat_b);
+							chat_fr.add(chat_p);
+							chat_fr.setVisible(true);
+						} else if(e.getKeyCode() == KeyEvent.VK_ESCAPE && ui) {
 							// сохранение карты
 							
 							Files.deleteIfExists(Paths.get("current/map"));
@@ -1359,6 +1416,12 @@ public class Main extends JPanel {
 					        fw.write("" + selectedBlockAddr());
 					        fw.close();
 					        
+					        try {
+					            Scanner sc = new Scanner(new File("current/msg"));
+					            message = sc.nextLine();
+					            sc.close();
+					        } catch(Exception ex) {}
+					        
 					        Thread.sleep(500);
 					    } catch(Exception ex) {
 					        ex.printStackTrace();
@@ -1391,9 +1454,12 @@ public class Main extends JPanel {
 			                        sc = new Scanner(new File("current/adminPos"));
 			                        adminPos = Integer.parseInt(sc.nextLine());
 			                        sc.close();
-			                    } catch(Exception e) {}
+			                        
+					                sc = new Scanner(new File("current/msg"));
+					                message = sc.nextLine();
+					                sc.close();
+					            } catch(Exception ex) {}
 			                }
-			                
 			                /******************/
 					        
 					        Thread.sleep(500);
@@ -1678,6 +1744,8 @@ public class Main extends JPanel {
 				g.drawString("~", 970, 20);
 			
 			g.setFont(new Font("Monospaced", Font.PLAIN, 14));
+			
+			if(gameState != 0) g.drawString(message, 15, 60);
 			
 			if(help && !programmingMode) {
 				g.drawImage(new ImageIcon("current/res/black.png").getImage(), 0, 0, 1024, 728, null);
