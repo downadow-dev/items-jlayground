@@ -12,6 +12,14 @@ if [[ "$1" == "" ]]; then
 fi
 ##################
 
+# проверка php
+php --version > /dev/null
+if [[ "$?" != '0' ]]; then
+    echo 'Please install php!'
+    exit 1
+fi
+#################
+
 # подключение
 if [[ "$1" == '-c' ]]; then
     # проверка curl
@@ -49,14 +57,6 @@ if [[ "$1" == '-c' ]]; then
 fi
 
 if [[ "$1" == '-s' || "$1" == '-S' ]]; then
-    # проверка php
-    php --version > /dev/null
-    if [[ "$?" != '0' ]]; then
-        echo 'Please install php!'
-        exit 1
-    fi
-    #################
-    
     if [[ "$1" == '-S' ]]; then
         java downadow.items_jlayground.main.Main --server &
     else
