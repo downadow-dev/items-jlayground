@@ -541,9 +541,11 @@ public class Main extends JPanel {
 						            
 						            if(map[selected + WIDTH] != '.') {
 						                for(int i = 0; i < 3; i++) {
-						                    selected -= WIDTH;
-						                    map[selected] = map[selected + WIDTH];
-						                    map[selected + WIDTH] = '.';
+						                    if(map[selected - WIDTH] == '.') {
+						                        selected -= WIDTH;
+						                        map[selected] = map[selected + WIDTH];
+						                        map[selected + WIDTH] = '.';
+						                    }
 						                    Thread.sleep(150);
 						                }
 						            }
