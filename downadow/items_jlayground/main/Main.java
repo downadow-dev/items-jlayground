@@ -345,6 +345,7 @@ public class Main extends JPanel {
 							else
 							    behavior += "" + (((int)e.getKeyChar() - (int)'0') * 100);
 						    behavior += " ";
+							behaviorSelected2 = selectedBlockAddr();
 							step = false;
 							return;
 						}
