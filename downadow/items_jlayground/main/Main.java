@@ -43,7 +43,7 @@ public class Main extends JPanel {
 	
 	private static boolean noWater = false;
 	
-	private static boolean select = false, selectz = false;
+	private static boolean select = false, selectz = false, step = false;
 	
 	private static boolean fill = false;
 	
@@ -256,6 +256,11 @@ public class Main extends JPanel {
 	    }.start();
 	}
 	
+	
+	/**********
+	 *  main  *
+	 **********/
+	
 	public static void main(String[] args) {
 	    if(args.length > 0 && args[0].equals("--server")) {
 	        gameState = 1;
@@ -331,6 +336,19 @@ public class Main extends JPanel {
 							return;
 						}
 						
+						else if(step) {
+							behavior += "step:" + selectedBlockAddr() + ":";
+							if(e.getKeyChar() == '0')
+							    behavior += "50";
+							else if(e.getKeyChar() == '9')
+							    behavior += "1000";
+							else
+							    behavior += "" + (((int)e.getKeyChar() - (int)'0') * 100);
+						    behavior += " ";
+							step = false;
+							return;
+						}
+						
 						if(e.getKeyCode() == KeyEvent.VK_HOME) {
 							behavior = "";
 							behaviorSelected2 = -1;
@@ -381,6 +399,8 @@ public class Main extends JPanel {
 							behaviorSelected2 = selectedBlockAddr();
 						} else if(e.getKeyCode() == KeyEvent.VK_B) {
 							behavior += "boom ";
+						} else if(e.getKeyCode() == KeyEvent.VK_E) {
+							step = true;
 						} else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
 							behavior += "sel:" + selectedBlockAddr() + " ";
 							behaviorSelected2 = selectedBlockAddr();
@@ -1293,6 +1313,8 @@ public class Main extends JPanel {
 							String[] behaviorSplitted = behavior.split(" ");
 							
 							for(int i = 0; i < behaviorSplitted.length; i++) {
+							    behaviorSplitted[i] = behaviorSplitted[i].replace("selected", "" + (selected != -1 ? selected : selectedBlockAddr()));
+							    
 								if(behaviorSplitted[i].isEmpty())
 									continue;
 								else if(behaviorSplitted[i].split(":")[0].equals("sel") && behaviorSelected == 0) {
@@ -1358,22 +1380,22 @@ public class Main extends JPanel {
 								} else if(behaviorSplitted[i].startsWith("~")) {
 									Thread.sleep(!slow ? Integer.parseInt(behaviorSplitted[i].replace("~", "")) : Integer.parseInt(behaviorSplitted[i].replace("~", "")) * 2);
 								} else if(behaviorSplitted[i].equals("wait:up")) {
-									while(map[behaviorSelected - WIDTH] == '.')
+									while(map[behaviorSelected - WIDTH] == '.' && !behavior.isEmpty())
 										Thread.sleep(40);
 								} else if(behaviorSplitted[i].equals("wait:down")) {
-									while(map[behaviorSelected + WIDTH] == '.')
+									while(map[behaviorSelected + WIDTH] == '.' && !behavior.isEmpty())
 										Thread.sleep(40);
 								} else if(behaviorSplitted[i].equals("wait:right")) {
-									while(map[behaviorSelected + 1] == '.')
+									while(map[behaviorSelected + 1] == '.' && !behavior.isEmpty())
 										Thread.sleep(40);
 								} else if(behaviorSplitted[i].equals("wait:left")) {
-									while(map[behaviorSelected - 1] == '.')
+									while(map[behaviorSelected - 1] == '.' && !behavior.isEmpty())
 										Thread.sleep(40);
 								} else if(behaviorSplitted[i].equals("wait")) {
 									while(map[behaviorSelected - 1] == '.'     &&
 									      map[behaviorSelected + 1] == '.'     &&
 									      map[behaviorSelected + WIDTH] == '.' &&
-									      map[behaviorSelected - WIDTH] == '.')
+									      map[behaviorSelected - WIDTH] == '.' && !behavior.isEmpty())
 										Thread.sleep(40);
 								} else if(behaviorSplitted[i].startsWith("tp:")) {
 									map[Integer.parseInt(behaviorSplitted[i].split(":")[1])] = map[behaviorSelected];
@@ -1383,6 +1405,34 @@ public class Main extends JPanel {
 							        physics = -WIDTH;
 						        else if(behaviorSplitted[i].equals("-physics"))
 							        physics = WIDTH;
+						        else if(behaviorSplitted[i].startsWith("step:")) {
+							        int delay  = Integer.parseInt(behaviorSplitted[i].split(":")[2]),
+							            target = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
+						            
+						            while(behaviorSelected != target && !behavior.isEmpty()) {
+						                if(behaviorSelected / WIDTH < target / WIDTH && map[behaviorSelected + WIDTH] == '.') {
+						                    map[behaviorSelected + WIDTH] = map[behaviorSelected];
+						                    map[behaviorSelected] = '.';
+						                    behaviorSelected += WIDTH;
+						                } else if(behaviorSelected / WIDTH > target / WIDTH && map[behaviorSelected - WIDTH] == '.') {
+						                    map[behaviorSelected - WIDTH] = map[behaviorSelected];
+						                    map[behaviorSelected] = '.';
+						                    behaviorSelected -= WIDTH;
+						                }
+						                
+						                if(behaviorSelected % WIDTH < target % WIDTH && map[behaviorSelected + 1] == '.') {
+						                    map[behaviorSelected + 1] = map[behaviorSelected];
+						                    map[behaviorSelected] = '.';
+						                    behaviorSelected++;
+						                } else if(behaviorSelected % WIDTH > target % WIDTH && map[behaviorSelected - 1] == '.') {
+						                    map[behaviorSelected - 1] = map[behaviorSelected];
+						                    map[behaviorSelected] = '.';
+						                    behaviorSelected--;
+						                }
+						                
+						                Thread.sleep((long)delay);
+						            }
+						        }
 							}
 						}
 						
@@ -1782,25 +1832,26 @@ public class Main extends JPanel {
 				
 				g.setFont(new Font("Monospaced", Font.PLAIN, 15));
 				
-				g.drawString("<стрелки>.......:  перемещение", 20, 20);
-				g.drawString("wasd............:  up, left, down, right", 20, 40);
-				g.drawString("WASD............:  up:copy, left:copy, down:copy, right:copy", 20, 60);
-				g.drawString("ijkl............:  up:lift, left:lift, down:lift, right:lift", 20, 80);
-				g.drawString("fF..............:  fire, fire2", 20, 100);
-				g.drawString("b...............:  boom", 20, 120);
-				g.drawString("<Home>..........:  стереть весь код", 20, 140);
-				g.drawString("<Backspace>.....:  стереть последний блок кода", 20, 160);
-				g.drawString("<пробел>........:  sel:<...> (выбрать блок под прицелом)", 20, 180);
-				g.drawString("<Ctrl+X>........:  no_sel (убрать выделение)", 20, 200);
-				g.drawString("<Enter>.........:  set:<след. клавиша>", 20, 220);
-				g.drawString("<Insert>........:  изменение кода в текстовом режиме", 20, 240);
-				g.drawString("0123456789-.....:  ~<...> (приостановить выполнение на 50/100/200/.../1000/5000 миллисекунд", 20, 260);
-				g.drawString("Z...............:  wait (ждать любого столкновения)", 20, 280);
-				g.drawString("   'z', а после 'w'/'a'/'s'/'d' --- wait:up/left/down/right (ждать столкновения в опр. стороне)", 20, 300);
-				g.drawString("<F5>............:  выход из режима программирования", 20, 320);
-				g.drawString("<F1>............:  скрыть/показать эту помощь", 20, 340);
-				g.drawString("T...............:  tp:<адрес блока под прицелом>", 20, 360);
-				g.drawString("<F10>...........:  -physics", 20, 380);
+				g.drawString("<стрелки>.......:   перемещение", 20, 20);
+				g.drawString("wasd............:   up, left, down, right", 20, 40);
+				g.drawString("WASD............:   up:copy, left:copy, down:copy, right:copy", 20, 60);
+				g.drawString("ijkl............:   up:lift, left:lift, down:lift, right:lift", 20, 80);
+				g.drawString("fF..............:   fire, fire2", 20, 100);
+				g.drawString("b...............:   boom", 20, 120);
+				g.drawString("<Home>..........:   стереть весь код", 20, 140);
+				g.drawString("<Backspace>.....:   стереть последний блок кода", 20, 160);
+				g.drawString("<пробел>........:   sel:<...> (выбрать блок под прицелом)", 20, 180);
+				g.drawString("<Ctrl+X>........:   no_sel (убрать выделение)", 20, 200);
+				g.drawString("<Enter>.........:   set:<след. клавиша>", 20, 220);
+				g.drawString("<Insert>........:   изменение кода в текстовом режиме", 20, 240);
+				g.drawString("0123456789-.....:   ~<...> (приостановить выполнение на 50/100/200/.../1000/5000 миллисекунд", 20, 260);
+				g.drawString("Z...............:   wait (ждать любого столкновения)", 20, 280);
+				g.drawString("z, а после w/a/s/d: wait:up/left/down/right (ждать столкновения в опр. стороне)", 20, 300);
+				g.drawString("<F5>............:   выход из режима программирования", 20, 320);
+				g.drawString("<F1>............:   скрыть/показать эту помощь", 20, 340);
+				g.drawString("T...............:   tp:<адрес блока под прицелом>", 20, 360);
+				g.drawString("<F10>...........:   -physics", 20, 380);
+				g.drawString("E, а после 0..9 :   step:<...>:<...> (шагать с перерывами в 50/100/.../1000 миллисекунд)", 20, 400);
 			}
 		}
 	}
