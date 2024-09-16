@@ -1554,7 +1554,7 @@ public class Main extends JPanel {
 		   ================== */
 		int iii = cameraStart;
 		for(int i = 0; i < HEIGHT; i++) {
-			for(int ii = 0; ii < WIDTH; ii++) {
+			for(int ii = 0; ii < 18; ii++) {
 				try {
 					if(iii < map.length && iii >= 0) {
 						g.setColor(bgColor);
@@ -1676,11 +1676,12 @@ public class Main extends JPanel {
 				} catch(ArrayIndexOutOfBoundsException e) {}
 				iii++;
 			}
+			iii += WIDTH - 18;
 		}
 		
 		iii = cameraStart;
 		for(int i = 0; i < HEIGHT; i++) {
-			for(int ii = 0; ii < WIDTH; ii++) {
+			for(int ii = 0; ii < 18; ii++) {
 				try {
 					if(Main.map[iii] == 'f')
 						g.drawImage(new ImageIcon("current/res/fire.png").getImage(), ii * 60 - 30, i * 60 - 100, 180, 200, null);
@@ -1756,13 +1757,14 @@ public class Main extends JPanel {
 				} catch(ArrayIndexOutOfBoundsException e) {}
 				iii++;
 			}
+			iii += WIDTH - 18;
 		}
 		/*********************************/
 		
 		if(ui) {
 			iii = cameraStart;
 			for(int i = 0; i < HEIGHT; i++) {
-				for(int ii = 0; ii < WIDTH; ii++) {
+				for(int ii = 0; ii < 18; ii++) {
 					try {
 						if(forBoom[iii] && !programmingMode) {
 							g.drawImage(new ImageIcon("current/res/red.png").getImage(), ii * 60 - 60, i * 60, 180, 60, null);
@@ -1774,6 +1776,7 @@ public class Main extends JPanel {
 					} catch(ArrayIndexOutOfBoundsException e) {}
 					iii++;
 				}
+				iii += WIDTH - 18;
 			}
 			
 			g.drawImage(new ImageIcon("current/res/pricel.png").getImage(), 1024 / 2 - 7, 700 / 2 - 20, 12, 8, null);
