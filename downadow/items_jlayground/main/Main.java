@@ -799,7 +799,7 @@ public class Main extends JPanel {
 						else if(e.getKeyChar() == 'G')
 							map[selectedBlockAddr()] = 'G';
 						/* поставить стекло */
-						else if(e.getKeyCode() == KeyEvent.VK_G && map[selectedBlockAddr() + WIDTH] != '.')
+						else if(e.getKeyCode() == KeyEvent.VK_G)
 							map[selectedBlockAddr()] = 'g';
 						/* поставить current/res/stone.png */
 						else if(e.getKeyCode() == KeyEvent.VK_T)
