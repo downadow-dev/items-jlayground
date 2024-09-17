@@ -1580,7 +1580,7 @@ public class Main extends JPanel {
         /* рисование объектов
            ================== */
         int iii = cameraStart;
-        for(int i = 0; i < HEIGHT; i++) {
+        for(int i = 0; i < 14; i++) {
             for(int ii = 0; ii < 18; ii++) {
                 try {
                     if(iii < map.length && iii >= 0) {
@@ -1707,7 +1707,7 @@ public class Main extends JPanel {
         }
         
         iii = cameraStart;
-        for(int i = 0; i < HEIGHT; i++) {
+        for(int i = 0; i < 14; i++) {
             for(int ii = 0; ii < 18; ii++) {
                 try {
                     if(Main.map[iii] == 'f')
@@ -1790,7 +1790,7 @@ public class Main extends JPanel {
         
         if(ui) {
             iii = cameraStart;
-            for(int i = 0; i < HEIGHT; i++) {
+            for(int i = 0; i < 14; i++) {
                 for(int ii = 0; ii < 18; ii++) {
                     try {
                         if(forBoom[iii] && !programmingMode) {
