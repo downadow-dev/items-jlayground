@@ -303,7 +303,7 @@ public class Main extends JPanel {
         fr.setSize(1024, 728);
         fr.setResizable(false);
         fr.setLocationRelativeTo(null);
-        fr.setDefaultCloseOperation(3);
+        fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         fr.setLayout(null);
         Main p = new Main();
         p.setLayout(null);
