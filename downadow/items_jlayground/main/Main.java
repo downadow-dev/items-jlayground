@@ -1525,9 +1525,7 @@ public class Main extends JPanel {
                             } catch(Exception ex) {}
                             
                             Thread.sleep(500);
-                        } catch(Exception ex) {
-                            ex.printStackTrace();
-                        }
+                        } catch(Exception ex) {}
                     }
                 }
             }.start();
@@ -1565,9 +1563,7 @@ public class Main extends JPanel {
                             /******************/
                             
                             Thread.sleep(500);
-                        } catch(Exception ex) {
-                            ex.printStackTrace();
-                        }
+                        } catch(Exception ex) {}
                     }
                 }
             }.start();
