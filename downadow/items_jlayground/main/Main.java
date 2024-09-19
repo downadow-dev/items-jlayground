@@ -1505,9 +1505,15 @@ public class Main extends JPanel {
                                     String[] command = message.split("> /")[1].split(" ");
                                     
                                     if(command[0].startsWith("c")) {
-                                        map[Integer.parseInt(command[1])] = command[2].toCharArray()[0];
-                                    } else if(command[0].startsWith("d")) {
-                                        map[Integer.parseInt(command[1])] = '.';
+                                        char[] chrs = command[2].toCharArray();
+                                        int start = Integer.parseInt(command[1]);
+                                        for(int i = 0; i < chrs.length; i++)
+                                            map[start + i] = chrs[i];
+                                    } else if(command[0].startsWith("C")) {
+                                        char[] chrs = command[2].toCharArray();
+                                        int start = Integer.parseInt(command[1]);
+                                        for(int i = 0; i < chrs.length; i++)
+                                            map[start + i * WIDTH] = chrs[i];
                                     } else if(command[0].startsWith("f")) {
                                         fire(Integer.parseInt(command[1]));
                                     } else if(command[0].startsWith("F")) {
