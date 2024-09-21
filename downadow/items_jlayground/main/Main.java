@@ -1075,171 +1075,173 @@ public class Main extends JPanel {
         startTime = System.currentTimeMillis();
         
         /* "физика" и пр. */
-        new Thread() {
-            public void run() {
-                while(true) {
-                    try {
-                        if(physics == -WIDTH) {
+        if(gameState != 2) {
+            new Thread() {
+                public void run() {
+                    while(true) {
+                        try {
+                            if(physics == -WIDTH) {
+                                for(int i = WIDTH; i < map.length - WIDTH; i++) {
+                                    if(ph) {
+                                        if(selected == -1 && (map[i] == '@' || map[i] == 's' || map[i] == '|' || map[i] == 'd' ||
+                                        map[i] == '#' || map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' ||
+                                        map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' ||
+                                        map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' ||
+                                        map[i] == 'Q') && (map[i + physics] == '.' || map[i + physics] == 'W' ||
+                                        map[i + physics] == 'b' || map[i + physics] == 'g') &&
+                                        (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - physics] != 'z')) {
+                                            map[i + physics] = map[i];
+                                            map[i] = '.';
+                                        } else if((map[i] == '@' || map[i] == 's' || map[i] == '|' || map[i] == 'd' || map[i] == '#' ||
+                                            map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' || map[i] == 'Q') && map[i + physics] == 'k') {
+                                            map[i] = '.';
+                                        }
+                                    }
+                                }
+                            } else {
+                                for(int i = map.length - WIDTH; i > WIDTH; i--) {
+                                    if(ph) {
+                                        if(selected == -1 && (map[i] == '@' ||  map[i] == 's' || map[i] == '|' ||  map[i] == 'd' || map[i] == '#' ||
+                                            map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' || map[i] == 'Q') && (map[i + physics] == '.' || map[i + physics] == 'W' || map[i + physics] == 'b' || map[i + physics] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - physics] != 'z')) {
+                                            map[i + physics] = map[i];
+                                            map[i] = '.';
+                                        } else if((map[i] == '@' || map[i] == 's' || map[i] == '|' || map[i] == 'd' || map[i] == '#' ||
+                                            map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' || map[i] == 'Q') && map[i + physics] == 'k') {
+                                            map[i] = '.';
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            if(!slow)
+                                Thread.sleep(30);
+                            else
+                                Thread.sleep(110);
+                        } catch(Exception e) {}
+                    }
+                }
+            }.start();
+            new Thread() {
+                public void run() {
+                    while(true) {
+                        try {
                             for(int i = WIDTH; i < map.length - WIDTH; i++) {
                                 if(ph) {
-                                    if(selected == -1 && (map[i] == '@' || map[i] == 's' || map[i] == '|' || map[i] == 'd' ||
-                                    map[i] == '#' || map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' ||
-                                    map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' ||
-                                    map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' ||
-                                    map[i] == 'Q') && (map[i + physics] == '.' || map[i + physics] == 'W' ||
-                                    map[i + physics] == 'b' || map[i + physics] == 'g') &&
-                                    (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - physics] != 'z')) {
-                                        map[i + physics] = map[i];
-                                        map[i] = '.';
-                                    } else if((map[i] == '@' || map[i] == 's' || map[i] == '|' || map[i] == 'd' || map[i] == '#' ||
-                                        map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' || map[i] == 'Q') && map[i + physics] == 'k') {
-                                        map[i] = '.';
+                                    if(map[i] == 'W' && !noWater) {
+                                        if(map[i - 1] == 'f')
+                                            map[i - 1] = 'b';
+                                        if(map[i + 1] == 'f')
+                                            map[i + 1] = 'b';
+                                        if(map[i + physics] == 'f')
+                                            map[i + physics] = 'b';
+                                        if(map[i - physics] == 'f')
+                                            map[i - physics] = 'b';
+                                
+                                        if((map[i + physics] != '.' && map[i + physics] != 'W') || i + physics * 2 > map.length) {
+                                            if(map[i - 1] == '.' || map[i - 1] == 'd' || map[i - 1] == '|' || map[i - 1] == '#' || map[i - 1] == 'l') {
+                                                if(!slow)
+                                                    Thread.sleep(160);
+                                                else
+                                                    Thread.sleep(400);
+                                                map[i - 1] = 'W';
+                                            }
+                                    
+                                            if(map[i + 1] == '.' || map[i + 1] == 'd' || map[i + 1] == '|' || map[i + 1] == '#' || map[i + 1] == 'l') {
+                                                if(!slow)
+                                                    Thread.sleep(160);
+                                                else
+                                                    Thread.sleep(400);
+                                                map[i + 1] = 'W';
+                                            }
+                                        }
+                                
+                                        if(map[i + physics] == '.' || map[i + physics] == 'd' || map[i + physics] == '|' || map[i + physics] == '#' || map[i + physics] == 'l')
+                                            map[i + physics] = 'W';
+                                
+                                    } else if(noWater) {
+                                        for(int ii = 0; ii < map.length; ii++)
+                                            if(map[ii] == 'W')
+                                                map[ii] = '.';
+                                        noWater = false;
+                                    } else if(map[i] == '/' && map[i + physics] == '.')
+                                        map[i] = 'i';
+                                    else if(map[i] == '\\' && map[i + physics] == '.')
+                                        map[i] = 'I';
+                                    else if(map[i] == 'i')
+                                        map[i] = '/';
+                                    else if(map[i] == 'I')
+                                        map[i] = '\\';
+                                    else if(map[i] == 'A') {
+                                        if(map[i - 1] == '.' || map[i - 1] == 'f' || map[i - 1] == 'W')
+                                            map[i - 1] = 'A';
+                                        if(map[i + 1] == '.' || map[i + 1] == 'f' || map[i + 1] == 'W')
+                                            map[i + 1] = 'A';
+                                        if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'f' || map[i + WIDTH] == 'W')
+                                            map[i + WIDTH] = 'A';
+                                        if(map[i - WIDTH] == '.' || map[i - WIDTH] == 'f' || map[i - WIDTH] == 'W')
+                                            map[i - WIDTH] = 'A';
+                                
+                                        Thread.sleep(!slow ? 50 : 500);
                                     }
                                 }
                             }
-                        } else {
-                            for(int i = map.length - WIDTH; i > WIDTH; i--) {
-                                if(ph) {
-                                    if(selected == -1 && (map[i] == '@' ||  map[i] == 's' || map[i] == '|' ||  map[i] == 'd' || map[i] == '#' ||
-                                        map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' || map[i] == 'Q') && (map[i + physics] == '.' || map[i + physics] == 'W' || map[i + physics] == 'b' || map[i + physics] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - physics] != 'z')) {
-                                        map[i + physics] = map[i];
-                                        map[i] = '.';
-                                    } else if((map[i] == '@' || map[i] == 's' || map[i] == '|' || map[i] == 'd' || map[i] == '#' ||
-                                        map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' || map[i] == 'Q') && map[i + physics] == 'k') {
-                                        map[i] = '.';
-                                    }
-                                }
-                            }
-                        }
-                        
-                        if(!slow)
                             Thread.sleep(30);
-                        else
-                            Thread.sleep(110);
-                    } catch(Exception e) {}
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
-            }
-        }.start();
-        new Thread() {
-            public void run() {
-                while(true) {
-                    try {
-                        for(int i = WIDTH; i < map.length - WIDTH; i++) {
+            }.start();
+            
+            new Thread() {
+                public void run() {
+                    while(true) {
+                        for(int i = 0; i < map.length; i++) {
                             if(ph) {
-                                if(map[i] == 'W' && !noWater) {
-                                    if(map[i - 1] == 'f')
-                                        map[i - 1] = 'b';
-                                    if(map[i + 1] == 'f')
-                                        map[i + 1] = 'b';
-                                    if(map[i + physics] == 'f')
-                                        map[i + physics] = 'b';
-                                    if(map[i - physics] == 'f')
-                                        map[i - physics] = 'b';
-                            
-                                    if((map[i + physics] != '.' && map[i + physics] != 'W') || i + physics * 2 > map.length) {
-                                        if(map[i - 1] == '.' || map[i - 1] == 'd' || map[i - 1] == '|' || map[i - 1] == '#' || map[i - 1] == 'l') {
-                                            if(!slow)
-                                                Thread.sleep(160);
-                                            else
-                                                Thread.sleep(400);
-                                            map[i - 1] = 'W';
-                                        }
-                                
-                                        if(map[i + 1] == '.' || map[i + 1] == 'd' || map[i + 1] == '|' || map[i + 1] == '#' || map[i + 1] == 'l') {
-                                            if(!slow)
-                                                Thread.sleep(160);
-                                            else
-                                                Thread.sleep(400);
-                                            map[i + 1] = 'W';
+                                try {
+                                    /* работа батута */
+                                    if(map[i] == '%' && (map[i - physics] != '.' && map[i - physics * 2] == '.' && map[i - physics * 3] == '.' && map[i - physics * 4] == '.')) {
+                                        map[i - physics * 4] = map[i - physics];
+                                        map[i - physics] = '.';
+                                    }
+                                    /* работа порталов */
+                                    else if(map[i] == 'p') {
+                                        for(int ii = 0; ii < map.length - 1; ii++) {
+                                            if(map[ii] == 'P') {
+                                                if(map[i + 1] != '.')
+                                                    map[ii - 1] = map[i + 1];
+                                                if(map[i - 1] != '.')
+                                                    map[ii + 1] = map[i - 1];
+                                                if(map[i - physics] != '.')
+                                                    map[ii + physics] = map[i - physics];
+                                    
+                                                map[i - 1] = '.';
+                                                map[i + 1] = '.';
+                                                map[i - physics] = '.';
+                                                break;
+                                            }
                                         }
                                     }
-                            
-                                    if(map[i + physics] == '.' || map[i + physics] == 'd' || map[i + physics] == '|' || map[i + physics] == '#' || map[i + physics] == 'l')
-                                        map[i + physics] = 'W';
-                            
-                                } else if(noWater) {
-                                    for(int ii = 0; ii < map.length; ii++)
-                                        if(map[ii] == 'W')
-                                            map[ii] = '.';
-                                    noWater = false;
-                                } else if(map[i] == '/' && map[i + physics] == '.')
-                                    map[i] = 'i';
-                                else if(map[i] == '\\' && map[i + physics] == '.')
-                                    map[i] = 'I';
-                                else if(map[i] == 'i')
-                                    map[i] = '/';
-                                else if(map[i] == 'I')
-                                    map[i] = '\\';
-                                else if(map[i] == 'A') {
-                                    if(map[i - 1] == '.' || map[i - 1] == 'f' || map[i - 1] == 'W')
-                                        map[i - 1] = 'A';
-                                    if(map[i + 1] == '.' || map[i + 1] == 'f' || map[i + 1] == 'W')
-                                        map[i + 1] = 'A';
-                                    if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'f' || map[i + WIDTH] == 'W')
-                                        map[i + WIDTH] = 'A';
-                                    if(map[i - WIDTH] == '.' || map[i - WIDTH] == 'f' || map[i - WIDTH] == 'W')
-                                        map[i - WIDTH] = 'A';
-                            
-                                    Thread.sleep(!slow ? 50 : 500);
+                                    /* работа ускорения */
+                                    else if(map[i] == '~' && map[i - physics] != '.' && map[i - physics] != 'W' && map[i - physics] != '~' && map[i - physics + 1] == '.') {
+                                        map[i - physics + 1] = map[i - physics];
+                                        map[i - physics] = '.';
+                                        Thread.sleep(!slow ? 200 : 500);
+                                    } else if(map[i] == ',' && map[i - physics] != '.' && map[i - physics] != 'W' && map[i - physics] != '~' && map[i - physics - 1] == '.') {
+                                        map[i - physics - 1] = map[i - physics];
+                                        map[i - physics] = '.';
+                                        Thread.sleep(!slow ? 200 : 500);
+                                    }
+                                } catch(Exception e) {
+                                    e.printStackTrace();
                                 }
                             }
                         }
-                        Thread.sleep(30);
-                    } catch(Exception e) {
-                        e.printStackTrace();
+                        try {Thread.sleep(40);} catch(Exception e) {}
                     }
                 }
-            }
-        }.start();
-        
-        new Thread() {
-            public void run() {
-                while(true) {
-                    for(int i = 0; i < map.length; i++) {
-                        if(ph) {
-                            try {
-                                /* работа батута */
-                                if(map[i] == '%' && (map[i - physics] != '.' && map[i - physics * 2] == '.' && map[i - physics * 3] == '.' && map[i - physics * 4] == '.')) {
-                                    map[i - physics * 4] = map[i - physics];
-                                    map[i - physics] = '.';
-                                }
-                                /* работа порталов */
-                                else if(map[i] == 'p') {
-                                    for(int ii = 0; ii < map.length - 1; ii++) {
-                                        if(map[ii] == 'P') {
-                                            if(map[i + 1] != '.')
-                                                map[ii - 1] = map[i + 1];
-                                            if(map[i - 1] != '.')
-                                                map[ii + 1] = map[i - 1];
-                                            if(map[i - physics] != '.')
-                                                map[ii + physics] = map[i - physics];
-                                
-                                            map[i - 1] = '.';
-                                            map[i + 1] = '.';
-                                            map[i - physics] = '.';
-                                            break;
-                                        }
-                                    }
-                                }
-                                /* работа ускорения */
-                                else if(map[i] == '~' && map[i - physics] != '.' && map[i - physics] != 'W' && map[i - physics] != '~' && map[i - physics + 1] == '.') {
-                                    map[i - physics + 1] = map[i - physics];
-                                    map[i - physics] = '.';
-                                    Thread.sleep(!slow ? 200 : 500);
-                                } else if(map[i] == ',' && map[i - physics] != '.' && map[i - physics] != 'W' && map[i - physics] != '~' && map[i - physics - 1] == '.') {
-                                    map[i - physics - 1] = map[i - physics];
-                                    map[i - physics] = '.';
-                                    Thread.sleep(!slow ? 200 : 500);
-                                }
-                            } catch(Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                    try {Thread.sleep(40);} catch(Exception e) {}
-                }
-            }
-        }.start();
+            }.start();
+        }
         
         /* обновление экрана и пр. */
         new Thread() {
@@ -1273,203 +1275,205 @@ public class Main extends JPanel {
         }.start();
         
         /* логика стрелок */
-        new Thread() {
-            public void run() {
-                while(true) {
-                        for(int i = 0; i < map.length; i++) {
-                            try {
-                                if(map[i] == ':' && (map[i - 1] == 'z' || map[i + 1] == 'z' || map[i - physics] == 'z') || map[i + physics] == 'z') {
-                                    continue;
-                                } else if(map[i] == ':' && map[i - 1] == '.') {
-                                    map[i] = '.';
-                                    map[i - 1] = ':';
-                                } else if(map[i] == ':' && map[i - 1] != '.' && map[i - physics] == '.' && map[i - physics - 1] == '.') {
-                                    map[i] = '.';
-                                    map[i - physics - 1] = ':';
-                                } else if(map[i] == ';' && map[i + 1] != '.' && map[i - physics] == '.' && map[i - physics + 1] == '.') {
-                                    map[i] = '.';
-                                    map[i - physics + 1] = ';';
-                                } else if(map[i] == ':') {
-                                    map[i] = ';';
-                                } else if(map[i] == ';' && map[i + 1] == '.') {
-                                    map[i] = '.';
-                                    map[i + 1] = ';';
-                                    i++;
-                                } else if(map[i] == ';') {
-                                    map[i] = ':';
-                                }
-                            } catch(Exception e) {}
-                        }
-                        try {Thread.sleep(!slow ? 400 : 1000);} catch(Exception e) {}
+        if(gameState != 2) {
+            new Thread() {
+                public void run() {
+                    while(true) {
+                            for(int i = 0; i < map.length; i++) {
+                                try {
+                                    if(map[i] == ':' && (map[i - 1] == 'z' || map[i + 1] == 'z' || map[i - physics] == 'z') || map[i + physics] == 'z') {
+                                        continue;
+                                    } else if(map[i] == ':' && map[i - 1] == '.') {
+                                        map[i] = '.';
+                                        map[i - 1] = ':';
+                                    } else if(map[i] == ':' && map[i - 1] != '.' && map[i - physics] == '.' && map[i - physics - 1] == '.') {
+                                        map[i] = '.';
+                                        map[i - physics - 1] = ':';
+                                    } else if(map[i] == ';' && map[i + 1] != '.' && map[i - physics] == '.' && map[i - physics + 1] == '.') {
+                                        map[i] = '.';
+                                        map[i - physics + 1] = ';';
+                                    } else if(map[i] == ':') {
+                                        map[i] = ';';
+                                    } else if(map[i] == ';' && map[i + 1] == '.') {
+                                        map[i] = '.';
+                                        map[i + 1] = ';';
+                                        i++;
+                                    } else if(map[i] == ';') {
+                                        map[i] = ':';
+                                    }
+                                } catch(Exception e) {}
+                            }
+                            try {Thread.sleep(!slow ? 400 : 1000);} catch(Exception e) {}
+                    }
                 }
-            }
-        }.start();
-        
-        /* выполнение поведения */
-        new Thread() {
-            public void run() {
-                while(true) {
-                    try {
-                        if(!behavior.isEmpty() && ph) {
-                            String[] behaviorSplitted = behavior.split(" ");
-                            
-                            for(int i = 0; i < behaviorSplitted.length; i++) {
-                                behaviorSplitted[i] = behaviorSplitted[i].replace("selected", "" + (selected != -1 ? selected : selectedBlockAddr()));
+            }.start();
+            
+            /* выполнение поведения */
+            new Thread() {
+                public void run() {
+                    while(true) {
+                        try {
+                            if(!behavior.isEmpty() && ph) {
+                                String[] behaviorSplitted = behavior.split(" ");
                                 
-                                if(behaviorSplitted[i].isEmpty())
-                                    continue;
-                                /* sel */
-                                else if(behaviorSplitted[i].split(":")[0].equals("sel") && behaviorSelected == 0) {
-                                    behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
-                                }
-                                /* no_sel */
-                                else if(behaviorSplitted[i].split(":")[0].equals("no_sel")) {
-                                    behaviorSelected = 0;
-                                }
-                                /* перемещение */
-                                else if(behaviorSplitted[i].equals("up")) {
-                                    map[behaviorSelected - WIDTH] = map[behaviorSelected];
-                                    map[behaviorSelected] = '.';
-                                    behaviorSelected -= WIDTH;
-                                } else if(behaviorSplitted[i].equals("down")) {
-                                    map[behaviorSelected + WIDTH] = map[behaviorSelected];
-                                    map[behaviorSelected] = '.';
-                                    behaviorSelected += WIDTH;
-                                } else if(behaviorSplitted[i].equals("right")) {
-                                    map[behaviorSelected + 1] = map[behaviorSelected];
-                                    map[behaviorSelected] = '.';
-                                    behaviorSelected++;
-                                } else if(behaviorSplitted[i].equals("left")) {
-                                    map[behaviorSelected - 1] = map[behaviorSelected];
-                                    map[behaviorSelected] = '.';
-                                    behaviorSelected--;
-                                } else if(behaviorSplitted[i].equals("up:lift")) {
-                                    map[behaviorSelected - WIDTH * 2] = map[behaviorSelected - WIDTH];
-                                    map[behaviorSelected - WIDTH] = map[behaviorSelected];
-                                    map[behaviorSelected] = '.';
-                                    behaviorSelected -= WIDTH;
-                                } else if(behaviorSplitted[i].equals("down:lift")) {
-                                    map[behaviorSelected + WIDTH * 2] = map[behaviorSelected + WIDTH];
-                                    map[behaviorSelected + WIDTH] = map[behaviorSelected];
-                                    map[behaviorSelected] = '.';
-                                    behaviorSelected += WIDTH;
-                                } else if(behaviorSplitted[i].equals("right:lift")) {
-                                    map[behaviorSelected + 2] = map[behaviorSelected + 1];
-                                    map[behaviorSelected + 1] = map[behaviorSelected];
-                                    map[behaviorSelected] = '.';
-                                    behaviorSelected++;
-                                } else if(behaviorSplitted[i].equals("left:lift")) {
-                                    map[behaviorSelected - 2] = map[behaviorSelected - 1];
-                                    map[behaviorSelected - 1] = map[behaviorSelected];
-                                    map[behaviorSelected] = '.';
-                                    behaviorSelected--;
-                                } else if(behaviorSplitted[i].equals("up:copy")) {
-                                    map[behaviorSelected - WIDTH] = map[behaviorSelected];
-                                    behaviorSelected -= WIDTH;
-                                } else if(behaviorSplitted[i].equals("down:copy")) {
-                                    map[behaviorSelected + WIDTH] = map[behaviorSelected];
-                                    behaviorSelected += WIDTH;
-                                } else if(behaviorSplitted[i].equals("right:copy")) {
-                                    map[behaviorSelected + 1] = map[behaviorSelected];
-                                    behaviorSelected++;
-                                } else if(behaviorSplitted[i].equals("left:copy")) {
-                                    map[behaviorSelected - 1] = map[behaviorSelected];
-                                    behaviorSelected--;
-                                }
-                                /* fire, fire2 и boom */
-                                else if(behaviorSplitted[i].split(":")[0].equals("fire")) {
-                                    fire(behaviorSelected);
-                                } else if(behaviorSplitted[i].split(":")[0].equals("fire2")) {
-                                    fire2(behaviorSelected);
-                                } else if(behaviorSplitted[i].split(":")[0].equals("boom")) {
-                                    boom(behaviorSelected);
-                                }
-                                /* set */
-                                else if(behaviorSplitted[i].split(":")[0].equals("set")) {
-                                    map[behaviorSelected] = behaviorSplitted[i].split(":")[1].toCharArray()[0];
-                                }
-                                /* ~<...> */
-                                else if(behaviorSplitted[i].startsWith("~")) {
-                                    Thread.sleep(!slow ? Integer.parseInt(behaviorSplitted[i].replace("~", "")) : Integer.parseInt(behaviorSplitted[i].replace("~", "")) * 2);
-                                }
-                                /* wait */
-                                else if(behaviorSplitted[i].equals("wait:up")) {
-                                    while(map[behaviorSelected - WIDTH] == '.' && !behavior.isEmpty())
-                                        Thread.sleep(40);
-                                } else if(behaviorSplitted[i].equals("wait:down")) {
-                                    while(map[behaviorSelected + WIDTH] == '.' && !behavior.isEmpty())
-                                        Thread.sleep(40);
-                                } else if(behaviorSplitted[i].equals("wait:right")) {
-                                    while(map[behaviorSelected + 1] == '.' && !behavior.isEmpty())
-                                        Thread.sleep(40);
-                                } else if(behaviorSplitted[i].equals("wait:left")) {
-                                    while(map[behaviorSelected - 1] == '.' && !behavior.isEmpty())
-                                        Thread.sleep(40);
-                                } else if(behaviorSplitted[i].equals("wait")) {
-                                    while(map[behaviorSelected - 1] == '.'     &&
-                                          map[behaviorSelected + 1] == '.'     &&
-                                          map[behaviorSelected + WIDTH] == '.' &&
-                                          map[behaviorSelected - WIDTH] == '.' && !behavior.isEmpty())
-                                        Thread.sleep(40);
-                                }
-                                /* tp */
-                                else if(behaviorSplitted[i].startsWith("tp:")) {
-                                    map[Integer.parseInt(behaviorSplitted[i].split(":")[1])] = map[behaviorSelected];
-                                    map[behaviorSelected] = '.';
-                                    behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
-                                }
-                                /* -physics */
-                                else if(behaviorSplitted[i].equals("-physics") && physics == WIDTH)
-                                    physics = -WIDTH;
-                                else if(behaviorSplitted[i].equals("-physics"))
-                                    physics = WIDTH;
-                                /* step */
-                                else if(behaviorSplitted[i].startsWith("step:")) {
-                                    int delay  = Integer.parseInt(behaviorSplitted[i].split(":")[2]),
-                                        target = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
+                                for(int i = 0; i < behaviorSplitted.length; i++) {
+                                    behaviorSplitted[i] = behaviorSplitted[i].replace("selected", "" + (selected != -1 ? selected : selectedBlockAddr()));
                                     
-                                    while(behaviorSelected != target && !behavior.isEmpty()) {
-                                        if(behaviorSelected / WIDTH < target / WIDTH && map[behaviorSelected + WIDTH] == '.') {
-                                            map[behaviorSelected + WIDTH] = map[behaviorSelected];
-                                            map[behaviorSelected] = '.';
-                                            behaviorSelected += WIDTH;
-                                        } else if(behaviorSelected / WIDTH < target / WIDTH && map[behaviorSelected + WIDTH] != '.') {
-                                            break;
-                                        } else if(behaviorSelected / WIDTH > target / WIDTH && map[behaviorSelected - WIDTH] == '.') {
-                                            map[behaviorSelected - WIDTH] = map[behaviorSelected];
-                                            map[behaviorSelected] = '.';
-                                            behaviorSelected -= WIDTH;
-                                        } else if(behaviorSelected / WIDTH > target / WIDTH && map[behaviorSelected - WIDTH] != '.') {
-                                            break;
-                                        }
+                                    if(behaviorSplitted[i].isEmpty())
+                                        continue;
+                                    /* sel */
+                                    else if(behaviorSplitted[i].split(":")[0].equals("sel") && behaviorSelected == 0) {
+                                        behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
+                                    }
+                                    /* no_sel */
+                                    else if(behaviorSplitted[i].split(":")[0].equals("no_sel")) {
+                                        behaviorSelected = 0;
+                                    }
+                                    /* перемещение */
+                                    else if(behaviorSplitted[i].equals("up")) {
+                                        map[behaviorSelected - WIDTH] = map[behaviorSelected];
+                                        map[behaviorSelected] = '.';
+                                        behaviorSelected -= WIDTH;
+                                    } else if(behaviorSplitted[i].equals("down")) {
+                                        map[behaviorSelected + WIDTH] = map[behaviorSelected];
+                                        map[behaviorSelected] = '.';
+                                        behaviorSelected += WIDTH;
+                                    } else if(behaviorSplitted[i].equals("right")) {
+                                        map[behaviorSelected + 1] = map[behaviorSelected];
+                                        map[behaviorSelected] = '.';
+                                        behaviorSelected++;
+                                    } else if(behaviorSplitted[i].equals("left")) {
+                                        map[behaviorSelected - 1] = map[behaviorSelected];
+                                        map[behaviorSelected] = '.';
+                                        behaviorSelected--;
+                                    } else if(behaviorSplitted[i].equals("up:lift")) {
+                                        map[behaviorSelected - WIDTH * 2] = map[behaviorSelected - WIDTH];
+                                        map[behaviorSelected - WIDTH] = map[behaviorSelected];
+                                        map[behaviorSelected] = '.';
+                                        behaviorSelected -= WIDTH;
+                                    } else if(behaviorSplitted[i].equals("down:lift")) {
+                                        map[behaviorSelected + WIDTH * 2] = map[behaviorSelected + WIDTH];
+                                        map[behaviorSelected + WIDTH] = map[behaviorSelected];
+                                        map[behaviorSelected] = '.';
+                                        behaviorSelected += WIDTH;
+                                    } else if(behaviorSplitted[i].equals("right:lift")) {
+                                        map[behaviorSelected + 2] = map[behaviorSelected + 1];
+                                        map[behaviorSelected + 1] = map[behaviorSelected];
+                                        map[behaviorSelected] = '.';
+                                        behaviorSelected++;
+                                    } else if(behaviorSplitted[i].equals("left:lift")) {
+                                        map[behaviorSelected - 2] = map[behaviorSelected - 1];
+                                        map[behaviorSelected - 1] = map[behaviorSelected];
+                                        map[behaviorSelected] = '.';
+                                        behaviorSelected--;
+                                    } else if(behaviorSplitted[i].equals("up:copy")) {
+                                        map[behaviorSelected - WIDTH] = map[behaviorSelected];
+                                        behaviorSelected -= WIDTH;
+                                    } else if(behaviorSplitted[i].equals("down:copy")) {
+                                        map[behaviorSelected + WIDTH] = map[behaviorSelected];
+                                        behaviorSelected += WIDTH;
+                                    } else if(behaviorSplitted[i].equals("right:copy")) {
+                                        map[behaviorSelected + 1] = map[behaviorSelected];
+                                        behaviorSelected++;
+                                    } else if(behaviorSplitted[i].equals("left:copy")) {
+                                        map[behaviorSelected - 1] = map[behaviorSelected];
+                                        behaviorSelected--;
+                                    }
+                                    /* fire, fire2 и boom */
+                                    else if(behaviorSplitted[i].split(":")[0].equals("fire")) {
+                                        fire(behaviorSelected);
+                                    } else if(behaviorSplitted[i].split(":")[0].equals("fire2")) {
+                                        fire2(behaviorSelected);
+                                    } else if(behaviorSplitted[i].split(":")[0].equals("boom")) {
+                                        boom(behaviorSelected);
+                                    }
+                                    /* set */
+                                    else if(behaviorSplitted[i].split(":")[0].equals("set")) {
+                                        map[behaviorSelected] = behaviorSplitted[i].split(":")[1].toCharArray()[0];
+                                    }
+                                    /* ~<...> */
+                                    else if(behaviorSplitted[i].startsWith("~")) {
+                                        Thread.sleep(!slow ? Integer.parseInt(behaviorSplitted[i].replace("~", "")) : Integer.parseInt(behaviorSplitted[i].replace("~", "")) * 2);
+                                    }
+                                    /* wait */
+                                    else if(behaviorSplitted[i].equals("wait:up")) {
+                                        while(map[behaviorSelected - WIDTH] == '.' && !behavior.isEmpty())
+                                            Thread.sleep(40);
+                                    } else if(behaviorSplitted[i].equals("wait:down")) {
+                                        while(map[behaviorSelected + WIDTH] == '.' && !behavior.isEmpty())
+                                            Thread.sleep(40);
+                                    } else if(behaviorSplitted[i].equals("wait:right")) {
+                                        while(map[behaviorSelected + 1] == '.' && !behavior.isEmpty())
+                                            Thread.sleep(40);
+                                    } else if(behaviorSplitted[i].equals("wait:left")) {
+                                        while(map[behaviorSelected - 1] == '.' && !behavior.isEmpty())
+                                            Thread.sleep(40);
+                                    } else if(behaviorSplitted[i].equals("wait")) {
+                                        while(map[behaviorSelected - 1] == '.'     &&
+                                              map[behaviorSelected + 1] == '.'     &&
+                                              map[behaviorSelected + WIDTH] == '.' &&
+                                              map[behaviorSelected - WIDTH] == '.' && !behavior.isEmpty())
+                                            Thread.sleep(40);
+                                    }
+                                    /* tp */
+                                    else if(behaviorSplitted[i].startsWith("tp:")) {
+                                        map[Integer.parseInt(behaviorSplitted[i].split(":")[1])] = map[behaviorSelected];
+                                        map[behaviorSelected] = '.';
+                                        behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
+                                    }
+                                    /* -physics */
+                                    else if(behaviorSplitted[i].equals("-physics") && physics == WIDTH)
+                                        physics = -WIDTH;
+                                    else if(behaviorSplitted[i].equals("-physics"))
+                                        physics = WIDTH;
+                                    /* step */
+                                    else if(behaviorSplitted[i].startsWith("step:")) {
+                                        int delay  = Integer.parseInt(behaviorSplitted[i].split(":")[2]),
+                                            target = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
                                         
-                                        if(behaviorSelected % WIDTH < target % WIDTH && map[behaviorSelected + 1] == '.') {
-                                            map[behaviorSelected + 1] = map[behaviorSelected];
-                                            map[behaviorSelected] = '.';
-                                            behaviorSelected++;
-                                        } else if(behaviorSelected % WIDTH < target % WIDTH && map[behaviorSelected + 1] != '.') {
-                                            break;
-                                        } else if(behaviorSelected % WIDTH > target % WIDTH && map[behaviorSelected - 1] == '.') {
-                                            map[behaviorSelected - 1] = map[behaviorSelected];
-                                            map[behaviorSelected] = '.';
-                                            behaviorSelected--;
-                                        } else if(behaviorSelected % WIDTH > target % WIDTH && map[behaviorSelected - 1] != '.') {
-                                            break;
+                                        while(behaviorSelected != target && !behavior.isEmpty()) {
+                                            if(behaviorSelected / WIDTH < target / WIDTH && map[behaviorSelected + WIDTH] == '.') {
+                                                map[behaviorSelected + WIDTH] = map[behaviorSelected];
+                                                map[behaviorSelected] = '.';
+                                                behaviorSelected += WIDTH;
+                                            } else if(behaviorSelected / WIDTH < target / WIDTH && map[behaviorSelected + WIDTH] != '.') {
+                                                break;
+                                            } else if(behaviorSelected / WIDTH > target / WIDTH && map[behaviorSelected - WIDTH] == '.') {
+                                                map[behaviorSelected - WIDTH] = map[behaviorSelected];
+                                                map[behaviorSelected] = '.';
+                                                behaviorSelected -= WIDTH;
+                                            } else if(behaviorSelected / WIDTH > target / WIDTH && map[behaviorSelected - WIDTH] != '.') {
+                                                break;
+                                            }
+                                            
+                                            if(behaviorSelected % WIDTH < target % WIDTH && map[behaviorSelected + 1] == '.') {
+                                                map[behaviorSelected + 1] = map[behaviorSelected];
+                                                map[behaviorSelected] = '.';
+                                                behaviorSelected++;
+                                            } else if(behaviorSelected % WIDTH < target % WIDTH && map[behaviorSelected + 1] != '.') {
+                                                break;
+                                            } else if(behaviorSelected % WIDTH > target % WIDTH && map[behaviorSelected - 1] == '.') {
+                                                map[behaviorSelected - 1] = map[behaviorSelected];
+                                                map[behaviorSelected] = '.';
+                                                behaviorSelected--;
+                                            } else if(behaviorSelected % WIDTH > target % WIDTH && map[behaviorSelected - 1] != '.') {
+                                                break;
+                                            }
+                                            
+                                            Thread.sleep((long)delay);
                                         }
-                                        
-                                        Thread.sleep((long)delay);
                                     }
                                 }
                             }
+                            
+                            Thread.sleep(500);
+                        } catch(Exception e) {
+                            e.printStackTrace();
                         }
-                        
-                        Thread.sleep(500);
-                    } catch(Exception e) {
-                        e.printStackTrace();
                     }
                 }
-            }
-        }.start();
+            }.start();
+        }
         
         /* для многопользовательской игры */
         
