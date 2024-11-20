@@ -113,7 +113,7 @@ public class Main extends JPanel {
                         if(slow)
                             Thread.sleep(15000);
                         if(map[saved] == 'f');
-                            map[saved] = 'b';
+                            map[saved] = new java.util.Random().nextInt(3) == 1 ? 'b' : '.';
                     } catch(Exception e) {}
                 }
             }.start();
@@ -165,22 +165,26 @@ public class Main extends JPanel {
                         if(map[saved - WIDTH] != 'R') map[saved - WIDTH] = '.';
                         
                         if(!(map[saved - 1 - WIDTH] >= '0' && map[saved - 1 - WIDTH] <= '9') && map[saved - 1 - WIDTH] != 'R' && map[saved - 1 - WIDTH] != '.') {
-                            map[saved - 2 - WIDTH * 2] = map[saved - 1 - WIDTH];
+                            if(map[saved - 2 - WIDTH * 2] != 'R')
+                                map[saved - 2 - WIDTH * 2] = map[saved - 1 - WIDTH];
                             map[saved - 1 - WIDTH] = '.';
                         }
                         
                         if(!(map[saved + 1 - WIDTH] >= '0' && map[saved + 1 - WIDTH] <= '9') && map[saved + 1 - WIDTH] != 'R' && map[saved + 1 - WIDTH] != '.') {
-                            map[saved + 2 - WIDTH * 2] = map[saved + 1 - WIDTH];
+                            if(map[saved + 2 - WIDTH * 2] != 'R')
+                                map[saved + 2 - WIDTH * 2] = map[saved + 1 - WIDTH];
                             map[saved + 1 - WIDTH] = '.';
                         }
                         
                         if(!(map[saved + 1 + WIDTH] >= '0' && map[saved + 1 + WIDTH] <= '9') && map[saved + 1 + WIDTH] != 'R' && map[saved + 1 + WIDTH] != '.') {
-                            map[saved + 2 + WIDTH * 2] = map[saved + 1 + WIDTH];
+                            if(map[saved + 2 + WIDTH * 2] != 'R')
+                                map[saved + 2 + WIDTH * 2] = map[saved + 1 + WIDTH];
                             map[saved + 1 + WIDTH] = '.';
                         }
                         
                         if(!(map[saved - 1 + WIDTH] >= '0' && map[saved - 1 + WIDTH] <= '9') && map[saved - 1 + WIDTH] != 'R' && map[saved - 1 + WIDTH] != '.') {
-                            map[saved - 2 + WIDTH * 2] = map[saved - 1 + WIDTH];
+                            if(map[saved - 2 + WIDTH * 2] != 'R')
+                                map[saved - 2 + WIDTH * 2] = map[saved - 1 + WIDTH];
                             map[saved - 1 + WIDTH] = '.';
                         }
                         
@@ -758,9 +762,6 @@ public class Main extends JPanel {
                         /* поставить блок ускорения */
                         else if(e.getKeyChar() == '~')
                             map[selectedBlockAddr()] = '~';
-                        /* поставить '???' */
-                        else if(e.getKeyChar() == ';')
-                            map[selectedBlockAddr()] = 'A';
                         /* поставить блок-батут */
                         else if(e.getKeyChar() == '%')
                             map[selectedBlockAddr()] = '%';
@@ -1140,17 +1141,17 @@ public class Main extends JPanel {
                                         if((map[i + physics] != '.' && map[i + physics] != 'W') || i + physics * 2 > map.length) {
                                             if(map[i - 1] == '.' || map[i - 1] == 'd' || map[i - 1] == '|' || map[i - 1] == '#' || map[i - 1] == 'l') {
                                                 if(!slow)
-                                                    Thread.sleep(160);
+                                                    Thread.sleep(90);
                                                 else
-                                                    Thread.sleep(400);
+                                                    Thread.sleep(200);
                                                 map[i - 1] = 'W';
                                             }
                                     
                                             if(map[i + 1] == '.' || map[i + 1] == 'd' || map[i + 1] == '|' || map[i + 1] == '#' || map[i + 1] == 'l') {
                                                 if(!slow)
-                                                    Thread.sleep(160);
+                                                    Thread.sleep(90);
                                                 else
-                                                    Thread.sleep(400);
+                                                    Thread.sleep(200);
                                                 map[i + 1] = 'W';
                                             }
                                         }
@@ -1171,18 +1172,6 @@ public class Main extends JPanel {
                                         map[i] = '/';
                                     else if(map[i] == 'I')
                                         map[i] = '\\';
-                                    else if(map[i] == 'A') {
-                                        if(map[i - 1] == '.' || map[i - 1] == 'f' || map[i - 1] == 'W')
-                                            map[i - 1] = 'A';
-                                        if(map[i + 1] == '.' || map[i + 1] == 'f' || map[i + 1] == 'W')
-                                            map[i + 1] = 'A';
-                                        if(map[i + WIDTH] == '.' || map[i + WIDTH] == 'f' || map[i + WIDTH] == 'W')
-                                            map[i + WIDTH] = 'A';
-                                        if(map[i - WIDTH] == '.' || map[i - WIDTH] == 'f' || map[i - WIDTH] == 'W')
-                                            map[i - WIDTH] = 'A';
-                                
-                                        Thread.sleep(!slow ? 50 : 500);
-                                    }
                                 }
                             }
                             Thread.sleep(30);
@@ -1534,7 +1523,7 @@ public class Main extends JPanel {
                                 }
                             } catch(Exception ex) {}
                             
-                            Thread.sleep(500);
+                            Thread.sleep(400);
                         } catch(Exception ex) {}
                     }
                 }
@@ -1572,7 +1561,7 @@ public class Main extends JPanel {
                             }
                             /******************/
                             
-                            Thread.sleep(500);
+                            Thread.sleep(400);
                         } catch(Exception ex) {}
                     }
                 }
@@ -1679,10 +1668,6 @@ public class Main extends JPanel {
                         g.drawImage(new ImageIcon("current/res/left.png").getImage(), ii * 60, i * 60, 60, 60, null);
                     } else if(map[iii] == ';') {
                         g.drawImage(new ImageIcon("current/res/right.png").getImage(), ii * 60, i * 60, 60, 60, null);
-                    } else if(map[iii] == 'A') {
-                        g.setColor(new Color(0, 0, 0));
-                        g.fillRect(ii * 60, i * 60, 60, 60);
-                        g.drawRect(ii * 60 , i * 60, 60, 60);
                     } else if(map[iii] == '~' || map[iii] == ',') {
                         g.setColor(new Color(5, 5, 5));
                         g.fillRect(ii * 60, i * 60, 60, 60);

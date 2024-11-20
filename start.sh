@@ -1,7 +1,16 @@
 #!/bin/bash
 
 if [[ "$1" == "--help" ]]; then
-    echo 'usage: ./start.sh [--help] [{-c <address>:<port>}|{{-s|-S} <address>:<port>}]'
+    echo 'Простой лаунчер для Items Jlayground.
+Использование: ./start.sh [один из следующих параметров]
+
+   -s <адрес>:<порт>         запустить сервер
+   -S <адрес>:<порт>         запустить сервер и разрешить клиентам
+                             запускать команды
+   -c <http-адрес>           подключиться к серверу, адрес может
+                             быть в формате <адр>:<порт>
+
+Без параметра, игра запускается в одиночном режиме.'
     exit 1
 fi
 
@@ -15,7 +24,7 @@ fi
 # проверка php
 php --version > /dev/null
 if [[ "$?" != '0' ]]; then
-    echo 'Please install php!'
+    echo 'Пожалуйста, установите php!'
     exit 1
 fi
 #################
@@ -25,25 +34,28 @@ if [[ "$1" == '-c' ]]; then
     # проверка curl
     curl --version > /dev/null
     if [[ "$?" != '0' ]]; then
-        echo 'Please install curl!'
+        echo 'Пожалуйста, установите curl!'
         exit 1
     fi
     #################
     
     # загрузка ресурспака
-    echo -n 'Downloading resourcepack... '
+    echo -n 'Скачивание ресурспака... '
     curl -o current/help "$2/current/help" 2> /dev/null
     for t in $(ls current/res/*); do
         curl -o "$t" "$2/$t" 2> /dev/null
     done
-    echo 'DONE'
+    echo 'ГОТОВО'
     ######################
     
-    echo -n 'Starting game... '
+    echo -n 'Запускаем Items Jlayground... '
     java downadow.items_jlayground.main.Main --client &
-    echo 'DONE'
+    echo 'ГОТОВО'
     
-    echo 'Multiplayer game.'
+    curl "$2/msg.php?m=$(php -r 'echo urlencode("[connect]");')" 2> /dev/null
+    trap "curl \"$2/msg.php?m=$(php -r 'echo urlencode("[disconnect]");')\" 2> /dev/null" EXIT
+    
+    echo 'Многопользовательская игра.'
     
     while true; do
         curl -o current/map "$2/current/map" 2> /dev/null
@@ -52,7 +64,7 @@ if [[ "$1" == '-c' ]]; then
             curl "$2/msg.php?m=$(php -r 'echo urlencode(file_get_contents("current/msg"));')" 2> /dev/null
             : > current/msg
         fi
-        sleep 0.5
+        sleep 0.4
     done
 fi
 
