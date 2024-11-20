@@ -667,7 +667,7 @@ public class Main extends JPanel {
                                     if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                                         try {
                                             FileWriter fw = new FileWriter("current/msg");
-                                            fw.write(chat_tf.getText());
+                                            fw.write(chat_tf.getText().replace("$$", "" + selectedBlockAddr()));
                                             fw.close();
                                             
                                             chat_fr.setVisible(false);
@@ -1552,10 +1552,6 @@ public class Main extends JPanel {
                                 try {
                                     sc = new Scanner(new File("current/adminPos"));
                                     adminPos = Integer.parseInt(sc.nextLine());
-                                    sc.close();
-                                    
-                                    sc = new Scanner(new File("current/msg"));
-                                    message = sc.nextLine();
                                     sc.close();
                                 } catch(Exception ex) {}
                             }
