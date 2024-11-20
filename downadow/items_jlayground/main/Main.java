@@ -683,7 +683,7 @@ public class Main extends JPanel {
                                 public void actionPerformed(java.awt.event.ActionEvent e) {
                                     try {
                                         FileWriter fw = new FileWriter("current/msg");
-                                        fw.write(chat_tf.getText());
+                                        fw.write(chat_tf.getText().replace("$$", "" + selectedBlockAddr()));
                                         fw.close();
                                         
                                         chat_fr.setVisible(false);
