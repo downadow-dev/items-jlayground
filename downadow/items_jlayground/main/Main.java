@@ -1498,7 +1498,8 @@ public class Main extends JPanel {
                             
                             if(selected == -1) {
                                 Scanner sc = new Scanner(new File("current/map"));
-                                behavior = sc.nextLine();
+                                if(!programmingMode) behavior = sc.nextLine();
+                                else sc.nextLine();
                                 String bgColorNew = sc.nextLine();
                                 bgColor = new Color(Integer.parseInt(bgColorNew.split(" ")[0]), Integer.parseInt(bgColorNew.split(" ")[1]), Integer.parseInt(bgColorNew.split(" ")[2]));
                                 
