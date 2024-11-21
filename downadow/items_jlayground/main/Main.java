@@ -53,6 +53,8 @@ public class Main extends JPanel {
     /* вывести помощь */
     private static boolean help = true;
     
+    private static char currentBlock = '.';
+    
     private static int physics = WIDTH;
     
     private static String helpMessage = "";
@@ -78,6 +80,10 @@ public class Main extends JPanel {
     }
     
     private static long startTime = 0;
+    
+    private static void setBlock(int addr, char blk) {
+        map[addr] = blk;
+    }
     
     private static void fire(int addr) {
         final int saved = addr;
@@ -503,7 +509,7 @@ public class Main extends JPanel {
                         return;
                     }
                     if(select && e.getKeyChar() != 65535) {
-                        map[selectedBlockAddr()] = e.getKeyChar();
+                        currentBlock = e.getKeyChar();
                         select = false;
                         return;
                     }
@@ -734,147 +740,15 @@ public class Main extends JPanel {
                             fire(selectedBlockAddr());
                         } else if(e.getKeyChar() == 'F' && map[selectedBlockAddr()] != '.')
                             fire2(selectedBlockAddr());
-                        /* поставить воду */
-                        else if(e.getKeyCode() == KeyEvent.VK_COMMA)
-                            map[selectedBlockAddr()] = 'W';
-                        /* поставить стул */
-                        else if(e.getKeyCode() == KeyEvent.VK_M)
-                            map[selectedBlockAddr()] = 'M';
-                        /* поставить слизь */
-                        else if(e.getKeyCode() == KeyEvent.VK_Z)
-                            map[selectedBlockAddr()] = 'z';
-                        /* поставить "бомбу" */
-                        else if(e.getKeyChar() == '*')
-                            map[selectedBlockAddr()] = '"';
-                        /* поставить current/res/b.png */
-                        else if(e.getKeyCode() == KeyEvent.VK_B)
-                            map[selectedBlockAddr()] = 'B';
-                        /* поставить коробку */
-                        else if(e.getKeyChar() == 'x') {
-                            map[selectedBlockAddr() - 1] = '|';
-                            map[selectedBlockAddr() - 1 - WIDTH] = '|';
-                            map[selectedBlockAddr() - WIDTH] = '|';
-                            map[selectedBlockAddr()] = '@';
-                        }
-                        
-                        else if(e.getKeyChar() == 'X')
-                            map[selectedBlockAddr()] = 'X';
-                        /* поставить блок ускорения */
-                        else if(e.getKeyChar() == '~')
-                            map[selectedBlockAddr()] = '~';
-                        /* поставить блок-батут */
-                        else if(e.getKeyChar() == '%')
-                            map[selectedBlockAddr()] = '%';
-                        /* поставить синий блок */
-                        else if(e.getKeyChar() == 'E' && selected == -1)
-                            map[selectedBlockAddr()] = 'E';
-                        /* поставить решётку */
-                        else if(e.getKeyCode() == KeyEvent.VK_E && selected == -1)
-                            map[selectedBlockAddr()] = '#';
-                        /* поставить компьютер */
-                        else if(e.getKeyCode() == KeyEvent.VK_H)
-                            map[selectedBlockAddr()] = 'h';
-                        /* поставить машину */
-                        else if(e.getKeyCode() == KeyEvent.VK_Q && selected == -1)
-                            map[selectedBlockAddr()] = 'q';
-                        /* поставить current/res/bricks.png */
-                        else if(e.getKeyChar() == 'r')
-                            map[selectedBlockAddr()] = 'r';
-                        /* поставить портал */
-                        else if(e.getKeyChar() == 'p')
-                            map[selectedBlockAddr()] = 'p';
-                        else if(e.getKeyChar() == 'P')
-                            map[selectedBlockAddr()] = 'P';
-                        /* поставить current/res/superbricks.png */
-                        else if(e.getKeyChar() == 'R')
-                            map[selectedBlockAddr()] = 'R';
-                        /* поставить лестницу */
-                        else if(e.getKeyCode() == KeyEvent.VK_L)
-                            map[selectedBlockAddr()] = 'l';
-                        /* поставить автомобиль */
-                        else if(e.getKeyCode() == KeyEvent.VK_C)
-                            map[selectedBlockAddr()] = 'c';
-                        /* поставить танк */
-                        else if(e.getKeyChar() == '=')
-                            map[selectedBlockAddr()] = '(';
-                        /* поставить зелёный блок */
-                        else if(e.getKeyChar() == 'G')
-                            map[selectedBlockAddr()] = 'G';
-                        /* поставить стекло */
-                        else if(e.getKeyCode() == KeyEvent.VK_G)
-                            map[selectedBlockAddr()] = 'g';
-                        /* поставить current/res/stone.png */
-                        else if(e.getKeyCode() == KeyEvent.VK_T)
-                            map[selectedBlockAddr()] = 't';
-                        /* поставить current/res/W.png */
-                        else if(e.getKeyCode() == KeyEvent.VK_W && selected == -1)
-                            map[selectedBlockAddr()] = 'w';
-                        /* поставить жёлтый блок */
-                        else if(e.getKeyCode() == KeyEvent.VK_Y)
-                            map[selectedBlockAddr()] = 'y';
-                        /* поставить радужный блок */
-                        else if(e.getKeyChar() == '$')
-                            map[selectedBlockAddr()] = '$';
-                        /* поставить специальный блок */
-                        else if(e.getKeyChar() == 'k')
-                            map[selectedBlockAddr()] = 'k';
-                        /* поставить огнемёт */
-                        else if(e.getKeyCode() == KeyEvent.VK_U)
-                            map[selectedBlockAddr()] = '[';
-                        /* поставить current/res/sand.png */
-                        else if(e.getKeyCode() == KeyEvent.VK_S && selected == -1)
-                            map[selectedBlockAddr()] = 's';
-                        /* поставить кровать */
-                        else if(e.getKeyCode() == KeyEvent.VK_N)
-                            map[selectedBlockAddr()] = 'd';
-                        /* поставить дверь/палку */
-                        else if(e.getKeyChar() == 'd' && selected == -1)
-                            map[selectedBlockAddr()] = '|';
-                        else if(e.getKeyChar() == 'D' && selected == -1)
-                            map[selectedBlockAddr()] = '&';
-                        /* поставить свет */
-                        else if(e.getKeyCode() == KeyEvent.VK_O)
-                            map[selectedBlockAddr()] = '^';
-                        /* поставить вертолёт */
-                        else if(e.getKeyCode() == KeyEvent.VK_I)
-                            map[selectedBlockAddr()] = '/';
-                        /* поставить минералку */
-                        else if(e.getKeyChar() == '`')
-                            map[selectedBlockAddr()] = '`';
-                        /* поставить полублок */
-                        else if(e.getKeyCode() == KeyEvent.VK_V)
-                            map[selectedBlockAddr()] = '№';
-                        /* поставить "ещё какие-то блоки" */
-                        else if(e.getKeyCode() == KeyEvent.VK_1)
-                            map[selectedBlockAddr()] = 'N';
-                        else if(e.getKeyCode() == KeyEvent.VK_2)
-                            map[selectedBlockAddr()] = 'J';
-                        else if(e.getKeyCode() == KeyEvent.VK_3)
-                            map[selectedBlockAddr()] = 'O';
-                        else if(e.getKeyCode() == KeyEvent.VK_4)
-                            map[selectedBlockAddr()] = 'L';
-                        else if(e.getKeyCode() == KeyEvent.VK_5)
-                            map[selectedBlockAddr()] = 'K';
-                        else if(e.getKeyCode() == KeyEvent.VK_6)
-                            map[selectedBlockAddr()] = 'U';
-                        else if(e.getKeyCode() == KeyEvent.VK_7)
-                            map[selectedBlockAddr()] = 'Y';
-                        else if(e.getKeyCode() == KeyEvent.VK_8)
-                            map[selectedBlockAddr()] = 'v';
-                        else if(e.getKeyCode() == KeyEvent.VK_9)
-                            map[selectedBlockAddr()] = 'V';
-                        else if(e.getKeyCode() == KeyEvent.VK_0)
-                            map[selectedBlockAddr()] = ';';
                         /* выбрать блок */
                         else if(e.getKeyCode() == KeyEvent.VK_SPACE && selected == -1 && map[selectedBlockAddr()] != '.')
                             selected = selectedBlockAddr();
                         /* убрать выделение */
                         else if(e.getKeyCode() == KeyEvent.VK_SPACE && selected != -1)
                             selected = -1;
-                        /* вставить блок */
-                        else if(e.getKeyChar() == '+') {
+                        /* выбор блока */
+                        else if(e.getKeyCode() == KeyEvent.VK_X)
                             select = true;
-                        }
                         /* бросать блок */
                         else if(e.getKeyCode() == KeyEvent.VK_F11 && selected == -1)
                             shootLeft(selectedBlockAddr());
@@ -913,8 +787,11 @@ public class Main extends JPanel {
                             map[selected] = 'Q';
                         else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == 'Q')
                             map[selected] = 'q';
+                        /* поставить блок */
+                        else if(e.getKeyCode() == KeyEvent.VK_C)
+                            setBlock(selectedBlockAddr(), currentBlock);
                         /* взрыв */
-                        else if(e.getKeyCode() == KeyEvent.VK_ENTER && selected == -1 && ((int)map[selectedBlockAddr()] > (int)'9' || (int)map[selectedBlockAddr()] < (int)'0')) {
+                        else if(e.getKeyCode() == KeyEvent.VK_ENTER && selected == -1) {
                             new Thread() {
                                 public void run() {
                                     for(int i = 0; i < forBoom.length; i++) {
@@ -935,16 +812,16 @@ public class Main extends JPanel {
                         }
                         /* активация объектов */
                         else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == '[') {
-                            map[selected + 1] = '.';
-                            map[selected + 1 - WIDTH] = '.';
+                            setBlock(selected + 1, '.');
+                            setBlock(selected + 1 - WIDTH, '.');
                             for(int i = 1; i < 8; i++) {
                                 fire(selected + i);
                                 fire(selected + i - WIDTH);
                             }
                         }
                         else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == ']') {
-                            map[selected - 1] = '.';
-                            map[selected - 1 - WIDTH] = '.';
+                            setBlock(selected - 1, '.');
+                            setBlock(selected - 1 - WIDTH, '.');
                             for(int i = 1; i < 8; i++) {
                                 fire(selected - i);
                                 fire(selected - i - WIDTH);
@@ -957,7 +834,7 @@ public class Main extends JPanel {
                         else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == '(') {
                             for(int i = 1; i < 16; i++) {
                                 if((map[selected + i - WIDTH] != '.' && !(map[selected + i - WIDTH] >= '0' && map[selected + i - WIDTH] <= '9')) || (map[selected + i] != '.' && !(map[selected + i] >= '0' && map[selected + i] <= '9'))) {
-                                    map[selected] = '<';
+                                    setBlock(selected, '<');
                                     boom(selected + i - WIDTH);
                                     break;
                                 }
@@ -965,7 +842,7 @@ public class Main extends JPanel {
                         } else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == ')') {
                             for(int i = 1; i < 16; i++) {
                                 if((map[selected - i - WIDTH] != '.' && !(map[selected - i - WIDTH] >= '0' && map[selected - i - WIDTH] <= '9')) || (map[selected - i] != '.' && !(map[selected - i] >= '0' && map[selected - i] <= '9'))) {
-                                    map[selected] = '>';
+                                    setBlock(selected, '>');
                                     boom(selected - i - WIDTH);
                                     break;
                                 }
@@ -1798,13 +1675,10 @@ public class Main extends JPanel {
             
             g.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 14));
             g.setColor(new Color(255, 255, 0));
-            if(!select && !fill)
+            if(!fill)
                 g.drawString("" + fill((System.currentTimeMillis() - startTime) / 60000, 2) + ":" + fill((System.currentTimeMillis() - startTime) / 1000 % 60, 2), 15, 20);
-            else if(select && !fill)
-                g.drawString("Введите символ...", 15, 20);
-            else if(!select && fill)
+            else
                 g.drawString("Выберите сторону...", 15, 20);
-            
             
             if(programmingMode) {
                 g.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 11));
@@ -1812,8 +1686,7 @@ public class Main extends JPanel {
                 char[] behavior2 = behavior.toCharArray();
                 
                 iii = 0;
-                loop:
-                for(int i = 0; i < 8; i++) {
+                loop: for(int i = 0; i < 8; i++) {
                     for(int ii = 0; ii < 128; ii++, iii++) {
                         try {
                             g.drawString("" + behavior2[iii], 15 + ii * 7, 80 + i * 20);
@@ -1826,7 +1699,7 @@ public class Main extends JPanel {
             
             g.setColor(new Color(255, 255, 255));
             g.drawString("" + selectedBlockAddr(), 15, 40);
-            try {g.drawString("" + map[selectedBlockAddr()], 65, 40);} catch(ArrayIndexOutOfBoundsException e) {}
+            try {g.drawString("" + map[selectedBlockAddr()] + " [" + (select ? "???" : currentBlock) + "]", 65, 40);} catch(ArrayIndexOutOfBoundsException e) {}
             
             g.setColor(new Color(250, 250, 250));
             g.setFont(new Font("Monospaced", Font.BOLD, 20));
