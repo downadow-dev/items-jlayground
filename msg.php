@@ -1,5 +1,5 @@
 
 <?php
-    file_put_contents('current/msg', '<' . $_SERVER['REMOTE_ADDR'] . '> ' . $_GET['m']);
+    file_put_contents('current/msg', $_GET['m'] . ' <' . $_SERVER['REMOTE_ADDR'] . '>');
 ?>
 

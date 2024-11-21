@@ -32,7 +32,7 @@ public class Main extends JPanel {
     
     private static boolean programmingMode = false;
     
-    private static String behavior = "";
+    private static String behavior = "", cmsg = "";
     private static int behaviorSelected = 0;
     
     private static boolean ui = true;
@@ -81,138 +81,160 @@ public class Main extends JPanel {
     
     private static long startTime = 0;
     
+    /* отправить сообщение */
+    private static void sendMessage(String msg) {
+        if(!cmsg.isEmpty())
+            cmsg += ";;;";
+        cmsg += msg.replace("$$", "" + selectedBlockAddr());
+    }
+    
     private static void setBlock(int addr, char blk) {
-        map[addr] = blk;
+        if(gameState != 2 || selected != -1)
+            map[addr] = blk;
+        else
+            sendMessage("/c " + addr + " " + blk);
     }
     
     private static void fire(int addr) {
-        final int saved = addr;
-        if(map[saved] == 'B' || map[saved] == 'l' || map[saved] == '|' ||
-           map[saved] == '@' || map[saved] == 'd' || map[saved] == 'w' || map[saved] == 'M' || map[saved] == 'm' ||
-           map[saved] == 'c' || map[saved] == 'C' || map[saved] == 'L' || map[saved] == 'X') {
-            map[saved] = 'f';
+        if(gameState != 2 || selected != -1) {
+            final int saved = addr;
+            if(map[saved] == 'B' || map[saved] == 'l' || map[saved] == '|' ||
+               map[saved] == '@' || map[saved] == 'd' || map[saved] == 'w' || map[saved] == 'M' || map[saved] == 'm' ||
+               map[saved] == 'c' || map[saved] == 'C' || map[saved] == 'L' || map[saved] == 'X') {
+                map[saved] = 'f';
 
-            new Thread() {
-                public void run() {
-                    try {
-                        for(int i = 0; i < 6; i++) {
-                            Thread.sleep(5000);
-                            if(map[saved] != 'f')
-                                return;
-                            if(map[saved - 1] == 'B' || map[saved - 1] == 'l' || map[saved - 1] == '|' ||
-                               map[saved - 1] == '@' || map[saved - 1] == 'd' || map[saved - 1] == 'w' || map[saved - 1] == 'M' || map[saved - 1] == 'm' ||
-                               map[saved - 1] == 'c' || map[saved - 1] == 'C' || map[saved - 1] == 'L' || map[saved - 1] == 'X')
-                                fire(saved - 1);
-                            if(map[saved + 1] == 'B' || map[saved + 1] == 'l' || map[saved + 1] == '|' ||
-                               map[saved + 1] == '@' || map[saved + 1] == 'd' || map[saved + 1] == 'w' || map[saved + 1] == 'M' || map[saved + 1] == 'm' ||
-                               map[saved + 1] == 'c' || map[saved + 1] == 'C' || map[saved + 1] == 'L' || map[saved + 1] == 'X')
-                                fire(saved + 1);
-                            if(map[saved + WIDTH] == 'B' || map[saved + WIDTH] == 'l' || map[saved + WIDTH] == '|' ||
-                               map[saved + WIDTH] == '@' || map[saved + WIDTH] == 'd' || map[saved + WIDTH] == 'w' || map[saved + WIDTH] == 'm' || map[saved + WIDTH] == 'M' ||
-                               map[saved + WIDTH] == 'c' || map[saved + WIDTH] == 'C' || map[saved + WIDTH] == 'L' || map[saved + WIDTH] == 'X')
-                                fire(saved + WIDTH);
-                            if(map[saved - WIDTH] == 'B' || map[saved - WIDTH] == 'l' || map[saved - WIDTH] == '|' ||
-                               map[saved - WIDTH] == '@' || map[saved - WIDTH] == 'd' || map[saved - WIDTH] == 'w' || map[saved - WIDTH] == 'm' || map[saved - WIDTH] == 'M' ||
-                               map[saved - WIDTH] == 'c' || map[saved - WIDTH] == 'C' || map[saved - WIDTH] == 'L' || map[saved - WIDTH] == 'X')
-                                fire(saved - WIDTH);
-                        }
-                        if(slow)
-                            Thread.sleep(15000);
-                        if(map[saved] == 'f');
-                            map[saved] = new java.util.Random().nextInt(3) == 1 ? 'b' : '.';
-                    } catch(Exception e) {}
-                }
-            }.start();
+                new Thread() {
+                    public void run() {
+                        try {
+                            for(int i = 0; i < 6; i++) {
+                                Thread.sleep(5000);
+                                if(map[saved] != 'f')
+                                    return;
+                                if(map[saved - 1] == 'B' || map[saved - 1] == 'l' || map[saved - 1] == '|' ||
+                                   map[saved - 1] == '@' || map[saved - 1] == 'd' || map[saved - 1] == 'w' || map[saved - 1] == 'M' || map[saved - 1] == 'm' ||
+                                   map[saved - 1] == 'c' || map[saved - 1] == 'C' || map[saved - 1] == 'L' || map[saved - 1] == 'X')
+                                    fire(saved - 1);
+                                if(map[saved + 1] == 'B' || map[saved + 1] == 'l' || map[saved + 1] == '|' ||
+                                   map[saved + 1] == '@' || map[saved + 1] == 'd' || map[saved + 1] == 'w' || map[saved + 1] == 'M' || map[saved + 1] == 'm' ||
+                                   map[saved + 1] == 'c' || map[saved + 1] == 'C' || map[saved + 1] == 'L' || map[saved + 1] == 'X')
+                                    fire(saved + 1);
+                                if(map[saved + WIDTH] == 'B' || map[saved + WIDTH] == 'l' || map[saved + WIDTH] == '|' ||
+                                   map[saved + WIDTH] == '@' || map[saved + WIDTH] == 'd' || map[saved + WIDTH] == 'w' || map[saved + WIDTH] == 'm' || map[saved + WIDTH] == 'M' ||
+                                   map[saved + WIDTH] == 'c' || map[saved + WIDTH] == 'C' || map[saved + WIDTH] == 'L' || map[saved + WIDTH] == 'X')
+                                    fire(saved + WIDTH);
+                                if(map[saved - WIDTH] == 'B' || map[saved - WIDTH] == 'l' || map[saved - WIDTH] == '|' ||
+                                   map[saved - WIDTH] == '@' || map[saved - WIDTH] == 'd' || map[saved - WIDTH] == 'w' || map[saved - WIDTH] == 'm' || map[saved - WIDTH] == 'M' ||
+                                   map[saved - WIDTH] == 'c' || map[saved - WIDTH] == 'C' || map[saved - WIDTH] == 'L' || map[saved - WIDTH] == 'X')
+                                    fire(saved - WIDTH);
+                            }
+                            if(slow)
+                                Thread.sleep(15000);
+                            if(map[saved] == 'f');
+                                map[saved] = new java.util.Random().nextInt(3) == 1 ? 'b' : '.';
+                        } catch(Exception e) {}
+                    }
+                }.start();
+            }
+        } else {
+            sendMessage("/f " + addr);
         }
     }
     
     private static void fire2(int addr) {
-        final int saved = addr;
-        map[saved] = 'F';
+        if(gameState != 2 || selected != -1) {
+            final int saved = addr;
+            map[saved] = 'F';
 
-        new Thread() {
-            public void run() {
-                try {
-                    Thread.sleep(!slow ? 500 : 1200);
-                    if(map[saved - 1] != '.' && map[saved - 1] != 'F' && map[saved - 1] != 'W')
-                        fire2(saved - 1);
-                    if(map[saved + 1] != '.' && map[saved + 1] != 'F' && map[saved + 1] != 'W')
-                        fire2(saved + 1);
-                    if(map[saved + WIDTH] != '.' && map[saved + WIDTH] != 'F' && map[saved + WIDTH] != 'W')
-                        fire2(saved + WIDTH);
-                    if(map[saved - WIDTH] != '.' && map[saved - WIDTH] != 'F' && map[saved - WIDTH] != 'W')
-                        fire2(saved - WIDTH);
-                    if(map[saved - WIDTH - 1] != '.' && map[saved - WIDTH - 1] != 'F' && map[saved - WIDTH - 1] != 'W')
-                        fire2(saved - WIDTH - 1);
-                    if(map[saved - WIDTH + 1] != '.' && map[saved - WIDTH + 1] != 'F' && map[saved - WIDTH + 1] != 'W')
-                        fire2(saved - WIDTH + 1);
-                    if(map[saved + WIDTH - 1] != '.' && map[saved + WIDTH - 1] != 'F' && map[saved + WIDTH - 1] != 'W')
-                        fire2(saved + WIDTH - 1);
-                    if(map[saved + WIDTH + 1] != '.' && map[saved + WIDTH + 1] != 'F' && map[saved + WIDTH + 1] != 'W')
-                        fire2(saved + WIDTH + 1);
-                    
-                    Thread.sleep(!slow ? 7000 : 15000);
-                    map[saved] = '.';
-                } catch(Exception e) {}
-            }
-        }.start();
+            new Thread() {
+                public void run() {
+                    try {
+                        Thread.sleep(!slow ? 500 : 1200);
+                        if(map[saved - 1] != '.' && map[saved - 1] != 'F' && map[saved - 1] != 'W')
+                            fire2(saved - 1);
+                        if(map[saved + 1] != '.' && map[saved + 1] != 'F' && map[saved + 1] != 'W')
+                            fire2(saved + 1);
+                        if(map[saved + WIDTH] != '.' && map[saved + WIDTH] != 'F' && map[saved + WIDTH] != 'W')
+                            fire2(saved + WIDTH);
+                        if(map[saved - WIDTH] != '.' && map[saved - WIDTH] != 'F' && map[saved - WIDTH] != 'W')
+                            fire2(saved - WIDTH);
+                        if(map[saved - WIDTH - 1] != '.' && map[saved - WIDTH - 1] != 'F' && map[saved - WIDTH - 1] != 'W')
+                            fire2(saved - WIDTH - 1);
+                        if(map[saved - WIDTH + 1] != '.' && map[saved - WIDTH + 1] != 'F' && map[saved - WIDTH + 1] != 'W')
+                            fire2(saved - WIDTH + 1);
+                        if(map[saved + WIDTH - 1] != '.' && map[saved + WIDTH - 1] != 'F' && map[saved + WIDTH - 1] != 'W')
+                            fire2(saved + WIDTH - 1);
+                        if(map[saved + WIDTH + 1] != '.' && map[saved + WIDTH + 1] != 'F' && map[saved + WIDTH + 1] != 'W')
+                            fire2(saved + WIDTH + 1);
+                        
+                        Thread.sleep(!slow ? 7000 : 15000);
+                        map[saved] = '.';
+                    } catch(Exception e) {}
+                }
+            }.start();
+        } else {
+            sendMessage("/F " + addr);
+        }
     }
     
     private static void boom(int addr) {
-        final int saved = addr;
-        new Thread() {
-            public void run() {
-                try {
+        if(gameState != 2 || selected != -1) {
+            final int saved = addr;
+            new Thread() {
+                public void run() {
                     try {
-                        if(map[saved] != 'R')         map[saved] = '.';
-                        if(map[saved + 1] != 'R')     map[saved + 1] = '.';
-                        if(map[saved - 1] != 'R')     map[saved - 1] = '.';
-                        if(map[saved + WIDTH] != 'R') map[saved + WIDTH] = '.';
-                        if(map[saved - WIDTH] != 'R') map[saved - WIDTH] = '.';
-                        
-                        if(!(map[saved - 1 - WIDTH] >= '0' && map[saved - 1 - WIDTH] <= '9') && map[saved - 1 - WIDTH] != 'R' && map[saved - 1 - WIDTH] != '.') {
-                            if(map[saved - 2 - WIDTH * 2] != 'R')
-                                map[saved - 2 - WIDTH * 2] = map[saved - 1 - WIDTH];
-                            map[saved - 1 - WIDTH] = '.';
+                        try {
+                            if(map[saved] != 'R')         map[saved] = '.';
+                            if(map[saved + 1] != 'R')     map[saved + 1] = '.';
+                            if(map[saved - 1] != 'R')     map[saved - 1] = '.';
+                            if(map[saved + WIDTH] != 'R') map[saved + WIDTH] = '.';
+                            if(map[saved - WIDTH] != 'R') map[saved - WIDTH] = '.';
+                            
+                            if(!(map[saved - 1 - WIDTH] >= '0' && map[saved - 1 - WIDTH] <= '9') && map[saved - 1 - WIDTH] != 'R' && map[saved - 1 - WIDTH] != '.') {
+                                if(map[saved - 2 - WIDTH * 2] != 'R')
+                                    map[saved - 2 - WIDTH * 2] = map[saved - 1 - WIDTH];
+                                map[saved - 1 - WIDTH] = '.';
+                            }
+                            
+                            if(!(map[saved + 1 - WIDTH] >= '0' && map[saved + 1 - WIDTH] <= '9') && map[saved + 1 - WIDTH] != 'R' && map[saved + 1 - WIDTH] != '.') {
+                                if(map[saved + 2 - WIDTH * 2] != 'R')
+                                    map[saved + 2 - WIDTH * 2] = map[saved + 1 - WIDTH];
+                                map[saved + 1 - WIDTH] = '.';
+                            }
+                            
+                            if(!(map[saved + 1 + WIDTH] >= '0' && map[saved + 1 + WIDTH] <= '9') && map[saved + 1 + WIDTH] != 'R' && map[saved + 1 + WIDTH] != '.') {
+                                if(map[saved + 2 + WIDTH * 2] != 'R')
+                                    map[saved + 2 + WIDTH * 2] = map[saved + 1 + WIDTH];
+                                map[saved + 1 + WIDTH] = '.';
+                            }
+                            
+                            if(!(map[saved - 1 + WIDTH] >= '0' && map[saved - 1 + WIDTH] <= '9') && map[saved - 1 + WIDTH] != 'R' && map[saved - 1 + WIDTH] != '.') {
+                                if(map[saved - 2 + WIDTH * 2] != 'R')
+                                    map[saved - 2 + WIDTH * 2] = map[saved - 1 + WIDTH];
+                                map[saved - 1 + WIDTH] = '.';
+                            }
+                            
+                            fire(saved - 2);
+                            fire(saved + 2);
+                            fire(saved + WIDTH * 2);
+                        } catch(ArrayIndexOutOfBoundsException e) {}
+                        for(int i = 0; i < 7; i++) {
+                            if(map[saved] != 'R')
+                                map[saved] = (char)((int)'0' + i);
+                            if(!slow)
+                                Thread.sleep(30);
+                            else
+                                Thread.sleep(110);
                         }
-                        
-                        if(!(map[saved + 1 - WIDTH] >= '0' && map[saved + 1 - WIDTH] <= '9') && map[saved + 1 - WIDTH] != 'R' && map[saved + 1 - WIDTH] != '.') {
-                            if(map[saved + 2 - WIDTH * 2] != 'R')
-                                map[saved + 2 - WIDTH * 2] = map[saved + 1 - WIDTH];
-                            map[saved + 1 - WIDTH] = '.';
-                        }
-                        
-                        if(!(map[saved + 1 + WIDTH] >= '0' && map[saved + 1 + WIDTH] <= '9') && map[saved + 1 + WIDTH] != 'R' && map[saved + 1 + WIDTH] != '.') {
-                            if(map[saved + 2 + WIDTH * 2] != 'R')
-                                map[saved + 2 + WIDTH * 2] = map[saved + 1 + WIDTH];
-                            map[saved + 1 + WIDTH] = '.';
-                        }
-                        
-                        if(!(map[saved - 1 + WIDTH] >= '0' && map[saved - 1 + WIDTH] <= '9') && map[saved - 1 + WIDTH] != 'R' && map[saved - 1 + WIDTH] != '.') {
-                            if(map[saved - 2 + WIDTH * 2] != 'R')
-                                map[saved - 2 + WIDTH * 2] = map[saved - 1 + WIDTH];
-                            map[saved - 1 + WIDTH] = '.';
-                        }
-                        
-                        fire(saved - 2);
-                        fire(saved + 2);
-                        fire(saved + WIDTH * 2);
-                    } catch(ArrayIndexOutOfBoundsException e) {}
-                    for(int i = 0; i < 7; i++) {
                         if(map[saved] != 'R')
-                            map[saved] = (char)((int)'0' + i);
-                        if(!slow)
-                            Thread.sleep(30);
-                        else
-                            Thread.sleep(110);
+                            map[saved] = '.';
+                    } catch(Exception ex) {
+                        ex.printStackTrace();
                     }
-                    if(map[saved] != 'R')
-                        map[saved] = '.';
-                } catch(Exception ex) {
-                    ex.printStackTrace();
                 }
-            }
-        }.start();
+            }.start();
+        } else {
+            sendMessage("/b " + addr);
+        }
     }
     
     private static void shootRight(int addr) {
@@ -327,22 +349,27 @@ public class Main extends JPanel {
                         if(select && e.getKeyChar() != ' ' && e.getKeyChar() != ':' && e.getKeyChar() != (char)65535) {
                             behavior += "set:" + e.getKeyChar() + " ";
                             select = false;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                             return;
                         } else if(selectz && e.getKeyCode() == KeyEvent.VK_W) {
                             behavior += "wait:up ";
                             selectz = false;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                             return;
                         } else if(selectz && e.getKeyCode() == KeyEvent.VK_S) {
                             behavior += "wait:down ";
                             selectz = false;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                             return;
                         } else if(selectz && e.getKeyCode() == KeyEvent.VK_A) {
                             behavior += "wait:left ";
                             selectz = false;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                             return;
                         } else if(selectz && e.getKeyCode() == KeyEvent.VK_D) {
                             behavior += "wait:right ";
                             selectz = false;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                             return;
                         }
                         
@@ -357,64 +384,84 @@ public class Main extends JPanel {
                             behavior += " ";
                             behaviorSelected2 = selectedBlockAddr();
                             step = false;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                             return;
                         }
                         
                         if(e.getKeyCode() == KeyEvent.VK_HOME) {
                             behavior = "";
                             behaviorSelected2 = -1;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyChar() == 'W') {
                             behavior += "up:copy ";
                             behaviorSelected2 -= WIDTH;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyChar() == 'S') {
                             behavior += "down:copy ";
                             behaviorSelected2 += WIDTH;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyChar() == 'A') {
                             behavior += "left:copy ";
                             behaviorSelected2--;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyChar() == 'D') {
                             behavior += "right:copy ";
                             behaviorSelected2++;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_W) {
                             behavior += "up ";
                             behaviorSelected2 -= WIDTH;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_S) {
                             behavior += "down ";
                             behaviorSelected2 += WIDTH;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_A) {
                             behavior += "left ";
                             behaviorSelected2--;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_D) {
                             behavior += "right ";
                             behaviorSelected2++;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_F10) {
                             behavior += "-physics ";
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_I) {
                             behavior += "up:lift ";
                             behaviorSelected2 -= WIDTH;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_K) {
                             behavior += "down:lift ";
                             behaviorSelected2 += WIDTH;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_J) {
                             behavior += "left:lift ";
                             behaviorSelected2--;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_L) {
                             behavior += "right:lift ";
                             behaviorSelected2++;
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyChar() == 'f') {
                             behavior += "fire ";
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_F) {
                             behavior += "fire2 ";
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_T) {
                             behavior += "tp:" + selectedBlockAddr() + " ";
                             behaviorSelected2 = selectedBlockAddr();
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_B) {
                             behavior += "boom ";
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_E) {
                             step = true;
                         } else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
                             behavior += "sel:" + selectedBlockAddr() + " ";
                             behaviorSelected2 = selectedBlockAddr();
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                             select = true;
                         }
@@ -429,39 +476,53 @@ public class Main extends JPanel {
                         else if(e.getKeyCode() == KeyEvent.VK_F5)
                             programmingMode = false;
                         
-                        else if(e.getKeyCode() == KeyEvent.VK_0)
+                        else if(e.getKeyCode() == KeyEvent.VK_0) {
                             behavior += "~50 ";
-                        else if(e.getKeyCode() == KeyEvent.VK_1)
+                            if(gameState == 2) sendMessage("/p " + behavior);
+                        } else if(e.getKeyCode() == KeyEvent.VK_1) {
                             behavior += "~100 ";
-                        else if(e.getKeyCode() == KeyEvent.VK_2)
+                            if(gameState == 2) sendMessage("/p " + behavior);
+                        } else if(e.getKeyCode() == KeyEvent.VK_2) {
                             behavior += "~200 ";
-                        else if(e.getKeyCode() == KeyEvent.VK_3)
+                            if(gameState == 2) sendMessage("/p " + behavior);
+                        } else if(e.getKeyCode() == KeyEvent.VK_3) {
                             behavior += "~300 ";
-                        else if(e.getKeyCode() == KeyEvent.VK_4)
+                            if(gameState == 2) sendMessage("/p " + behavior);
+                        } else if(e.getKeyCode() == KeyEvent.VK_4) {
                             behavior += "~400 ";
-                        else if(e.getKeyCode() == KeyEvent.VK_5)
+                            if(gameState == 2) sendMessage("/p " + behavior);
+                        } else if(e.getKeyCode() == KeyEvent.VK_5) {
                             behavior += "~500 ";
-                        else if(e.getKeyCode() == KeyEvent.VK_6)
+                            if(gameState == 2) sendMessage("/p " + behavior);
+                        } else if(e.getKeyCode() == KeyEvent.VK_6) {
                             behavior += "~600 ";
-                        else if(e.getKeyCode() == KeyEvent.VK_7)
+                            if(gameState == 2) sendMessage("/p " + behavior);
+                        } else if(e.getKeyCode() == KeyEvent.VK_7) {
                             behavior += "~700 ";
-                        else if(e.getKeyCode() == KeyEvent.VK_8)
+                            if(gameState == 2) sendMessage("/p " + behavior);
+                        } else if(e.getKeyCode() == KeyEvent.VK_8) {
                             behavior += "~800 ";
-                        else if(e.getKeyCode() == KeyEvent.VK_9)
+                            if(gameState == 2) sendMessage("/p " + behavior);
+                        } else if(e.getKeyCode() == KeyEvent.VK_9) {
                             behavior += "~1000 ";
-                        else if(e.getKeyCode() == KeyEvent.VK_MINUS)
+                            if(gameState == 2) sendMessage("/p " + behavior);
+                        } else if(e.getKeyCode() == KeyEvent.VK_MINUS) {
                             behavior += "~5000 ";
-                        else if(e.getKeyChar() == 'Z')
+                            if(gameState == 2) sendMessage("/p " + behavior);
+                        } else if(e.getKeyChar() == 'Z') {
                             behavior += "wait ";
-                        else if(e.getKeyChar() == 'z') {
+                            if(gameState == 2) sendMessage("/p " + behavior);
+                        } else if(e.getKeyChar() == 'z') {
                             selectz = true;
-                        } else if(e.getKeyChar() == (char)24 /* Ctrl+X */)
+                        } else if(e.getKeyChar() == (char)24 /* Ctrl+X */) {
                             behavior += "no_sel ";
-                        else if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+                            if(gameState == 2) sendMessage("/p " + behavior);
+                        } else if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
                             String[] behavior2 = behavior.split(" ");
                             behavior = "";
                             for(int i = 0; i < behavior2.length - 1; i++)
                                 behavior += behavior2[i] + " ";
+                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_INSERT) {
                             JFrame sb_fr = new JFrame("изменить поведение");
                             sb_fr.setAlwaysOnTop(true);
@@ -479,6 +540,7 @@ public class Main extends JPanel {
                                 public void keyPressed(KeyEvent e) {
                                     if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                                         behavior = sb_tf.getText();
+                                        if(gameState == 2) sendMessage("/p " + behavior);
                                         sb_fr.setVisible(false);
                                     }
                                 }
@@ -489,6 +551,7 @@ public class Main extends JPanel {
                             sb_b.addActionListener(new ActionListener() {
                                 public void actionPerformed(ActionEvent e) {
                                     behavior = sb_tf.getText();
+                                    if(gameState == 2) sendMessage("/p " + behavior);
                                     sb_fr.setVisible(false);
                                 }
                                 public void keyTyped(KeyEvent e) {}
@@ -516,50 +579,50 @@ public class Main extends JPanel {
                     
                     else if(e.getKeyCode() == KeyEvent.VK_LEFT && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() - 1] == '.') {
                         for(int i = selectedBlockAddr() - 1; map[i] == '.'; i--)
-                            map[i] = map[selectedBlockAddr()];
+                            setBlock(i, map[selectedBlockAddr()]);
                         fill = false;
                         return;
                     }
                     else if(e.getKeyCode() == KeyEvent.VK_RIGHT && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() + 1] == '.') {
                         for(int i = selectedBlockAddr() + 1; map[i] == '.'; i++)
-                            map[i] = map[selectedBlockAddr()];
+                            setBlock(i, map[selectedBlockAddr()]);
                         fill = false;
                         return;
                     }
                     else if(e.getKeyCode() == KeyEvent.VK_DOWN && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() + WIDTH] == '.') {
                         for(int i = selectedBlockAddr() + WIDTH; map[i] == '.'; i += WIDTH)
-                            map[i] = map[selectedBlockAddr()];
+                            setBlock(i, map[selectedBlockAddr()]);
                         fill = false;
                         return;
                     }
                     else if(e.getKeyCode() == KeyEvent.VK_UP && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() - WIDTH] == '.') {
                         for(int i = selectedBlockAddr() - WIDTH; map[i] == '.'; i -= WIDTH)
-                            map[i] = map[selectedBlockAddr()];
+                            setBlock(i, map[selectedBlockAddr()]);
                         fill = false;
                         return;
                     }
                     
                     else if(e.getKeyCode() == KeyEvent.VK_LEFT && fill && map[selectedBlockAddr()] != '.') {
                         for(int i = selectedBlockAddr() - 1; map[i] != '.'; i--)
-                            map[i] = map[selectedBlockAddr()];
+                            setBlock(i, map[selectedBlockAddr()]);
                         fill = false;
                         return;
                     }
                     else if(e.getKeyCode() == KeyEvent.VK_RIGHT && fill && map[selectedBlockAddr()] != '.') {
                         for(int i = selectedBlockAddr() + 1; map[i] != '.'; i++)
-                            map[i] = map[selectedBlockAddr()];
+                            setBlock(i, map[selectedBlockAddr()]);
                         fill = false;
                         return;
                     }
                     else if(e.getKeyCode() == KeyEvent.VK_DOWN && fill && map[selectedBlockAddr()] != '.') {
                         for(int i = selectedBlockAddr() + WIDTH; map[i] != '.'; i += WIDTH)
-                            map[i] = map[selectedBlockAddr()];
+                            setBlock(i, map[selectedBlockAddr()]);
                         fill = false;
                         return;
                     }
                     else if(e.getKeyCode() == KeyEvent.VK_UP && fill && map[selectedBlockAddr()] != '.') {
                         for(int i = selectedBlockAddr() - WIDTH; map[i] != '.'; i -= WIDTH)
-                            map[i] = map[selectedBlockAddr()];
+                            setBlock(i, map[selectedBlockAddr()]);
                         fill = false;
                         return;
                     }
@@ -642,12 +705,12 @@ public class Main extends JPanel {
                         else if(e.getKeyCode() == KeyEvent.VK_F8) {
                             for(int i = 0; i < map.length; i++)
                                 if(map[i] != '.' && map[i] != 's')
-                                    map[i] = 's';
+                                    setBlock(i, 's');
                         }
                         else if(e.getKeyCode() == KeyEvent.VK_F9) {
                             for(int i = map.length - WIDTH - 1; i >= 0; i--) {
-                                map[i + WIDTH] = map[i];
-                                map[i] = '.';
+                                setBlock(i + WIDTH, map[i]);
+                                setBlock(i, '.');
                             }
                         }
                         else if(e.getKeyCode() == KeyEvent.VK_F10 && physics == WIDTH)
@@ -672,9 +735,7 @@ public class Main extends JPanel {
                                 public void keyPressed(KeyEvent e) {
                                     if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                                         try {
-                                            FileWriter fw = new FileWriter("current/msg");
-                                            fw.write(chat_tf.getText().replace("$$", "" + selectedBlockAddr()));
-                                            fw.close();
+                                            sendMessage(chat_tf.getText());
                                             
                                             chat_fr.setVisible(false);
                                         } catch(Exception ex) {
@@ -688,9 +749,7 @@ public class Main extends JPanel {
                             chat_b.addActionListener(new java.awt.event.ActionListener() {
                                 public void actionPerformed(java.awt.event.ActionEvent e) {
                                     try {
-                                        FileWriter fw = new FileWriter("current/msg");
-                                        fw.write(chat_tf.getText().replace("$$", "" + selectedBlockAddr()));
-                                        fw.close();
+                                        sendMessage(chat_tf.getText());
                                         
                                         chat_fr.setVisible(false);
                                     } catch(Exception ex) {
@@ -728,7 +787,7 @@ public class Main extends JPanel {
                             ui = true;
                         /* удаление блока */
                         else if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
-                            map[selectedBlockAddr()] = '.';
+                            setBlock(selectedBlockAddr(), '.');
                         else if(e.getKeyCode() == KeyEvent.VK_DELETE) {
                             map[selected] = '.';
                             selected = -1;
@@ -1140,6 +1199,25 @@ public class Main extends JPanel {
             }
         }.start();
         
+        /* отправка сообщения */
+        if(gameState == 2) {
+            new Thread() {
+                public void run() {
+                    while(true) {
+                        try {
+                            if(!cmsg.isEmpty()) {
+                                FileWriter fw = new FileWriter("current/msg");
+                                fw.write(cmsg);
+                                fw.close();
+                                cmsg = "";
+                            }
+                            Thread.sleep(1000);
+                        } catch(Exception e) {}
+                    }
+                }
+            }.start();
+        }
+        
         /* логика стрелок */
         if(gameState != 2) {
             new Thread() {
@@ -1367,36 +1445,42 @@ public class Main extends JPanel {
                             
                             try {
                                 Scanner sc = new Scanner(new File("current/msg"));
-                                message = sc.nextLine();
+                                String[] messages = sc.nextLine().split(";;;");
                                 sc.close();
                                 
-                                /* выполнение команд */
-                                if(serverAllowCreators && message.split("> ")[1].startsWith("/")) {
-                                    String[] command = message.split("> /")[1].split(" ");
-                                    
-                                    if(command[0].startsWith("c")) {
-                                        char[] chrs = command[2].toCharArray();
-                                        int start = Integer.parseInt(command[1]);
-                                        for(int i = 0; i < chrs.length; i++)
-                                            map[start + i] = chrs[i];
-                                    } else if(command[0].startsWith("C")) {
-                                        char[] chrs = command[2].toCharArray();
-                                        int start = Integer.parseInt(command[1]);
-                                        for(int i = 0; i < chrs.length; i++)
-                                            map[start + i * WIDTH] = chrs[i];
-                                    } else if(command[0].startsWith("f")) {
-                                        fire(Integer.parseInt(command[1]));
-                                    } else if(command[0].startsWith("F")) {
-                                        fire2(Integer.parseInt(command[1]));
-                                    } else if(command[0].startsWith("b")) {
-                                        boom(Integer.parseInt(command[1]));
+                                for(int msgi = 0; msgi < messages.length; msgi++) {
+                                    message = messages[msgi];
+                                    /* выполнение команд */
+                                    if(serverAllowCreators && message.startsWith("/")) {
+                                        message = message.split(" <")[0];
+                                        String[] command = message.subSequence(1, message.length()).toString().split(" ");
+                                        
+                                        if(command[0].startsWith("c")) {
+                                            char[] chrs = command[2].toCharArray();
+                                            int start = Integer.parseInt(command[1]);
+                                            for(int i = 0; i < chrs.length; i++)
+                                                map[start + i] = chrs[i];
+                                        } else if(command[0].startsWith("C")) {
+                                            char[] chrs = command[2].toCharArray();
+                                            int start = Integer.parseInt(command[1]);
+                                            for(int i = 0; i < chrs.length; i++)
+                                                map[start + i * WIDTH] = chrs[i];
+                                        } else if(command[0].startsWith("f")) {
+                                            fire(Integer.parseInt(command[1]));
+                                        } else if(command[0].startsWith("F")) {
+                                            fire2(Integer.parseInt(command[1]));
+                                        } else if(command[0].startsWith("b")) {
+                                            boom(Integer.parseInt(command[1]));
+                                        } else if(command[0].equals("p")) {
+                                            behavior = message.subSequence(3, message.length()).toString();
+                                        }
+                                        
+                                        message = "";
+                                        
+                                        fw = new FileWriter("current/msg");
+                                        fw.write("");
+                                        fw.close();
                                     }
-                                    
-                                    message = "";
-                                    
-                                    fw = new FileWriter("current/msg");
-                                    fw.write("");
-                                    fw.close();
                                 }
                             } catch(Exception ex) {}
                             
