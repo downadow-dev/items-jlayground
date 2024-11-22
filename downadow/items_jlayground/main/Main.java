@@ -238,54 +238,68 @@ public class Main extends JPanel {
     }
     
     private static void shootRight(int addr) {
-        new Thread() {
-            public void run() {
-                try {
-                    while(!ph) {
-                        Thread.sleep(15);
-                        continue;
+        if(gameState != 2 || selected != -1) {
+            new Thread() {
+                public void run() {
+                    try {
+                        while(!ph) {
+                            Thread.sleep(15);
+                            continue;
+                        }
+                        int i;
+                        int ii = 0;
+                        for(i = addr; map[i + 1] == '.' && ii < 45; i++, ii++) {
+                            map[i + 1] = map[i];
+                            map[i] = '.';
+                            Thread.sleep(!slow ? 25 : 60);
+                        }
+                        if(map[i + 1] != '.')
+                            map[i] = '.';
+                        if(map[i + 1] != 'f' && map[i + 1] != 'F' && map[i + 1] != 'R')
+                            map[i + 1] = '.';
+                    } catch(Exception e) {
+                        e.printStackTrace();
                     }
-                    int i;
-                    int ii = 0;
-                    for(i = addr; map[i + 1] == '.' && ii < 45; i++, ii++) {
-                        map[i + 1] = map[i];
-                        map[i] = '.';
-                        Thread.sleep(!slow ? 25 : 60);
-                    }
-                    if(map[i + 1] != '.')
-                        map[i] = '.';
-                    if(map[i + 1] != 'f' && map[i + 1] != 'F' && map[i + 1] != 'R')
-                        map[i + 1] = '.';
-                } catch(Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        }.start();
+            }.start();
+        } else {
+            int i;
+            for(i = addr + 1; map[i] == '.'; i++);
+            setBlock(i, '.');
+            setBlock(addr, '.');
+        }
     }
     private static void shootLeft(int addr) {
-        new Thread() {
-            public void run() {
-                try {
-                    while(!ph) {
-                        Thread.sleep(15);
-                        continue;
+        if(gameState != 2 || selected != -1) {
+            new Thread() {
+                public void run() {
+                    try {
+                        while(!ph) {
+                            Thread.sleep(15);
+                            continue;
+                        }
+                        int i;
+                        int ii = 0;
+                        for(i = addr; map[i - 1] == '.' && ii < 45; i--, ii++) {
+                            map[i - 1] = map[i];
+                            map[i] = '.';
+                            Thread.sleep(!slow ? 25 : 60);
+                        }
+                        if(map[i - 1] != '.')
+                            map[i] = '.';
+                        if(map[i - 1] != 'f' && map[i - 1] != 'F' && map[i - 1] != 'R')
+                            map[i - 1] = '.';
+                    } catch(Exception e) {
+                        e.printStackTrace();
                     }
-                    int i;
-                    int ii = 0;
-                    for(i = addr; map[i - 1] == '.' && ii < 45; i--, ii++) {
-                        map[i - 1] = map[i];
-                        map[i] = '.';
-                        Thread.sleep(!slow ? 25 : 60);
-                    }
-                    if(map[i - 1] != '.')
-                        map[i] = '.';
-                    if(map[i - 1] != 'f' && map[i - 1] != 'F' && map[i - 1] != 'R')
-                        map[i - 1] = '.';
-                } catch(Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        }.start();
+            }.start();
+        } else {
+            int i;
+            for(i = addr - 1; map[i] == '.'; i--);
+            setBlock(i, '.');
+            setBlock(addr, '.');
+        }
     }
     
     
@@ -702,12 +716,12 @@ public class Main extends JPanel {
                         else if(e.getKeyCode() == KeyEvent.VK_F2 && slow)
                             slow = false;
                         /*******************************/
-                        else if(e.getKeyCode() == KeyEvent.VK_F8) {
+                        else if(e.getKeyCode() == KeyEvent.VK_F8 && gameState != 2) {
                             for(int i = 0; i < map.length; i++)
                                 if(map[i] != '.' && map[i] != 's')
                                     setBlock(i, 's');
                         }
-                        else if(e.getKeyCode() == KeyEvent.VK_F9) {
+                        else if(e.getKeyCode() == KeyEvent.VK_F9 && gameState != 2) {
                             for(int i = map.length - WIDTH - 1; i >= 0; i--) {
                                 setBlock(i + WIDTH, map[i]);
                                 setBlock(i, '.');
@@ -956,7 +970,8 @@ public class Main extends JPanel {
                             setbg_tfR.addKeyListener(new KeyListener() {
                                 public void keyPressed(KeyEvent e) {
                                     if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                                        bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+                                        if(gameState != 2 || selected != -1) bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+                                        else sendMessage("/B " + setbg_tfR.getText() + " " + setbg_tfG.getText() + " " + setbg_tfB.getText());
                                         setbg_fr.setVisible(false);
                                     }
                                 }
@@ -966,7 +981,8 @@ public class Main extends JPanel {
                             setbg_tfG.addKeyListener(new KeyListener() {
                                 public void keyPressed(KeyEvent e) {
                                     if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                                        bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+                                        if(gameState != 2 || selected != -1) bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+                                        else sendMessage("/B " + setbg_tfR.getText() + " " + setbg_tfG.getText() + " " + setbg_tfB.getText());
                                         setbg_fr.setVisible(false);
                                     }
                                 }
@@ -976,7 +992,8 @@ public class Main extends JPanel {
                             setbg_tfB.addKeyListener(new KeyListener() {
                                 public void keyPressed(KeyEvent e) {
                                     if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                                        bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+                                        if(gameState != 2 || selected != -1) bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+                                        else sendMessage("/B " + setbg_tfR.getText() + " " + setbg_tfG.getText() + " " + setbg_tfB.getText());
                                         setbg_fr.setVisible(false);
                                     }
                                 }
@@ -985,7 +1002,8 @@ public class Main extends JPanel {
                             });
                             setbg_b.addActionListener(new java.awt.event.ActionListener() {
                                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                                    bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+                                    if(gameState != 2 || selected != -1) bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+                                    else sendMessage("/B " + setbg_tfR.getText() + " " + setbg_tfG.getText() + " " + setbg_tfB.getText());
                                     setbg_fr.setVisible(false);
                                 }
                             });
@@ -1473,6 +1491,8 @@ public class Main extends JPanel {
                                             boom(Integer.parseInt(command[1]));
                                         } else if(command[0].equals("p")) {
                                             behavior = message.subSequence(3, message.length()).toString();
+                                        } else if(command[0].startsWith("B")) {
+                                            bgColor = new Color(Integer.parseInt(command[1]), Integer.parseInt(command[2]), Integer.parseInt(command[3]));
                                         }
                                         
                                         message = "";
