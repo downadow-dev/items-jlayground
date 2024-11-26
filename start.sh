@@ -39,14 +39,19 @@ if [[ "$1" == '-c' ]]; then
     fi
     #################
     
-    # загрузка ресурспака
-    echo -n 'Скачивание ресурспака... '
-    curl -o current/help "$2/current/help" 2> /dev/null
-    for t in $(ls current/res/*); do
-        curl -o "$t" "$2/$t" 2> /dev/null
-    done
+    # проверка ресурспака
+    echo -n 'Проверка ресурспака... '
+    curl -o desc "$2/current/desc" 2> /dev/null
+    if ! diff desc current/desc > /dev/null; then
+        echo 'ОШИБКА'
+        echo 'Пожалуйста, загрузите ресурспак сервера.'
+        rm -f desc
+        exit 1
+    fi
+    rm -f desc
     echo 'ГОТОВО'
-    ######################
+    #####################
+    curl -o current/help "$2/current/help" 2> /dev/null
     
     echo -n 'Запускаем Items Jlayground... '
     java downadow.items_jlayground.main.Main --client &

@@ -735,6 +735,43 @@ public class Main extends JPanel {
                         
                         return;
                     }
+                    if(select && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                        JFrame select_fr = new JFrame("выбор блока (введите число символа в кодировке)");
+                        select_fr.setAlwaysOnTop(true);
+                        select_fr.setSize(300, 100);
+                        select_fr.setResizable(false);
+                        select_fr.setLocationRelativeTo(null);
+                        JPanel select_p = new JPanel();
+                        select_p.setBounds(0, 0, 300, 100);
+                        select_fr.setLayout(null);
+                        JTextField select_tf = new JTextField(16);
+                        JButton select_b = new JButton("Готово");
+    
+                        select_tf.addKeyListener(new KeyListener() {
+                            public void keyPressed(KeyEvent e) {
+                                if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                                    currentBlock = (char)Integer.parseInt(select_tf.getText());
+                                    select = false;
+                                    select_fr.setVisible(false);
+                                }
+                            }
+                            public void keyTyped(KeyEvent e) {}
+                            public void keyReleased(KeyEvent e) {}
+                        });
+                        select_b.addActionListener(new java.awt.event.ActionListener() {
+                            public void actionPerformed(java.awt.event.ActionEvent e) {
+                                currentBlock = (char)Integer.parseInt(select_tf.getText());
+                                select = false;
+                                select_fr.setVisible(false);
+                            }
+                        });
+    
+                        select_p.add(select_tf);
+                        select_p.add(select_b);
+                        select_fr.add(select_p);
+                        select_fr.setVisible(true);
+                        return;
+                    }
                     if(select && e.getKeyChar() != 65535) {
                         currentBlock = e.getKeyChar();
                         select = false;
@@ -1009,6 +1046,14 @@ public class Main extends JPanel {
                                 if((map[selected + i - WIDTH] != '.' && !(map[selected + i - WIDTH] >= '0' && map[selected + i - WIDTH] <= '9')) || (map[selected + i] != '.' && !(map[selected + i] >= '0' && map[selected + i] <= '9'))) {
                                     setBlock(selected, Blocks.getC2(map[selected]));
                                     boom(selected + i - WIDTH);
+                                    
+                                    new Thread() {
+                                        public void run() {
+                                            try {Thread.sleep(25);} catch(Exception ex) {}
+                                            setBlock(selected, Blocks.getC2(map[selected]));
+                                        }
+                                    }.start();
+                                    
                                     break;
                                 }
                             }
@@ -1017,6 +1062,14 @@ public class Main extends JPanel {
                                 if((map[selected - i - WIDTH] != '.' && !(map[selected - i - WIDTH] >= '0' && map[selected - i - WIDTH] <= '9')) || (map[selected - i] != '.' && !(map[selected - i] >= '0' && map[selected - i] <= '9'))) {
                                     setBlock(selected, Blocks.getC2(map[selected]));
                                     boom(selected - i - WIDTH);
+                                    
+                                    new Thread() {
+                                        public void run() {
+                                            try {Thread.sleep(25);} catch(Exception ex) {}
+                                            setBlock(selected, Blocks.getC2(map[selected]));
+                                        }
+                                    }.start();
+                                    
                                     break;
                                 }
                             }
@@ -1292,7 +1345,7 @@ public class Main extends JPanel {
                         else if(following && selected == -1)
                             following = false;
                         
-                        while(following && !jump && selected > WIDTH && !Blocks.isHelicopter(map[selected]) && map[selected + WIDTH] == '.') {
+                        while(following && !jump && selected > WIDTH && !Blocks.isHelicopter(map[selected]) && !Blocks.isEraser(map[selected]) && map[selected + WIDTH] == '.') {
                             selected += WIDTH;
                             cameraStart = selected - (selectedBlockAddr() - cameraStart);
                             map[selected] = map[selected - WIDTH];
@@ -1674,6 +1727,9 @@ public class Main extends JPanel {
                     } else if(map[iii] == '%') {
                         g.setColor(new Color(255, 160, 0));
                         g.fillRect(ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
+                    } else if(map[iii] == 'b') {
+                        g.setColor(new Color(5, 5, 5));
+                        g.fillRect(ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
                     }
                 } catch(ArrayIndexOutOfBoundsException e) {}
                 iii++;
@@ -1730,7 +1786,7 @@ public class Main extends JPanel {
                         } else if(behaviorSelected2 != -1 && iii == behaviorSelected2 && programmingMode)
                             g.drawImage(new ImageIcon("current/images/engine/red.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
                         else if(gameState == 2 && iii == adminPos)
-                            g.drawImage(new ImageIcon("current/images/engine/pricel.png").getImage(), ii * Blocks.defaultW + Blocks.defaultW / 2, i * Blocks.defaultH + Blocks.defaultH / 2, Blocks.defaultW / 5, Blocks.defaultH / 5, null);
+                            g.drawImage(new ImageIcon("current/images/engine/pricel.png").getImage(), ii * Blocks.defaultW + Blocks.defaultW / 2, i * Blocks.defaultH + Blocks.defaultH / 2, 12, 8, null);
                     } catch(ArrayIndexOutOfBoundsException e) {}
                     iii++;
                 }
