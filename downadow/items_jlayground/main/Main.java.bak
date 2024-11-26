@@ -1,6 +1,5 @@
 package downadow.items_jlayground.main;
 
-import downadow.items_jlayground.blocks.Blocks;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -9,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Font;
-import java.awt.Image;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.File;
@@ -18,7 +16,7 @@ import java.io.FileWriter;
 
 public class Main extends JPanel {
     /* ширина и высота карты в объектах */
-    private static final int WIDTH = 250, HEIGHT = 60;
+    private static final int WIDTH = 200, HEIGHT = 50;
     /* карта */
     private static char[] map = new char[WIDTH * HEIGHT];
     
@@ -49,7 +47,7 @@ public class Main extends JPanel {
     
     private static boolean fill = false;
     
-    private static int cameraStart = 115 + 50 * WIDTH;
+    private static int cameraStart = 32 + 40 * WIDTH;
     /* выбранный блок */
     private static int selected = -1;
     /* вывести помощь */
@@ -78,7 +76,7 @@ public class Main extends JPanel {
     
     /* возвращает адрес блока, на который указывает прицел */
     private static int selectedBlockAddr() {
-        return cameraStart + 10 + 6 * WIDTH;
+        return cameraStart + 8 + 5 * WIDTH;
     }
     
     private static long startTime = 0;
@@ -100,7 +98,9 @@ public class Main extends JPanel {
     private static void fire(int addr) {
         if(gameState != 2 || selected != -1) {
             final int saved = addr;
-            if(!Blocks.isFireResistant(map[saved])) {
+            if(map[saved] == 'B' || map[saved] == 'l' || map[saved] == '|' ||
+               map[saved] == '@' || map[saved] == 'd' || map[saved] == 'w' || map[saved] == 'M' || map[saved] == 'm' ||
+               map[saved] == 'c' || map[saved] == 'C' || map[saved] == 'L' || map[saved] == 'X') {
                 map[saved] = 'f';
 
                 new Thread() {
@@ -110,13 +110,21 @@ public class Main extends JPanel {
                                 Thread.sleep(5000);
                                 if(map[saved] != 'f')
                                     return;
-                                if(!Blocks.isFireResistant(map[saved - 1]))
+                                if(map[saved - 1] == 'B' || map[saved - 1] == 'l' || map[saved - 1] == '|' ||
+                                   map[saved - 1] == '@' || map[saved - 1] == 'd' || map[saved - 1] == 'w' || map[saved - 1] == 'M' || map[saved - 1] == 'm' ||
+                                   map[saved - 1] == 'c' || map[saved - 1] == 'C' || map[saved - 1] == 'L' || map[saved - 1] == 'X')
                                     fire(saved - 1);
-                                if(!Blocks.isFireResistant(map[saved + 1]))
+                                if(map[saved + 1] == 'B' || map[saved + 1] == 'l' || map[saved + 1] == '|' ||
+                                   map[saved + 1] == '@' || map[saved + 1] == 'd' || map[saved + 1] == 'w' || map[saved + 1] == 'M' || map[saved + 1] == 'm' ||
+                                   map[saved + 1] == 'c' || map[saved + 1] == 'C' || map[saved + 1] == 'L' || map[saved + 1] == 'X')
                                     fire(saved + 1);
-                                if(!Blocks.isFireResistant(map[saved + WIDTH]))
+                                if(map[saved + WIDTH] == 'B' || map[saved + WIDTH] == 'l' || map[saved + WIDTH] == '|' ||
+                                   map[saved + WIDTH] == '@' || map[saved + WIDTH] == 'd' || map[saved + WIDTH] == 'w' || map[saved + WIDTH] == 'm' || map[saved + WIDTH] == 'M' ||
+                                   map[saved + WIDTH] == 'c' || map[saved + WIDTH] == 'C' || map[saved + WIDTH] == 'L' || map[saved + WIDTH] == 'X')
                                     fire(saved + WIDTH);
-                                if(!Blocks.isFireResistant(map[saved - WIDTH]))
+                                if(map[saved - WIDTH] == 'B' || map[saved - WIDTH] == 'l' || map[saved - WIDTH] == '|' ||
+                                   map[saved - WIDTH] == '@' || map[saved - WIDTH] == 'd' || map[saved - WIDTH] == 'w' || map[saved - WIDTH] == 'm' || map[saved - WIDTH] == 'M' ||
+                                   map[saved - WIDTH] == 'c' || map[saved - WIDTH] == 'C' || map[saved - WIDTH] == 'L' || map[saved - WIDTH] == 'X')
                                     fire(saved - WIDTH);
                             }
                             if(slow)
@@ -141,21 +149,21 @@ public class Main extends JPanel {
                 public void run() {
                     try {
                         Thread.sleep(!slow ? 500 : 1200);
-                        if(map[saved - 1] != '.' && map[saved - 1] != 'F' && !Blocks.isWater(map[saved - 1]))
+                        if(map[saved - 1] != '.' && map[saved - 1] != 'F' && map[saved - 1] != 'W')
                             fire2(saved - 1);
-                        if(map[saved + 1] != '.' && map[saved + 1] != 'F' && !Blocks.isWater(map[saved + 1]))
+                        if(map[saved + 1] != '.' && map[saved + 1] != 'F' && map[saved + 1] != 'W')
                             fire2(saved + 1);
-                        if(map[saved + WIDTH] != '.' && map[saved + WIDTH] != 'F' && !Blocks.isWater(map[saved + WIDTH]))
+                        if(map[saved + WIDTH] != '.' && map[saved + WIDTH] != 'F' && map[saved + WIDTH] != 'W')
                             fire2(saved + WIDTH);
-                        if(map[saved - WIDTH] != '.' && map[saved - WIDTH] != 'F' && !Blocks.isWater(map[saved - WIDTH]))
+                        if(map[saved - WIDTH] != '.' && map[saved - WIDTH] != 'F' && map[saved - WIDTH] != 'W')
                             fire2(saved - WIDTH);
-                        if(map[saved - WIDTH - 1] != '.' && map[saved - WIDTH - 1] != 'F' && !Blocks.isWater(map[saved - WIDTH - 1]))
+                        if(map[saved - WIDTH - 1] != '.' && map[saved - WIDTH - 1] != 'F' && map[saved - WIDTH - 1] != 'W')
                             fire2(saved - WIDTH - 1);
-                        if(map[saved - WIDTH + 1] != '.' && map[saved - WIDTH + 1] != 'F' && !Blocks.isWater(map[saved - WIDTH + 1]))
+                        if(map[saved - WIDTH + 1] != '.' && map[saved - WIDTH + 1] != 'F' && map[saved - WIDTH + 1] != 'W')
                             fire2(saved - WIDTH + 1);
-                        if(map[saved + WIDTH - 1] != '.' && map[saved + WIDTH - 1] != 'F' && !Blocks.isWater(map[saved + WIDTH - 1]))
+                        if(map[saved + WIDTH - 1] != '.' && map[saved + WIDTH - 1] != 'F' && map[saved + WIDTH - 1] != 'W')
                             fire2(saved + WIDTH - 1);
-                        if(map[saved + WIDTH + 1] != '.' && map[saved + WIDTH + 1] != 'F' && !Blocks.isWater(map[saved + WIDTH + 1]))
+                        if(map[saved + WIDTH + 1] != '.' && map[saved + WIDTH + 1] != 'F' && map[saved + WIDTH + 1] != 'W')
                             fire2(saved + WIDTH + 1);
                         
                         Thread.sleep(!slow ? 7000 : 15000);
@@ -175,32 +183,32 @@ public class Main extends JPanel {
                 public void run() {
                     try {
                         try {
-                            if(!Blocks.isStrong(map[saved]))         map[saved] = '.';
-                            if(!Blocks.isStrong(map[saved + 1]))     map[saved + 1] = '.';
-                            if(!Blocks.isStrong(map[saved - 1]))     map[saved - 1] = '.';
-                            if(!Blocks.isStrong(map[saved + WIDTH])) map[saved + WIDTH] = '.';
-                            if(!Blocks.isStrong(map[saved - WIDTH])) map[saved - WIDTH] = '.';
+                            if(map[saved] != 'R')         map[saved] = '.';
+                            if(map[saved + 1] != 'R')     map[saved + 1] = '.';
+                            if(map[saved - 1] != 'R')     map[saved - 1] = '.';
+                            if(map[saved + WIDTH] != 'R') map[saved + WIDTH] = '.';
+                            if(map[saved - WIDTH] != 'R') map[saved - WIDTH] = '.';
                             
-                            if(!(map[saved - 1 - WIDTH] >= '0' && map[saved - 1 - WIDTH] <= '9') && !Blocks.isStrong(map[saved -1 - WIDTH]) && map[saved - 1 - WIDTH] != '.') {
-                                if(!Blocks.isStrong(map[saved - 2 - WIDTH * 2]))
+                            if(!(map[saved - 1 - WIDTH] >= '0' && map[saved - 1 - WIDTH] <= '9') && map[saved - 1 - WIDTH] != 'R' && map[saved - 1 - WIDTH] != '.') {
+                                if(map[saved - 2 - WIDTH * 2] != 'R')
                                     map[saved - 2 - WIDTH * 2] = map[saved - 1 - WIDTH];
                                 map[saved - 1 - WIDTH] = '.';
                             }
                             
-                            if(!(map[saved + 1 - WIDTH] >= '0' && map[saved + 1 - WIDTH] <= '9') && !Blocks.isStrong(map[saved + 1 - WIDTH]) && map[saved + 1 - WIDTH] != '.') {
-                                if(!Blocks.isStrong(map[saved + 2 - WIDTH * 2]))
+                            if(!(map[saved + 1 - WIDTH] >= '0' && map[saved + 1 - WIDTH] <= '9') && map[saved + 1 - WIDTH] != 'R' && map[saved + 1 - WIDTH] != '.') {
+                                if(map[saved + 2 - WIDTH * 2] != 'R')
                                     map[saved + 2 - WIDTH * 2] = map[saved + 1 - WIDTH];
                                 map[saved + 1 - WIDTH] = '.';
                             }
                             
-                            if(!(map[saved + 1 + WIDTH] >= '0' && map[saved + 1 + WIDTH] <= '9') && !Blocks.isStrong(map[saved + 1 + WIDTH]) && map[saved + 1 + WIDTH] != '.') {
-                                if(!Blocks.isStrong(map[saved + 2 + WIDTH * 2]))
+                            if(!(map[saved + 1 + WIDTH] >= '0' && map[saved + 1 + WIDTH] <= '9') && map[saved + 1 + WIDTH] != 'R' && map[saved + 1 + WIDTH] != '.') {
+                                if(map[saved + 2 + WIDTH * 2] != 'R')
                                     map[saved + 2 + WIDTH * 2] = map[saved + 1 + WIDTH];
                                 map[saved + 1 + WIDTH] = '.';
                             }
                             
-                            if(!(map[saved - 1 + WIDTH] >= '0' && map[saved - 1 + WIDTH] <= '9') && !Blocks.isStrong(map[saved - 1 + WIDTH]) && map[saved - 1 + WIDTH] != '.') {
-                                if(!Blocks.isStrong(map[saved - 2 + WIDTH * 2]))
+                            if(!(map[saved - 1 + WIDTH] >= '0' && map[saved - 1 + WIDTH] <= '9') && map[saved - 1 + WIDTH] != 'R' && map[saved - 1 + WIDTH] != '.') {
+                                if(map[saved - 2 + WIDTH * 2] != 'R')
                                     map[saved - 2 + WIDTH * 2] = map[saved - 1 + WIDTH];
                                 map[saved - 1 + WIDTH] = '.';
                             }
@@ -210,14 +218,14 @@ public class Main extends JPanel {
                             fire(saved + WIDTH * 2);
                         } catch(ArrayIndexOutOfBoundsException e) {}
                         for(int i = 0; i < 7; i++) {
-                            if(!Blocks.isStrong(map[saved]))
+                            if(map[saved] != 'R')
                                 map[saved] = (char)((int)'0' + i);
                             if(!slow)
                                 Thread.sleep(30);
                             else
                                 Thread.sleep(110);
                         }
-                        if(!Blocks.isStrong(map[saved]))
+                        if(map[saved] != 'R')
                             map[saved] = '.';
                     } catch(Exception ex) {
                         ex.printStackTrace();
@@ -247,7 +255,7 @@ public class Main extends JPanel {
                         }
                         if(map[i + 1] != '.')
                             map[i] = '.';
-                        if(map[i + 1] != 'f' && map[i + 1] != 'F' && !Blocks.isStrong(map[i + 1]))
+                        if(map[i + 1] != 'f' && map[i + 1] != 'F' && map[i + 1] != 'R')
                             map[i + 1] = '.';
                     } catch(Exception e) {
                         e.printStackTrace();
@@ -279,7 +287,7 @@ public class Main extends JPanel {
                         }
                         if(map[i - 1] != '.')
                             map[i] = '.';
-                        if(map[i - 1] != 'f' && map[i - 1] != 'F' && !Blocks.isStrong(map[i - 1]))
+                        if(map[i - 1] != 'f' && map[i - 1] != 'F' && map[i - 1] != 'R')
                             map[i - 1] = '.';
                     } catch(Exception e) {
                         e.printStackTrace();
@@ -311,7 +319,7 @@ public class Main extends JPanel {
         }
         
         try {
-            /* загрузка карты, поведения, мода и текста помощи */
+            /* загрузка карты, поведения и текста помощи */
             
             Scanner sc = new Scanner(new File("current/map"));
             behavior = sc.nextLine();
@@ -329,164 +337,6 @@ public class Main extends JPanel {
             sc = new Scanner(new File("current/help"));
             while(sc.hasNextLine())
                 helpMessage += sc.nextLine() + "\n";
-            sc.close();
-            
-            sc = new Scanner(new File("current/desc"));
-            while(sc.hasNextLine()) {
-                String[] tokens = sc.nextLine().replace("  ", " ").replace("\t", "").split(" ");
-                
-                if(tokens[0].startsWith("#") || tokens[0].isEmpty())
-                    continue;
-                else if(tokens[0].equals("type:simple")) {
-                    char c = '\0';
-                    char leftC = c;
-                    char rightC = c;
-                    Image texture = null;
-                    boolean isFallen = false;
-                    boolean isStrong = false;
-                    boolean isSticky = false;
-                    boolean isFireResistant = false;
-                    boolean isEraser = false;
-                    int x = Blocks.defaultX;
-                    int y = Blocks.defaultY;
-                    int w = Blocks.defaultW;
-                    int h = Blocks.defaultH;
-                    
-                    for(int i = 1; i < tokens.length; i++) {
-                        if(tokens[i].startsWith("c:")) {
-                            c = tokens[i].toCharArray()[2];
-                            if(tokens[i].length() > 3) {
-                                leftC = tokens[i].toCharArray()[3];
-                                rightC = tokens[i].toCharArray()[4];
-                            } else {
-                                leftC = c;
-                                rightC = c;
-                            }
-                        } else if(tokens[i].startsWith("texture:")) {
-                            texture = new ImageIcon("current/images/" + tokens[i].split(":")[1]).getImage();
-                        } else if(tokens[i].equals("fallen")) {
-                            isFallen = true;
-                        } else if(tokens[i].equals("strong")) {
-                            isStrong = true;
-                        } else if(tokens[i].equals("sticky")) {
-                            isSticky = true;
-                        } else if(tokens[i].equals("fire_resistant")) {
-                            isFireResistant = true;
-                        } else if(tokens[i].equals("eraser")) {
-                            isEraser = true;
-                        } else if(tokens[i].startsWith("x:")) {
-                            x = Integer.parseInt(tokens[i].split(":")[1]);
-                        } else if(tokens[i].startsWith("y:")) {
-                            y = Integer.parseInt(tokens[i].split(":")[1]);
-                        } else if(tokens[i].startsWith("w:")) {
-                            w = Integer.parseInt(tokens[i].split(":")[1]);
-                        } else if(tokens[i].startsWith("h:")) {
-                            h = Integer.parseInt(tokens[i].split(":")[1]);
-                        }
-                    }
-                    
-                    Blocks.addSimple(c, leftC, rightC, texture, isFallen, isStrong, isSticky,
-                        isFireResistant, isEraser, x, y, w, h);
-                } else if(tokens[0].equals("type:tank") || tokens[0].equals("type:helicopter")) {
-                    char c = '\0';
-                    char leftC = c;
-                    char rightC = c;
-                    Image texture = null;
-                    boolean isStrong = false;
-                    char c2 = c;
-                    int x = Blocks.defaultX;
-                    int y = Blocks.defaultY;
-                    int w = Blocks.defaultW;
-                    int h = Blocks.defaultH;
-                    
-                    for(int i = 1; i < tokens.length; i++) {
-                        if(tokens[i].startsWith("c:")) {
-                            c = tokens[i].toCharArray()[2];
-                            if(tokens[i].length() > 3) {
-                                leftC = tokens[i].toCharArray()[3];
-                                rightC = tokens[i].toCharArray()[4];
-                            } else {
-                                leftC = c;
-                                rightC = c;
-                            }
-                            c2 = c;
-                        } else if(tokens[i].startsWith("c2:")) {
-                            c2 = tokens[i].toCharArray()[3];
-                        } else if(tokens[i].startsWith("texture:")) {
-                            texture = new ImageIcon("current/images/" + tokens[i].split(":")[1]).getImage();
-                        } else if(tokens[i].equals("strong")) {
-                            isStrong = true;
-                        } else if(tokens[i].startsWith("x:")) {
-                            x = Integer.parseInt(tokens[i].split(":")[1]);
-                        } else if(tokens[i].startsWith("y:")) {
-                            y = Integer.parseInt(tokens[i].split(":")[1]);
-                        } else if(tokens[i].startsWith("w:")) {
-                            w = Integer.parseInt(tokens[i].split(":")[1]);
-                        } else if(tokens[i].startsWith("h:")) {
-                            h = Integer.parseInt(tokens[i].split(":")[1]);
-                        }
-                    }
-                    
-                    if(tokens[0].equals("type:tank"))
-                        Blocks.addTank(c, leftC, rightC, texture, c2, isStrong, x, y, w, h);
-                    else
-                        Blocks.addHelicopter(c, leftC, rightC, texture, c2, isStrong, x, y, w, h);
-                } else if(tokens[0].equals("type:water")) {
-                    char c = '\0';
-                    Image texture = null;
-                    
-                    for(int i = 1; i < tokens.length; i++) {
-                        if(tokens[i].startsWith("c:")) {
-                            c = tokens[i].toCharArray()[2];
-                        } else if(tokens[i].startsWith("texture:")) {
-                            texture = new ImageIcon("current/images/" + tokens[i].split(":")[1]).getImage();
-                        }
-                    }
-                    
-                    Blocks.addWaterType(c, texture);
-                } else if(tokens[0].equals("type:arrow")) {
-                    char c = '\0', leftC = '\0', rightC = '\0';
-                    Image texture = null;
-                    boolean isFallen = false;
-                    boolean isStrong = false;
-                    boolean isFireResistant = false;
-                    int x = Blocks.defaultX, y = Blocks.defaultY, w = Blocks.defaultW, h = Blocks.defaultH;
-                    
-                    for(int i = 1; i < tokens.length; i++) {
-                        if(tokens[i].startsWith("c:")) {
-                            c = tokens[i].toCharArray()[2];
-                            if(tokens[i].length() > 3) {
-                                leftC = tokens[i].toCharArray()[3];
-                                rightC = tokens[i].toCharArray()[4];
-                            } else {
-                                leftC = c;
-                                rightC = c;
-                            }
-                        } else if(tokens[i].startsWith("texture:")) {
-                            texture = new ImageIcon("current/images/" + tokens[i].split(":")[1]).getImage();
-                        } else if(tokens[i].equals("fallen")) {
-                            isFallen = true;
-                        } else if(tokens[i].equals("strong")) {
-                            isStrong = true;
-                        } else if(tokens[i].equals("fire_resistant")) {
-                            isFireResistant = true;
-                        } else if(tokens[i].startsWith("x:")) {
-                            x = Integer.parseInt(tokens[i].split(":")[1]);
-                        } else if(tokens[i].startsWith("y:")) {
-                            y = Integer.parseInt(tokens[i].split(":")[1]);
-                        } else if(tokens[i].startsWith("w:")) {
-                            w = Integer.parseInt(tokens[i].split(":")[1]);
-                        } else if(tokens[i].startsWith("h:")) {
-                            h = Integer.parseInt(tokens[i].split(":")[1]);
-                        }
-                    }
-                    
-                    Blocks.addArrow(c, leftC, rightC, texture, isFallen, isStrong,
-                        isFireResistant, x, y, w, h);
-                } else {
-                    throw new Exception("unknown type `" + tokens[0] + "`");
-                }
-            }
             sc.close();
             
             /******************/
@@ -866,6 +716,11 @@ public class Main extends JPanel {
                         else if(e.getKeyCode() == KeyEvent.VK_F2 && slow)
                             slow = false;
                         /*******************************/
+                        else if(e.getKeyCode() == KeyEvent.VK_F8 && gameState != 2) {
+                            for(int i = 0; i < map.length; i++)
+                                if(map[i] != '.' && map[i] != 's')
+                                    setBlock(i, 's');
+                        }
                         else if(e.getKeyCode() == KeyEvent.VK_F9 && gameState != 2) {
                             for(int i = map.length - WIDTH - 1; i >= 0; i--) {
                                 setBlock(i + WIDTH, map[i]);
@@ -952,7 +807,9 @@ public class Main extends JPanel {
                             selected = -1;
                         /* поставить огонь */
                         } else if(e.getKeyChar() == 'f' && map[selectedBlockAddr()] != '.' &&
-                                  !Blocks.isFireResistant(map[selectedBlockAddr()])) {
+                                 (map[selectedBlockAddr()] == 'B' || map[selectedBlockAddr()] == 'l' || map[selectedBlockAddr()] == '|' ||
+                                  map[selectedBlockAddr()] == '@' || map[selectedBlockAddr()] == 'd' || map[selectedBlockAddr()] == 'w' ||
+                                  map[selectedBlockAddr()] == 'c' || map[selectedBlockAddr()] == 'C')) {
                             fire(selectedBlockAddr());
                         } else if(e.getKeyChar() == 'F' && map[selectedBlockAddr()] != '.')
                             fire2(selectedBlockAddr());
@@ -971,14 +828,38 @@ public class Main extends JPanel {
                         else if(e.getKeyCode() == KeyEvent.VK_F12 && selected == -1)
                             shootRight(selectedBlockAddr());
                         /* отражение объектов */
+                        else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == 'c')
+                            map[selected] = 'C';
+                        else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == 'C')
+                            map[selected] = 'c';
+                        else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == '[')
+                            map[selected] = ']';
+                        else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == ']')
+                            map[selected] = '[';
+                        else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == '(')
+                            map[selected] = ')';
+                        else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == ')')
+                            map[selected] = '(';
+                        else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == '/')
+                            map[selected] = '\\';
+                        else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == '\\')
+                            map[selected] = '/';
+                        else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == ';')
+                            map[selected] = ':';
+                        else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == ':')
+                            map[selected] = ';';
                         else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == '~')
                             map[selected] = ',';
                         else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == ',')
                             map[selected] = '~';
-                        else if(e.getKeyCode() == KeyEvent.VK_Q)
-                            map[selected] = Blocks.getLeftC(map[selected]);
-                        else if(e.getKeyCode() == KeyEvent.VK_E)
-                            map[selected] = Blocks.getRightC(map[selected]);
+                        else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == 'M')
+                            map[selected] = 'm';
+                        else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == 'm')
+                            map[selected] = 'M';
+                        else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == 'q')
+                            map[selected] = 'Q';
+                        else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == 'Q')
+                            map[selected] = 'q';
                         /* поставить блок */
                         else if(e.getKeyCode() == KeyEvent.VK_C)
                             setBlock(selectedBlockAddr(), currentBlock);
@@ -1003,52 +884,65 @@ public class Main extends JPanel {
                                 forBoom[i] = false;
                         }
                         /* активация объектов */
+                        else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == '[') {
+                            setBlock(selected + 1, '.');
+                            setBlock(selected + 1 - WIDTH, '.');
+                            for(int i = 1; i < 8; i++) {
+                                fire(selected + i);
+                                fire(selected + i - WIDTH);
+                            }
+                        }
+                        else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == ']') {
+                            setBlock(selected - 1, '.');
+                            setBlock(selected - 1 - WIDTH, '.');
+                            for(int i = 1; i < 8; i++) {
+                                fire(selected - i);
+                                fire(selected - i - WIDTH);
+                            }
+                        }
+                        /* ^         ^
+                           | огнемёт |
+                           *         * */
                         
-                        else if(e.getKeyCode() == KeyEvent.VK_ENTER && Blocks.isTank(map[selected]) && Blocks.getRightC(map[selected]) == map[selected]) {
+                        else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == '(') {
                             for(int i = 1; i < 16; i++) {
                                 if((map[selected + i - WIDTH] != '.' && !(map[selected + i - WIDTH] >= '0' && map[selected + i - WIDTH] <= '9')) || (map[selected + i] != '.' && !(map[selected + i] >= '0' && map[selected + i] <= '9'))) {
-                                    setBlock(selected, Blocks.getC2(map[selected]));
+                                    setBlock(selected, '<');
                                     boom(selected + i - WIDTH);
                                     break;
                                 }
                             }
-                        } else if(e.getKeyCode() == KeyEvent.VK_ENTER && Blocks.isTank(map[selected]) && Blocks.getLeftC(map[selected]) == map[selected]) {
+                        } else if(e.getKeyCode() == KeyEvent.VK_ENTER && map[selected] == ')') {
                             for(int i = 1; i < 16; i++) {
                                 if((map[selected - i - WIDTH] != '.' && !(map[selected - i - WIDTH] >= '0' && map[selected - i - WIDTH] <= '9')) || (map[selected - i] != '.' && !(map[selected - i] >= '0' && map[selected - i] <= '9'))) {
-                                    setBlock(selected, Blocks.getC2(map[selected]));
+                                    setBlock(selected, '>');
                                     boom(selected - i - WIDTH);
                                     break;
                                 }
                             }
-                        } else if(e.getKeyCode() == KeyEvent.VK_ENTER && Blocks.isHelicopter(map[selected]) && map[selected + WIDTH] == '.') {
-                            new Thread() {
-                                public void run() {
-                                    try {
-                                        int i;
-                                        for(i = selected + WIDTH * 2; map[i] == '.'; i += WIDTH) {
-                                            map[i] = 'f';
-                                            Thread.sleep(slow ? 90 : 40);
-                                            map[i] = '.';
-                                        }
-                                        boom(i);
-                                    } catch(Exception e) {}
-                                }
-                            }.start();
                         }
                         /* операции с выделенным блоком */
-                        else if(e.getKeyCode() == KeyEvent.VK_W && selected != -1 && (map[selected - WIDTH] == '.' || Blocks.isWater(map[selected - WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
+                        else if(e.getKeyCode() == KeyEvent.VK_W && selected != -1 && ((map[selected - WIDTH] == '.' || map[selected - WIDTH] == 'g' || map[selected - WIDTH] == 'W') || map[selected] == 'k') && map[selected] != 'f') {
+                            if(slow)
+                                Thread.sleep(50);
                             map[selected - WIDTH] = map[selected];
                             map[selected] = '.';
                             selected -= WIDTH;
-                        } else if(e.getKeyCode() == KeyEvent.VK_S && selected != -1 && (map[selected + WIDTH] == '.' || Blocks.isWater(map[selected + WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
+                        } else if(e.getKeyCode() == KeyEvent.VK_S && selected != -1 && ((map[selected + WIDTH] == '.' || map[selected + WIDTH] == 'g' || map[selected + WIDTH] == 'W') || map[selected] == 'k') && map[selected] != 'f') {
+                            if(slow)
+                                Thread.sleep(50);
                             map[selected + WIDTH] = map[selected];
                             map[selected] = '.';
                             selected += WIDTH;
-                        } else if(e.getKeyCode() == KeyEvent.VK_A && selected != -1 && (map[selected - 1] == '.' || Blocks.isWater(map[selected - 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
+                        } else if(e.getKeyCode() == KeyEvent.VK_A && selected != -1 && ((map[selected - 1] == '.' || map[selected - 1] == 'g' || map[selected - 1] == 'W') || map[selected] == 'k') && map[selected] != 'f') {
+                            if(slow)
+                                Thread.sleep(50);
                             map[selected - 1] = map[selected];
                             map[selected] = '.';
                             selected--;
-                        } else if(e.getKeyCode() == KeyEvent.VK_D && selected != -1 && (map[selected + 1] == '.' || Blocks.isWater(map[selected + 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
+                        } else if(e.getKeyCode() == KeyEvent.VK_D && selected != -1 && ((map[selected + 1] == '.' || map[selected + 1] == 'g' || map[selected + 1] == 'W') || map[selected] == 'k') && map[selected] != 'f') {
+                            if(slow)
+                                Thread.sleep(50);
                             map[selected + 1] = map[selected];
                             map[selected] = '.';
                             selected++;
@@ -1144,12 +1038,17 @@ public class Main extends JPanel {
                             if(physics == -WIDTH) {
                                 for(int i = WIDTH; i < map.length - WIDTH; i++) {
                                     if(ph) {
-                                        if(selected == -1 && Blocks.isFallen(map[i]) && (map[i + physics] == '.' || Blocks.isWater(map[i + physics]) ||
-                                        map[i + physics] == 'b') &&
-                                        (!Blocks.isSticky(map[i - 1]) && !Blocks.isSticky(map[i + 1]) && !Blocks.isSticky(map[i - physics]))) {
+                                        if(selected == -1 && (map[i] == '@' || map[i] == 's' || map[i] == '|' || map[i] == 'd' ||
+                                        map[i] == '#' || map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' ||
+                                        map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' ||
+                                        map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' ||
+                                        map[i] == 'Q') && (map[i + physics] == '.' || map[i + physics] == 'W' ||
+                                        map[i + physics] == 'b' || map[i + physics] == 'g') &&
+                                        (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - physics] != 'z')) {
                                             map[i + physics] = map[i];
                                             map[i] = '.';
-                                        } else if(Blocks.isFallen(map[i]) && Blocks.isEraser(map[i + physics])) {
+                                        } else if((map[i] == '@' || map[i] == 's' || map[i] == '|' || map[i] == 'd' || map[i] == '#' ||
+                                            map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' || map[i] == 'Q') && map[i + physics] == 'k') {
                                             map[i] = '.';
                                         }
                                     }
@@ -1157,12 +1056,12 @@ public class Main extends JPanel {
                             } else {
                                 for(int i = map.length - WIDTH; i > WIDTH; i--) {
                                     if(ph) {
-                                        if(selected == -1 && Blocks.isFallen(map[i]) && (map[i + physics] == '.' || Blocks.isWater(map[i + physics]) ||
-                                        map[i + physics] == 'b') &&
-                                        (!Blocks.isSticky(map[i - 1]) && !Blocks.isSticky(map[i + 1]) && !Blocks.isSticky(map[i - physics]))) {
+                                        if(selected == -1 && (map[i] == '@' ||  map[i] == 's' || map[i] == '|' ||  map[i] == 'd' || map[i] == '#' ||
+                                            map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' || map[i] == 'Q') && (map[i + physics] == '.' || map[i + physics] == 'W' || map[i + physics] == 'b' || map[i + physics] == 'g') && (map[i - 1] != 'z' && map[i + 1] != 'z' && map[i - physics] != 'z')) {
                                             map[i + physics] = map[i];
                                             map[i] = '.';
-                                        } else if(Blocks.isFallen(map[i]) && Blocks.isEraser(map[i + physics])) {
+                                        } else if((map[i] == '@' || map[i] == 's' || map[i] == '|' || map[i] == 'd' || map[i] == '#' ||
+                                            map[i] == 'l' || map[i] == 'c' || map[i] == 'M' || map[i] == 'm' || map[i] == 'C' || map[i] == '[' || map[i] == ']' || map[i] == '"' || map[i] == '(' || map[i] == ')' || map[i] == ';' || map[i] == ':' || map[i] == '`' || map[i] == 'q' || map[i] == 'Q') && map[i + physics] == 'k') {
                                             map[i] = '.';
                                         }
                                     }
@@ -1172,7 +1071,7 @@ public class Main extends JPanel {
                             if(!slow)
                                 Thread.sleep(30);
                             else
-                                Thread.sleep(70);
+                                Thread.sleep(110);
                         } catch(Exception e) {}
                     }
                 }
@@ -1183,7 +1082,7 @@ public class Main extends JPanel {
                         try {
                             for(int i = WIDTH; i < map.length - WIDTH; i++) {
                                 if(ph) {
-                                    if(Blocks.isWater(map[i]) && !noWater) {
+                                    if(map[i] == 'W' && !noWater) {
                                         if(map[i - 1] == 'f')
                                             map[i - 1] = 'b';
                                         if(map[i + 1] == 'f')
@@ -1192,33 +1091,41 @@ public class Main extends JPanel {
                                             map[i + physics] = 'b';
                                         if(map[i - physics] == 'f')
                                             map[i - physics] = 'b';
-                                        
-                                        if((map[i + physics] != '.' && !Blocks.isWater(map[i + physics])) || i + physics * 2 > map.length) {
-                                            if(map[i - 1] == '.') {
+                                
+                                        if((map[i + physics] != '.' && map[i + physics] != 'W') || i + physics * 2 > map.length) {
+                                            if(map[i - 1] == '.' || map[i - 1] == 'd' || map[i - 1] == '|' || map[i - 1] == '#' || map[i - 1] == 'l') {
                                                 if(!slow)
-                                                    Thread.sleep(100);
+                                                    Thread.sleep(90);
                                                 else
-                                                    Thread.sleep(210);
-                                                map[i - 1] = map[i];
+                                                    Thread.sleep(200);
+                                                map[i - 1] = 'W';
                                             }
                                     
-                                            if(map[i + 1] == '.') {
+                                            if(map[i + 1] == '.' || map[i + 1] == 'd' || map[i + 1] == '|' || map[i + 1] == '#' || map[i + 1] == 'l') {
                                                 if(!slow)
-                                                    Thread.sleep(100);
+                                                    Thread.sleep(90);
                                                 else
-                                                    Thread.sleep(210);
-                                                map[i + 1] = map[i];
+                                                    Thread.sleep(200);
+                                                map[i + 1] = 'W';
                                             }
                                         }
                                 
-                                        if(map[i + physics] == '.')
-                                            map[i + physics] = map[i];
+                                        if(map[i + physics] == '.' || map[i + physics] == 'd' || map[i + physics] == '|' || map[i + physics] == '#' || map[i + physics] == 'l')
+                                            map[i + physics] = 'W';
+                                
                                     } else if(noWater) {
                                         for(int ii = 0; ii < map.length; ii++)
-                                            if(Blocks.isWater(map[ii]))
+                                            if(map[ii] == 'W')
                                                 map[ii] = '.';
                                         noWater = false;
-                                    }
+                                    } else if(map[i] == '/' && map[i + physics] == '.')
+                                        map[i] = 'i';
+                                    else if(map[i] == '\\' && map[i + physics] == '.')
+                                        map[i] = 'I';
+                                    else if(map[i] == 'i')
+                                        map[i] = '/';
+                                    else if(map[i] == 'I')
+                                        map[i] = '\\';
                                 }
                             }
                             Thread.sleep(30);
@@ -1258,12 +1165,12 @@ public class Main extends JPanel {
                                             }
                                         }
                                     }
-                                    /* работа блоков движения */
-                                    else if(map[i] == '~' && map[i - physics] != '.' && !Blocks.isWater(map[i - physics]) && map[i - physics] != '~' && map[i - physics + 1] == '.') {
+                                    /* работа ускорения */
+                                    else if(map[i] == '~' && map[i - physics] != '.' && map[i - physics] != 'W' && map[i - physics] != '~' && map[i - physics + 1] == '.') {
                                         map[i - physics + 1] = map[i - physics];
                                         map[i - physics] = '.';
                                         Thread.sleep(!slow ? 200 : 500);
-                                    } else if(map[i] == ',' && map[i - physics] != '.' && !Blocks.isWater(map[i - physics]) && map[i - physics] != '~' && map[i - physics - 1] == '.') {
+                                    } else if(map[i] == ',' && map[i - physics] != '.' && map[i - physics] != 'W' && map[i - physics] != '~' && map[i - physics - 1] == '.') {
                                         map[i - physics - 1] = map[i - physics];
                                         map[i - physics] = '.';
                                         Thread.sleep(!slow ? 200 : 500);
@@ -1284,17 +1191,17 @@ public class Main extends JPanel {
             public void run() {
                 while(true) {
                     try {
-                        if(selected != -1 && (map[selected] == '.' || Blocks.isWater(map[selected])))
+                        if(selected != -1 && (map[selected] == '.' || map[selected] == 'W' || map[selected] == 'R'))
                             selected = -1;
                         
                         if(following && selected != -1)
-                            cameraStart = selected - (selectedBlockAddr() - cameraStart);
+                            cameraStart = selected - 8 - 5 * WIDTH;
                         else if(following && selected == -1)
                             following = false;
                         
-                        while(following && !jump && selected > WIDTH && !Blocks.isHelicopter(map[selected]) && map[selected + WIDTH] == '.') {
+                        while(following && !jump && selected > WIDTH && map[selected + WIDTH] == '.') {
                             selected += WIDTH;
-                            cameraStart = selected - (selectedBlockAddr() - cameraStart);
+                            cameraStart = selected - 8 - 5 * WIDTH;
                             map[selected] = map[selected - WIDTH];
                             map[selected - WIDTH] = '.';
                             fr.repaint();
@@ -1336,25 +1243,25 @@ public class Main extends JPanel {
                     while(true) {
                             for(int i = 0; i < map.length; i++) {
                                 try {
-                                    if(Blocks.isArrow(map[i]) && Blocks.getLeftC(map[i]) == map[i] && (Blocks.isSticky(map[i - 1]) || Blocks.isSticky(map[i + 1]) || Blocks.isSticky(map[i - physics]) || Blocks.isSticky(map[i + physics]))) {
+                                    if(map[i] == ':' && (map[i - 1] == 'z' || map[i + 1] == 'z' || map[i - physics] == 'z') || map[i + physics] == 'z') {
                                         continue;
-                                    } else if(Blocks.isArrow(map[i]) && Blocks.getLeftC(map[i]) == map[i] && map[i - 1] == '.') {
-                                        map[i - 1] = map[i];
+                                    } else if(map[i] == ':' && map[i - 1] == '.') {
                                         map[i] = '.';
-                                    } else if(Blocks.isArrow(map[i]) && Blocks.getLeftC(map[i]) == map[i] && map[i - 1] != '.' && map[i - physics] == '.' && map[i - physics - 1] == '.') {
-                                        map[i - physics - 1] = map[i];
+                                        map[i - 1] = ':';
+                                    } else if(map[i] == ':' && map[i - 1] != '.' && map[i - physics] == '.' && map[i - physics - 1] == '.') {
                                         map[i] = '.';
-                                    } else if(Blocks.isArrow(map[i]) && Blocks.getRightC(map[i]) == map[i] && map[i + 1] != '.' && map[i - physics] == '.' && map[i - physics + 1] == '.') {
-                                        map[i - physics + 1] = map[i];
+                                        map[i - physics - 1] = ':';
+                                    } else if(map[i] == ';' && map[i + 1] != '.' && map[i - physics] == '.' && map[i - physics + 1] == '.') {
                                         map[i] = '.';
-                                    } else if(Blocks.isArrow(map[i]) && Blocks.getLeftC(map[i]) == map[i]) {
-                                        map[i] = Blocks.getRightC(map[i]);
-                                    } else if(Blocks.isArrow(map[i]) && Blocks.getRightC(map[i]) == map[i] && map[i + 1] == '.') {
-                                        map[i + 1] = map[i];
+                                        map[i - physics + 1] = ';';
+                                    } else if(map[i] == ':') {
+                                        map[i] = ';';
+                                    } else if(map[i] == ';' && map[i + 1] == '.') {
                                         map[i] = '.';
+                                        map[i + 1] = ';';
                                         i++;
-                                    } else if(Blocks.isArrow(map[i]) && Blocks.getRightC(map[i]) == map[i]) {
-                                        map[i] = Blocks.getLeftC(map[i]);
+                                    } else if(map[i] == ';') {
+                                        map[i] = ':';
                                     }
                                 } catch(Exception e) {}
                             }
@@ -1646,99 +1553,230 @@ public class Main extends JPanel {
         /* рисование объектов
            ================== */
         int iii = cameraStart;
-        for(int i = 0; i < 17; i++) {
-            for(int ii = 0; ii < 22; ii++) {
+        for(int i = 0; i < 14; i++) {
+            for(int ii = 0; ii < 18; ii++) {
                 try {
                     if(iii < map.length && iii >= 0) {
                         g.setColor(bgColor);
-                        g.fillRect(ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
+                        g.fillRect(ii * 60, i * 60, 60, 60);
                         if(ui) {
-                            try {
-                                g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));
-                                g.drawRect(ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
-                            } catch(IllegalArgumentException e) {}
+                            try {g.setColor(bgColor.getRed() < 195 && bgColor.getGreen() < 195 && bgColor.getBlue() < 195 ? new Color(bgColor.getRed() + 60, bgColor.getGreen() + 60, bgColor.getBlue() + 60) : new Color(bgColor.getRed() - 60, bgColor.getGreen() - 60, bgColor.getBlue() - 60));} catch(IllegalArgumentException e) {}
+                            g.drawRect(ii * 60 , i * 60, 60, 60);
                         }
                     }
                     
-                    if(map[iii] == '~' || map[iii] == ',') {
+                    if(map[iii] == '#') {
+                        g.drawImage(new ImageIcon("current/res/reshetka.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == 'l') {
+                        g.drawImage(new ImageIcon("current/res/lestnica.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == 'g') {
+                        g.drawImage(new ImageIcon("current/res/glass.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == '|') {
+                        g.drawImage(new ImageIcon("current/res/door_or_stick.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == '&') {
+                        g.drawImage(new ImageIcon("current/res/stick2.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == 'Y') {
+                        g.drawImage(new ImageIcon("current/res/door2.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == 'd') {
+                        g.drawImage(new ImageIcon("current/res/bed.png").getImage(), ii * 60 - 60, i * 60, 120, 60, null);
+                    } else if(map[iii] == '^') {
+                        g.setColor(new Color(255, 255, 255));
+                        g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
+                    } else if(map[iii] == 'v') {
+                        g.setColor(new Color(255, 0, 0));
+                        g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
+                    } else if(map[iii] == 'G') {
+                        g.setColor(new Color(0, 255, 0));
+                        g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
+                    } else if(map[iii] == 'b') {
+                        g.setColor(new Color(20, 20, 20));
+                        g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
+                    } else if(map[iii] == 'B')
+                        g.drawImage(new ImageIcon("current/res/B.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    else if(map[iii] == 's')
+                        g.drawImage(new ImageIcon("current/res/sand.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    else if(map[iii] == 't')
+                        g.drawImage(new ImageIcon("current/res/stone.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    else if(map[iii] == 'r')
+                        g.drawImage(new ImageIcon("current/res/bricks.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    else if(map[iii] == 'R')
+                        g.drawImage(new ImageIcon("current/res/superbricks.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    else if(map[iii] == 'w')
+                        g.drawImage(new ImageIcon("current/res/W.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    else if(map[iii] == 'N')
+                        g.drawImage(new ImageIcon("current/res/block0.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    else if(map[iii] == 'J') {
+                        g.setColor(new Color(0, 0, 0));
+                        g.fillRect(ii * 60, i * 60, 60, 60); g.drawRect(ii * 60 , i * 60, 60, 60);
+                    } else if(map[iii] == 'O')
+                        g.drawImage(new ImageIcon("current/res/block2.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    else if(map[iii] == 'L')
+                        g.drawImage(new ImageIcon("current/res/block3.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    else if(map[iii] == 'K') {
+                        g.drawImage(new ImageIcon("current/res/block4.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == 'U') {
+                        g.drawImage(new ImageIcon("current/res/pautina.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == 'W') {
+                        g.setColor(new Color(10, 10, 255));
+                        g.fillRect(ii * 60, i * 60, 60, 60);
+                        g.drawRect(ii * 60 , i * 60, 60, 60);
+                    } else if(map[iii] == 'E') {
+                        g.setColor(new Color(0, 0, 255));
+                        g.fillRect(ii * 60, i * 60, 60, 60);
+                        g.drawRect(ii * 60 , i * 60, 60, 60);
+                    } else if(map[iii] == 'z') {
+                        g.setColor(new Color(0, 225, 0));
+                        g.fillRect(ii * 60, i * 60, 60, 60);
+                        g.drawRect(ii * 60 , i * 60, 60, 60);
+                    } else if(map[iii] == '@')
+                        g.drawImage(new ImageIcon("current/res/box.png").getImage(), ii * 60 - 60, i * 60 - 60, 120, 120, null);
+                    else if(map[iii] == 'y') {
+                        g.setColor(new Color(255, 255, 0));
+                        g.fillRect(ii * 60, i * 60, 60, 60);
+                        g.setColor(new Color(180, 180, 0));
+                        g.drawRect(ii * 60, i * 60, 60, 60);
+                        g.drawRect(ii * 60 + 1, i * 60 + 1, 58, 58);
+                    } else if(map[iii] == '[') {
+                        g.drawImage(new ImageIcon("current/res/flamethrower0.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == 'V') {
+                        g.drawImage(new ImageIcon("current/res/B2.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == ']') {
+                        g.drawImage(new ImageIcon("current/res/flamethrower1.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == ':') {
+                        g.drawImage(new ImageIcon("current/res/left.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == ';') {
+                        g.drawImage(new ImageIcon("current/res/right.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == '~' || map[iii] == ',') {
                         g.setColor(new Color(5, 5, 5));
-                        g.fillRect(ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
+                        g.fillRect(ii * 60, i * 60, 60, 60);
+                        g.drawRect(ii * 60 , i * 60, 60, 60);
                         g.setColor(new Color(60, 60, 60));
-                        g.fillRect(ii * Blocks.defaultW + Blocks.defaultW / 3, i * Blocks.defaultH + Blocks.defaultH / 3, Blocks.defaultW / 3, Blocks.defaultH / 3);
+                        g.fillRect(ii * 60 + 20, i * 60 + 20, 20, 20);
+                        g.drawRect(ii * 60 + 20, i * 60 + 20, 20, 20);
                         
-                        if(ui) {
-                            g.setFont(new Font("Monospaced", Font.PLAIN, 14));
-                            g.setColor(new Color(255, 255, 255));
-                            g.drawString((map[iii] == ',' ? "<" : ">"), ii * Blocks.defaultW + 5, i * Blocks.defaultH + 5);
-                        }
+                        if(ui)
+                            g.drawImage(new ImageIcon("current/res/" + (map[iii] == '~' ? "right" : "left") + ".png").getImage(), ii * 60, i * 60, 60, 60, null);
                     } else if(map[iii] == '%') {
-                        g.setColor(new Color(255, 160, 0));
-                        g.fillRect(ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
+                        g.setColor(new Color(255, 150, 0));
+                        g.fillRect(ii * 60, i * 60, 60, 60);
+                        g.drawRect(ii * 60 , i * 60, 60, 60);
+                    } else if(map[iii] == '`') {
+                        g.drawImage(new ImageIcon("current/res/voda.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == '$') {
+                        g.drawImage(new ImageIcon("current/res/rainbow.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == 'h') {
+                        g.drawImage(new ImageIcon("current/res/computer.png").getImage(), ii * 60, i * 60, 60, 60, null);
+                    } else if(map[iii] == 'k') {
+                        g.drawImage(new ImageIcon("current/res/X.png").getImage(), ii * 60, i * 60, 60, 60, null);
                     }
                 } catch(ArrayIndexOutOfBoundsException e) {}
                 iii++;
             }
-            iii += WIDTH - 22;
+            iii += WIDTH - 18;
         }
         
         iii = cameraStart;
-        for(int i = 0; i < 17; i++) {
-            for(int ii = 0; ii < 22; ii++) {
+        for(int i = 0; i < 14; i++) {
+            for(int ii = 0; ii < 18; ii++) {
                 try {
                     if(Main.map[iii] == 'f')
-                        g.drawImage(new ImageIcon("current/images/engine/fire.png").getImage(), ii * Blocks.defaultW - Blocks.defaultW / 2, i * Blocks.defaultH - Blocks.defaultH * 2, Blocks.defaultW * 3, Blocks.defaultH * 3, null);
+                        g.drawImage(new ImageIcon("current/res/fire.png").getImage(), ii * 60 - 30, i * 60 - 100, 180, 200, null);
                     else if(Main.map[iii] == 'F')
-                        g.drawImage(new ImageIcon("current/images/engine/fire2.png").getImage(), ii * Blocks.defaultW - Blocks.defaultW / 2, i * Blocks.defaultH - Blocks.defaultH * 2, Blocks.defaultW * 3, Blocks.defaultH * 3, null);
+                        g.drawImage(new ImageIcon("current/res/fire2.png").getImage(), ii * 60 - 30, i * 60 - 100, 180, 200, null);
+                    /* подсветка света */
+                    else if(Main.map[iii] == '^')
+                        g.drawImage(new ImageIcon("current/res/white.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
+                    
+                    else if(Main.map[iii] == 'v')
+                        g.drawImage(new ImageIcon("current/res/red_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
+                    else if(Main.map[iii] == 'G')
+                        g.drawImage(new ImageIcon("current/res/green_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
+                    else if(Main.map[iii] == 'J')
+                        g.drawImage(new ImageIcon("current/res/black_.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
+                    else if(Main.map[iii] == 'E')
+                        g.drawImage(new ImageIcon("current/res/blue.png").getImage(), ii * 60 - 10, i * 60 - 10, 80, 80, null);
+                    
                     else if((int)Main.map[iii] >= (int)'0' && (int)Main.map[iii] <= (int)'9')
-                        g.drawImage(new ImageIcon("current/images/engine/boom" + Main.map[iii] + ".png").getImage(), ii * Blocks.defaultW - Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW * 3, Blocks.defaultH * 3, null);
-                    else if(map[iii] == 'p') {
-                        g.drawImage(new ImageIcon("current/images/engine/portal0.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW, Blocks.defaultH * 2, null);
+                        g.drawImage(new ImageIcon("current/res/boom" + Main.map[iii] + ".png").getImage(), ii * 60 - 60, i * 60 - 60, 180, 180, null);
+                    else if(map[iii] == 'c')
+                        g.drawImage(new ImageIcon("current/res/car0.png").getImage(), ii * 60 - 60, i * 60 - 20, 180, 80, null);
+                    else if(map[iii] == 'C')
+                        g.drawImage(new ImageIcon("current/res/car1.png").getImage(), ii * 60 - 60, i * 60 - 20, 180, 80, null);
+                    else if(map[iii] == 'q')
+                        g.drawImage(new ImageIcon("current/res/car2_0.png").getImage(), ii * 60 - 75, i * 60 - 30, 200, 90, null);
+                    else if(map[iii] == 'Q')
+                        g.drawImage(new ImageIcon("current/res/car2_1.png").getImage(), ii * 60 - 75, i * 60 - 30, 200, 90, null);
+                    else if(map[iii] == '/')
+                        g.drawImage(new ImageIcon("current/res/helicopter_00.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
+                    else if(map[iii] == '\\')
+                        g.drawImage(new ImageIcon("current/res/helicopter_10.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
+                    else if(map[iii] == 'i')
+                        g.drawImage(new ImageIcon("current/res/helicopter_01.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
+                    else if(map[iii] == 'I')
+                        g.drawImage(new ImageIcon("current/res/helicopter_11.png").getImage(), ii * 60 - 80, i * 60 - 30, 200, 90, null);
+                    else if(map[iii] == '(')
+                        g.drawImage(new ImageIcon("current/res/tank0_0.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
+                    else if(map[iii] == ')')
+                        g.drawImage(new ImageIcon("current/res/tank1_0.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
+                    else if(map[iii] == 'X')
+                        g.drawImage(new ImageIcon("current/res/box2.png").getImage(), ii * 60 - 60, i * 60 + 60, 120, 60, null);
+                    else if(map[iii] == '<') {
+                        g.drawImage(new ImageIcon("current/res/tank0_1.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
+                        map[iii] = '(';
+                    } else if(map[iii] == '>') {
+                        g.drawImage(new ImageIcon("current/res/tank1_1.png").getImage(), ii * 60 - 60, i * 60 - 20, 200, 80, null);
+                        map[iii] = ')';
+                    } else if(map[iii] == '"') {
+                        g.drawImage(new ImageIcon("current/res/bomb.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
+                    } else if(map[iii] == 'p') {
+                        g.drawImage(new ImageIcon("current/res/portal0.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
                     } else if(map[iii] == 'P') {
-                        g.drawImage(new ImageIcon("current/images/engine/portal1.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW, Blocks.defaultH * 2, null);
+                        g.drawImage(new ImageIcon("current/res/portal1.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
+                    } else if(map[iii] == 'M') {
+                        g.drawImage(new ImageIcon("current/res/l_stul.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
+                    } else if(map[iii] == 'm') {
+                        g.drawImage(new ImageIcon("current/res/r_stul.png").getImage(), ii * 60, i * 60 - 60, 60, 120, null);
+                    } else if(map[iii] == 'z') {
+                        g.drawImage(new ImageIcon("current/res/green.png").getImage(), ii * 60 - 15, i * 60 - 15, 90, 90, null);
                     } else if((map[iii] >= 'а' && map[iii] <= 'я') || (map[iii] >= 'А' && map[iii] <= 'Я') || map[iii] == '-' || map[iii] == '!' || map[iii] == '?' || map[iii] == 'ё' || map[iii] == 'Ё') {
                         g.setColor(new Color(255, 255, 255));
-                        g.setFont(new Font("Monospaced", Font.PLAIN, Blocks.defaultW));
-                        g.drawString("" + map[iii], ii * Blocks.defaultW + Blocks.defaultW / 4, i * Blocks.defaultH + Blocks.defaultH);
-                    }
-                    /* блок мода */
-                    else {
-                        g.drawImage(Blocks.getTexture(map[iii]), ii * Blocks.defaultW + Blocks.getTextureX(map[iii]), i * Blocks.defaultH + Blocks.getTextureY(map[iii]), Blocks.getTextureWidth(map[iii]), Blocks.getTextureHeight(map[iii]), null);
-                        if(Blocks.isHelicopter(map[iii]) && map[iii + physics] == '.')
-                            map[iii] = Blocks.getC2(map[iii]);
-                    }
+                        g.setFont(new Font("Monospaced", Font.PLAIN, 60));
+                        g.drawString("" + map[iii], ii * 60 + 15, i * 60 + 60);
+                    } else if(map[iii] == '№')
+                        g.drawImage(new ImageIcon("current/res/B2.png").getImage(), ii * 60, i * 60 - 33, 60, 60, null);
                     
                     /* подсветка выбранного блока */
                     if(iii == selected && ui && !following) {
                         g.setColor(new Color(0, 255, 0));
-                        g.drawRect(ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
+                        g.drawRect(ii * 60, i * 60, 60, 60);
                     }
                 } catch(ArrayIndexOutOfBoundsException e) {}
                 iii++;
             }
-            iii += WIDTH - 22;
+            iii += WIDTH - 18;
         }
         /*********************************/
         
         if(ui) {
             iii = cameraStart;
-            for(int i = 0; i < 17; i++) {
-                for(int ii = 0; ii < 22; ii++) {
+            for(int i = 0; i < 14; i++) {
+                for(int ii = 0; ii < 18; ii++) {
                     try {
                         if(forBoom[iii] && !programmingMode) {
-                            g.drawImage(new ImageIcon("current/images/engine/red.png").getImage(), ii * Blocks.defaultW - Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW * 3, Blocks.defaultH, null);
-                            g.drawImage(new ImageIcon("current/images/engine/red.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW, Blocks.defaultH * 3, null);
+                            g.drawImage(new ImageIcon("current/res/red.png").getImage(), ii * 60 - 60, i * 60, 180, 60, null);
+                            g.drawImage(new ImageIcon("current/res/red.png").getImage(), ii * 60, i * 60 - 60, 60, 180, null);
                         } else if(behaviorSelected2 != -1 && iii == behaviorSelected2 && programmingMode)
-                            g.drawImage(new ImageIcon("current/images/engine/red.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
+                            g.drawImage(new ImageIcon("current/res/red.png").getImage(), ii * 60, i * 60, 60, 60, null);
                         else if(gameState == 2 && iii == adminPos)
-                            g.drawImage(new ImageIcon("current/images/engine/pricel.png").getImage(), ii * Blocks.defaultW + Blocks.defaultW / 2, i * Blocks.defaultH + Blocks.defaultH / 2, Blocks.defaultW / 5, Blocks.defaultH / 5, null);
+                            g.drawImage(new ImageIcon("current/res/pricel.png").getImage(), ii * 60 + 25, i * 60 + 25, 20, 10, null);
                     } catch(ArrayIndexOutOfBoundsException e) {}
                     iii++;
                 }
-                iii += WIDTH - 22;
+                iii += WIDTH - 18;
             }
             
-            g.drawImage(new ImageIcon("current/images/engine/pricel.png").getImage(), 1024 / 2 + 8, 700 / 2 - 30, 12, 8, null);
-            g.drawImage(new ImageIcon("current/images/engine/vignette.png").getImage(), 0, 0, 1024, 728, null);
+            g.drawImage(new ImageIcon("current/res/pricel.png").getImage(), 1024 / 2 - 7, 700 / 2 - 20, 12, 8, null);
+            g.drawImage(new ImageIcon("current/res/vignette.png").getImage(), 0, 0, 1024, 728, null);
             
             g.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 14));
             g.setColor(new Color(255, 255, 0));
@@ -1779,13 +1817,13 @@ public class Main extends JPanel {
             if(gameState == 1) g.drawString(message, 15, 60);
             
             if(help && !programmingMode) {
-                g.drawImage(new ImageIcon("current/images/engine/black.png").getImage(), 0, 0, 1024, 728, null);
+                g.drawImage(new ImageIcon("current/res/black.png").getImage(), 0, 0, 1024, 728, null);
                 
                 String[] helpMessageSplitted = helpMessage.split("\n");
                 for(int i = 0; i < helpMessageSplitted.length; i++)
                     g.drawString(helpMessageSplitted[i], 15, (i + 1) * 18);
             } else if(help && programmingMode) {
-                g.drawImage(new ImageIcon("current/images/engine/black.png").getImage(), 0, 0, 1024, 728, null);
+                g.drawImage(new ImageIcon("current/res/black.png").getImage(), 0, 0, 1024, 728, null);
                 
                 g.setFont(new Font("Monospaced", Font.PLAIN, 15));
                 
