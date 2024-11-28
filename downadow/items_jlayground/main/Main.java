@@ -57,7 +57,7 @@ public class Main extends JPanel {
     
     private static char currentBlock = '.';
     
-    private static int physics = WIDTH;
+    private static int rain = -1;
     
     private static String helpMessage = "";
     
@@ -588,9 +588,6 @@ public class Main extends JPanel {
                             behavior += "right ";
                             behaviorSelected2++;
                             if(gameState == 2) sendMessage("/p " + behavior);
-                        } else if(e.getKeyCode() == KeyEvent.VK_F10) {
-                            behavior += "-physics ";
-                            if(gameState == 2) sendMessage("/p " + behavior);
                         } else if(e.getKeyCode() == KeyEvent.VK_I) {
                             behavior += "up:lift ";
                             behaviorSelected2 -= WIDTH;
@@ -909,13 +906,14 @@ public class Main extends JPanel {
                                 setBlock(i, '.');
                             }
                         }
-                        else if(e.getKeyCode() == KeyEvent.VK_F10 && physics == WIDTH)
-                            physics = -WIDTH;
-                        else if(e.getKeyCode() == KeyEvent.VK_F10 && physics == -WIDTH)
-                            physics = WIDTH;
+                        else if(e.getKeyCode() == KeyEvent.VK_F10)
+                            rain = (rain == -1 ? 0 : -1);
                         /*******************************/
                         
-                        else if(e.getKeyCode() == KeyEvent.VK_ESCAPE && gameState == 2) {
+                        else if(e.getKeyCode() == KeyEvent.VK_ESCAPE && gameState == 2 && ui) {
+                            ui = false;
+                            help = false;
+                            
                             JFrame chat_fr = new JFrame("написать сообщение");
                             chat_fr.setAlwaysOnTop(true);
                             chat_fr.setSize(320, 140);
@@ -932,7 +930,7 @@ public class Main extends JPanel {
                                     if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                                         try {
                                             sendMessage(chat_tf.getText());
-                                            
+                                            ui = true;
                                             chat_fr.setVisible(false);
                                         } catch(Exception ex) {
                                             ex.printStackTrace();
@@ -946,7 +944,7 @@ public class Main extends JPanel {
                                 public void actionPerformed(java.awt.event.ActionEvent e) {
                                     try {
                                         sendMessage(chat_tf.getText());
-                                        
+                                        ui = true;
                                         chat_fr.setVisible(false);
                                     } catch(Exception ex) {
                                         ex.printStackTrace();
@@ -961,19 +959,21 @@ public class Main extends JPanel {
                         } else if(e.getKeyCode() == KeyEvent.VK_ESCAPE && ui) {
                             // сохранение карты
                             
-                            Files.deleteIfExists(Paths.get("current/map"));
-                            FileWriter fw = new FileWriter("current/map");
-                            fw.write(behavior + "\n");
-                            fw.write("" + bgColor.getRed() + " " + bgColor.getGreen() + " " + bgColor.getBlue() + "\n");
-                            int iii = 0;
-                            for(int i = 0; i < HEIGHT; i++) {
-                                for(int ii = 0; ii < WIDTH; ii++) {
-                                    fw.write(map[iii]);
-                                    iii++;
+                            if(gameState == 0) {
+                                Files.deleteIfExists(Paths.get("current/map"));
+                                FileWriter fw = new FileWriter("current/map");
+                                fw.write(behavior + "\n");
+                                fw.write("" + bgColor.getRed() + " " + bgColor.getGreen() + " " + bgColor.getBlue() + "\n");
+                                int iii = 0;
+                                for(int i = 0; i < HEIGHT; i++) {
+                                    for(int ii = 0; ii < WIDTH; ii++) {
+                                        fw.write(map[iii]);
+                                        iii++;
+                                    }
+                                    fw.write("\n");
                                 }
-                                fw.write("\n");
+                                fw.close();
                             }
-                            fw.close();
                             
                             //////////////////////
                             
@@ -1194,30 +1194,15 @@ public class Main extends JPanel {
                 public void run() {
                     while(true) {
                         try {
-                            if(physics == -WIDTH) {
-                                for(int i = WIDTH; i < map.length - WIDTH; i++) {
-                                    if(ph) {
-                                        if(selected == -1 && Blocks.isFallen(map[i]) && (map[i + physics] == '.' || Blocks.isWater(map[i + physics]) ||
-                                        map[i + physics] == 'b') &&
-                                        (!Blocks.isSticky(map[i - 1]) && !Blocks.isSticky(map[i + 1]) && !Blocks.isSticky(map[i - physics]))) {
-                                            map[i + physics] = map[i];
-                                            map[i] = '.';
-                                        } else if(Blocks.isFallen(map[i]) && Blocks.isEraser(map[i + physics])) {
-                                            map[i] = '.';
-                                        }
-                                    }
-                                }
-                            } else {
-                                for(int i = map.length - WIDTH; i > WIDTH; i--) {
-                                    if(ph) {
-                                        if(selected == -1 && Blocks.isFallen(map[i]) && (map[i + physics] == '.' || Blocks.isWater(map[i + physics]) ||
-                                        map[i + physics] == 'b') &&
-                                        (!Blocks.isSticky(map[i - 1]) && !Blocks.isSticky(map[i + 1]) && !Blocks.isSticky(map[i - physics]))) {
-                                            map[i + physics] = map[i];
-                                            map[i] = '.';
-                                        } else if(Blocks.isFallen(map[i]) && Blocks.isEraser(map[i + physics])) {
-                                            map[i] = '.';
-                                        }
+                            for(int i = map.length - WIDTH; i > WIDTH; i--) {
+                                if(ph) {
+                                    if(selected == -1 && Blocks.isFallen(map[i]) && (map[i + WIDTH] == '.' || Blocks.isWater(map[i + WIDTH]) ||
+                                    map[i + WIDTH] == 'b') &&
+                                    (!Blocks.isSticky(map[i - 1]) && !Blocks.isSticky(map[i + 1]) && !Blocks.isSticky(map[i - WIDTH]))) {
+                                        map[i + WIDTH] = map[i];
+                                        map[i] = '.';
+                                    } else if(Blocks.isFallen(map[i]) && Blocks.isEraser(map[i + WIDTH])) {
+                                        map[i] = '.';
                                     }
                                 }
                             }
@@ -1241,12 +1226,12 @@ public class Main extends JPanel {
                                             map[i - 1] = 'b';
                                         if(map[i + 1] == 'f')
                                             map[i + 1] = 'b';
-                                        if(map[i + physics] == 'f')
-                                            map[i + physics] = 'b';
-                                        if(map[i - physics] == 'f')
-                                            map[i - physics] = 'b';
+                                        if(map[i + WIDTH] == 'f')
+                                            map[i + WIDTH] = 'b';
+                                        if(map[i - WIDTH] == 'f')
+                                            map[i - WIDTH] = 'b';
                                         
-                                        if((map[i + physics] != '.' && !Blocks.isWater(map[i + physics])) || i + physics * 2 > map.length) {
+                                        if((map[i + WIDTH] != '.' && !Blocks.isWater(map[i + WIDTH])) || i + WIDTH * 2 > map.length) {
                                             if(map[i - 1] == '.') {
                                                 if(!slow)
                                                     Thread.sleep(100);
@@ -1264,8 +1249,8 @@ public class Main extends JPanel {
                                             }
                                         }
                                 
-                                        if(map[i + physics] == '.')
-                                            map[i + physics] = map[i];
+                                        if(map[i + WIDTH] == '.')
+                                            map[i + WIDTH] = map[i];
                                     } else if(noWater) {
                                         for(int ii = 0; ii < map.length; ii++)
                                             if(Blocks.isWater(map[ii]))
@@ -1289,9 +1274,9 @@ public class Main extends JPanel {
                             if(ph) {
                                 try {
                                     /* работа батута */
-                                    if(map[i] == '%' && (map[i - physics] != '.' && map[i - physics * 2] == '.' && map[i - physics * 3] == '.' && map[i - physics * 4] == '.')) {
-                                        map[i - physics * 4] = map[i - physics];
-                                        map[i - physics] = '.';
+                                    if(map[i] == '%' && (map[i - WIDTH] != '.' && map[i - WIDTH * 2] == '.' && map[i - WIDTH * 3] == '.' && map[i - WIDTH * 4] == '.')) {
+                                        map[i - WIDTH * 4] = map[i - WIDTH];
+                                        map[i - WIDTH] = '.';
                                     }
                                     /* работа порталов */
                                     else if(map[i] == 'p') {
@@ -1301,24 +1286,24 @@ public class Main extends JPanel {
                                                     map[ii - 1] = map[i + 1];
                                                 if(map[i - 1] != '.')
                                                     map[ii + 1] = map[i - 1];
-                                                if(map[i - physics] != '.')
-                                                    map[ii + physics] = map[i - physics];
+                                                if(map[i - WIDTH] != '.')
+                                                    map[ii + WIDTH] = map[i - WIDTH];
                                     
                                                 map[i - 1] = '.';
                                                 map[i + 1] = '.';
-                                                map[i - physics] = '.';
+                                                map[i - WIDTH] = '.';
                                                 break;
                                             }
                                         }
                                     }
                                     /* работа блоков движения */
-                                    else if(map[i] == '~' && map[i - physics] != '.' && !Blocks.isWater(map[i - physics]) && map[i - physics] != '~' && map[i - physics + 1] == '.') {
-                                        map[i - physics + 1] = map[i - physics];
-                                        map[i - physics] = '.';
+                                    else if(map[i] == '~' && map[i - WIDTH] != '.' && !Blocks.isWater(map[i - WIDTH]) && map[i - WIDTH] != '~' && map[i - WIDTH + 1] == '.') {
+                                        map[i - WIDTH + 1] = map[i - WIDTH];
+                                        map[i - WIDTH] = '.';
                                         Thread.sleep(!slow ? 200 : 500);
-                                    } else if(map[i] == ',' && map[i - physics] != '.' && !Blocks.isWater(map[i - physics]) && map[i - physics] != '~' && map[i - physics - 1] == '.') {
-                                        map[i - physics - 1] = map[i - physics];
-                                        map[i - physics] = '.';
+                                    } else if(map[i] == ',' && map[i - WIDTH] != '.' && !Blocks.isWater(map[i - WIDTH]) && map[i - WIDTH] != '~' && map[i - WIDTH - 1] == '.') {
+                                        map[i - WIDTH - 1] = map[i - WIDTH];
+                                        map[i - WIDTH] = '.';
                                         Thread.sleep(!slow ? 200 : 500);
                                     }
                                 } catch(Exception e) {
@@ -1352,6 +1337,13 @@ public class Main extends JPanel {
                             map[selected - WIDTH] = '.';
                             fr.repaint();
                             Thread.sleep(90);
+                        }
+                        
+                        if(rain != -1) {
+                            if(rain < 4)
+                                rain++;
+                            else
+                                rain = 0;
                         }
                         
                         fr.repaint();
@@ -1389,16 +1381,16 @@ public class Main extends JPanel {
                     while(true) {
                             for(int i = 0; i < map.length; i++) {
                                 try {
-                                    if(Blocks.isArrow(map[i]) && Blocks.getLeftC(map[i]) == map[i] && (Blocks.isSticky(map[i - 1]) || Blocks.isSticky(map[i + 1]) || Blocks.isSticky(map[i - physics]) || Blocks.isSticky(map[i + physics]))) {
+                                    if(Blocks.isArrow(map[i]) && Blocks.getLeftC(map[i]) == map[i] && (Blocks.isSticky(map[i - 1]) || Blocks.isSticky(map[i + 1]) || Blocks.isSticky(map[i - WIDTH]) || Blocks.isSticky(map[i + WIDTH]))) {
                                         continue;
                                     } else if(Blocks.isArrow(map[i]) && Blocks.getLeftC(map[i]) == map[i] && map[i - 1] == '.') {
                                         map[i - 1] = map[i];
                                         map[i] = '.';
-                                    } else if(Blocks.isArrow(map[i]) && Blocks.getLeftC(map[i]) == map[i] && map[i - 1] != '.' && map[i - physics] == '.' && map[i - physics - 1] == '.') {
-                                        map[i - physics - 1] = map[i];
+                                    } else if(Blocks.isArrow(map[i]) && Blocks.getLeftC(map[i]) == map[i] && map[i - 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH - 1] == '.') {
+                                        map[i - WIDTH - 1] = map[i];
                                         map[i] = '.';
-                                    } else if(Blocks.isArrow(map[i]) && Blocks.getRightC(map[i]) == map[i] && map[i + 1] != '.' && map[i - physics] == '.' && map[i - physics + 1] == '.') {
-                                        map[i - physics + 1] = map[i];
+                                    } else if(Blocks.isArrow(map[i]) && Blocks.getRightC(map[i]) == map[i] && map[i + 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH + 1] == '.') {
+                                        map[i - WIDTH + 1] = map[i];
                                         map[i] = '.';
                                     } else if(Blocks.isArrow(map[i]) && Blocks.getLeftC(map[i]) == map[i]) {
                                         map[i] = Blocks.getRightC(map[i]);
@@ -1529,11 +1521,6 @@ public class Main extends JPanel {
                                         map[behaviorSelected] = '.';
                                         behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
                                     }
-                                    /* -physics */
-                                    else if(behaviorSplitted[i].equals("-physics") && physics == WIDTH)
-                                        physics = -WIDTH;
-                                    else if(behaviorSplitted[i].equals("-physics"))
-                                        physics = WIDTH;
                                     /* step */
                                     else if(behaviorSplitted[i].startsWith("step:")) {
                                         int delay  = Integer.parseInt(behaviorSplitted[i].split(":")[2]),
@@ -1711,6 +1698,8 @@ public class Main extends JPanel {
                                 g.drawRect(ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
                             } catch(IllegalArgumentException e) {}
                         }
+                        if(rain != -1)
+                            g.drawImage(new ImageIcon("current/images/engine/rain" + rain + ".png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
                     }
                     
                     if(map[iii] == '~' || map[iii] == ',') {
@@ -1731,6 +1720,13 @@ public class Main extends JPanel {
                         g.setColor(new Color(5, 5, 5));
                         g.fillRect(ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
                     }
+                    /* блок мода */
+                    else if(Blocks.getTextureX(map[iii]) == Blocks.defaultX && Blocks.getTextureY(map[iii]) == Blocks.defaultY &&
+                            Blocks.getTextureWidth(map[iii]) <= Blocks.defaultW && Blocks.getTextureHeight(map[iii]) <= Blocks.defaultH) {
+                        g.drawImage(Blocks.getTexture(map[iii]), ii * Blocks.defaultW + Blocks.getTextureX(map[iii]), i * Blocks.defaultH + Blocks.getTextureY(map[iii]), Blocks.getTextureWidth(map[iii]), Blocks.getTextureHeight(map[iii]), null);
+                        if(Blocks.isHelicopter(map[iii]) && map[iii + WIDTH] == '.')
+                            map[iii] = Blocks.getC2(map[iii]);
+                    }
                 } catch(ArrayIndexOutOfBoundsException e) {}
                 iii++;
             }
@@ -1741,9 +1737,11 @@ public class Main extends JPanel {
         for(int i = 0; i < 17; i++) {
             for(int ii = 0; ii < 22; ii++) {
                 try {
-                    if(Main.map[iii] == 'f')
+                    if(Main.map[iii] == 'f') {
                         g.drawImage(new ImageIcon("current/images/engine/fire.png").getImage(), ii * Blocks.defaultW - Blocks.defaultW / 2, i * Blocks.defaultH - Blocks.defaultH * 2, Blocks.defaultW * 3, Blocks.defaultH * 3, null);
-                    else if(Main.map[iii] == 'F')
+                        if(rain != -1 && selected == -1)
+                            Main.map[iii] = 'b';
+                    } else if(Main.map[iii] == 'F')
                         g.drawImage(new ImageIcon("current/images/engine/fire2.png").getImage(), ii * Blocks.defaultW - Blocks.defaultW / 2, i * Blocks.defaultH - Blocks.defaultH * 2, Blocks.defaultW * 3, Blocks.defaultH * 3, null);
                     else if((int)Main.map[iii] >= (int)'0' && (int)Main.map[iii] <= (int)'9')
                         g.drawImage(new ImageIcon("current/images/engine/boom" + Main.map[iii] + ".png").getImage(), ii * Blocks.defaultW - Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW * 3, Blocks.defaultH * 3, null);
@@ -1757,9 +1755,10 @@ public class Main extends JPanel {
                         g.drawString("" + map[iii], ii * Blocks.defaultW + Blocks.defaultW / 4, i * Blocks.defaultH + Blocks.defaultH);
                     }
                     /* блок мода */
-                    else {
+                    else if(Blocks.getTextureX(map[iii]) != Blocks.defaultX || Blocks.getTextureY(map[iii]) != Blocks.defaultY ||
+                            Blocks.getTextureWidth(map[iii]) > Blocks.defaultW || Blocks.getTextureHeight(map[iii]) > Blocks.defaultH) {
                         g.drawImage(Blocks.getTexture(map[iii]), ii * Blocks.defaultW + Blocks.getTextureX(map[iii]), i * Blocks.defaultH + Blocks.getTextureY(map[iii]), Blocks.getTextureWidth(map[iii]), Blocks.getTextureHeight(map[iii]), null);
-                        if(Blocks.isHelicopter(map[iii]) && map[iii + physics] == '.')
+                        if(Blocks.isHelicopter(map[iii]) && map[iii + WIDTH] == '.')
                             map[iii] = Blocks.getC2(map[iii]);
                     }
                     
@@ -1863,8 +1862,7 @@ public class Main extends JPanel {
                 g.drawString("<F5>............:   выход из режима программирования", 20, 320);
                 g.drawString("<F1>............:   скрыть/показать эту помощь", 20, 340);
                 g.drawString("T...............:   tp:<адрес блока под прицелом>", 20, 360);
-                g.drawString("<F10>...........:   -physics", 20, 380);
-                g.drawString("E, а после 0..9 :   step:<...>:<...> (шагать с перерывами в 50/100/.../1000 миллисекунд)", 20, 400);
+                g.drawString("E, а после 0..9 :   step:<...>:<...> (шагать с перерывами в 50/100/.../1000 миллисекунд)", 20, 380);
             }
         }
     }

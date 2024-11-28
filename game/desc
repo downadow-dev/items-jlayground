@@ -64,7 +64,7 @@ type:arrow c:;:; texture:right.png fallen fire_resistant
 # компьютер
 type:simple c:h texture:computer.png fire_resistant fallen
 # ящик
-type:simple c:X texture:box2.png x:-50 y:50 w:100
+type:simple c:X texture:box2.png fallen x:-100 w:100
 # тумбочка
 type:simple c:L texture:block3.png
 # ковёр
