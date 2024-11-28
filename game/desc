@@ -40,11 +40,11 @@ type:simple c:@ texture:box.png fallen x:-50 y:-50 w:100 h:100
 # палка
 type:simple c:| texture:door_or_stick.png fallen
 # вертолёт
-type:helicopter c://\ c2:I texture:helicopter_10.png fire_resistant x:-50 y:-16 w:150 h:66
-type:helicopter c:\/\ c2:i texture:helicopter_00.png fire_resistant x:-50 y:-16 w:150 h:66
+type:helicopter c://\ c2:I texture:helicopter_10.png x:-50 y:-16 w:150 h:66
+type:helicopter c:\/\ c2:i texture:helicopter_00.png x:-50 y:-16 w:150 h:66
 
-type:helicopter c:IIi c2:/ texture:helicopter_11.png fire_resistant x:-50 y:-16 w:150 h:66
-type:helicopter c:iIi c2:\ texture:helicopter_01.png fire_resistant x:-50 y:-16 w:150 h:66
+type:helicopter c:IIi c2:/ texture:helicopter_11.png x:-50 y:-16 w:150 h:66
+type:helicopter c:iIi c2:\ texture:helicopter_01.png x:-50 y:-16 w:150 h:66
 # слизь
 type:simple c:z texture:sticky_block.png fire_resistant sticky x:-20 y:-20 w:90 h:90
 # бутылка с водой
