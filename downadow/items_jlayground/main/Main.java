@@ -30,7 +30,7 @@ public class Main extends JPanel {
     
     private static int behaviorSelected2 = -1;
     
-    private static boolean jump = false;
+    private static boolean jump = false, blockHelicopter = false;
     
     private static boolean programmingMode = false;
     
@@ -841,6 +841,7 @@ public class Main extends JPanel {
                                             Thread.sleep(150);
                                         }
                                     }
+                                    Thread.sleep(160);
                                     
                                     jump = false;
                                 } catch(Exception e) {}
@@ -1073,18 +1074,20 @@ public class Main extends JPanel {
                                     break;
                                 }
                             }
-                        } else if(e.getKeyCode() == KeyEvent.VK_ENTER && Blocks.isHelicopter(map[selected]) && map[selected + WIDTH] == '.') {
+                        } else if(e.getKeyCode() == KeyEvent.VK_ENTER && Blocks.isHelicopter(map[selected]) && map[selected + WIDTH] == '.' && !blockHelicopter) {
                             new Thread() {
                                 public void run() {
+                                    blockHelicopter = true;
                                     try {
                                         int i;
                                         for(i = selected + WIDTH * 2; map[i] == '.'; i += WIDTH) {
-                                            map[i] = 'f';
-                                            Thread.sleep(slow ? 90 : 40);
+                                            map[i] = 'b';
+                                            Thread.sleep(slow ? 70 : 30);
                                             map[i] = '.';
                                         }
                                         boom(i);
                                     } catch(Exception e) {}
+                                    blockHelicopter = false;
                                 }
                             }.start();
                         }
@@ -1336,7 +1339,7 @@ public class Main extends JPanel {
                             map[selected] = map[selected - WIDTH];
                             map[selected - WIDTH] = '.';
                             fr.repaint();
-                            Thread.sleep(90);
+                            Thread.sleep(30);
                         }
                         
                         if(rain != -1) {
