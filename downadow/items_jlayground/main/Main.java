@@ -91,14 +91,12 @@ public class Main extends JPanel {
     }
     
     private static void setBlock(int addr, char blk) {
-        if(gameState != 2 || selected != -1)
-            map[addr] = blk;
-        else
-            sendMessage("/c " + addr + " " + blk);
+        map[addr] = blk;
+        if(gameState == 2) sendMessage("/c " + addr + " " + blk);
     }
     
     private static void fire(int addr) {
-        if(gameState != 2 || selected != -1) {
+        if(gameState != 2) {
             final int saved = addr;
             if(!Blocks.isFireResistant(map[saved])) {
                 map[saved] = 'f';
@@ -133,7 +131,7 @@ public class Main extends JPanel {
     }
     
     private static void fire2(int addr) {
-        if(gameState != 2 || selected != -1) {
+        if(gameState != 2) {
             final int saved = addr;
             map[saved] = 'F';
 
@@ -169,68 +167,66 @@ public class Main extends JPanel {
     }
     
     private static void boom(int addr) {
-        if(gameState != 2 || selected != -1) {
-            final int saved = addr;
-            new Thread() {
-                public void run() {
+        final int saved = addr;
+        new Thread() {
+            public void run() {
+                try {
                     try {
-                        try {
-                            if(!Blocks.isStrong(map[saved]))         map[saved] = '.';
-                            if(!Blocks.isStrong(map[saved + 1]))     map[saved + 1] = '.';
-                            if(!Blocks.isStrong(map[saved - 1]))     map[saved - 1] = '.';
-                            if(!Blocks.isStrong(map[saved + WIDTH])) map[saved + WIDTH] = '.';
-                            if(!Blocks.isStrong(map[saved - WIDTH])) map[saved - WIDTH] = '.';
-                            
-                            if(!(map[saved - 1 - WIDTH] >= '0' && map[saved - 1 - WIDTH] <= '9') && !Blocks.isStrong(map[saved -1 - WIDTH]) && map[saved - 1 - WIDTH] != '.') {
-                                if(!Blocks.isStrong(map[saved - 2 - WIDTH * 2]))
-                                    map[saved - 2 - WIDTH * 2] = map[saved - 1 - WIDTH];
-                                map[saved - 1 - WIDTH] = '.';
-                            }
-                            
-                            if(!(map[saved + 1 - WIDTH] >= '0' && map[saved + 1 - WIDTH] <= '9') && !Blocks.isStrong(map[saved + 1 - WIDTH]) && map[saved + 1 - WIDTH] != '.') {
-                                if(!Blocks.isStrong(map[saved + 2 - WIDTH * 2]))
-                                    map[saved + 2 - WIDTH * 2] = map[saved + 1 - WIDTH];
-                                map[saved + 1 - WIDTH] = '.';
-                            }
-                            
-                            if(!(map[saved + 1 + WIDTH] >= '0' && map[saved + 1 + WIDTH] <= '9') && !Blocks.isStrong(map[saved + 1 + WIDTH]) && map[saved + 1 + WIDTH] != '.') {
-                                if(!Blocks.isStrong(map[saved + 2 + WIDTH * 2]))
-                                    map[saved + 2 + WIDTH * 2] = map[saved + 1 + WIDTH];
-                                map[saved + 1 + WIDTH] = '.';
-                            }
-                            
-                            if(!(map[saved - 1 + WIDTH] >= '0' && map[saved - 1 + WIDTH] <= '9') && !Blocks.isStrong(map[saved - 1 + WIDTH]) && map[saved - 1 + WIDTH] != '.') {
-                                if(!Blocks.isStrong(map[saved - 2 + WIDTH * 2]))
-                                    map[saved - 2 + WIDTH * 2] = map[saved - 1 + WIDTH];
-                                map[saved - 1 + WIDTH] = '.';
-                            }
-                            
-                            fire(saved - 2);
-                            fire(saved + 2);
-                            fire(saved + WIDTH * 2);
-                        } catch(ArrayIndexOutOfBoundsException e) {}
-                        for(int i = 0; i < 7; i++) {
-                            if(!Blocks.isStrong(map[saved]))
-                                map[saved] = (char)((int)'0' + i);
-                            if(!slow)
-                                Thread.sleep(30);
-                            else
-                                Thread.sleep(110);
+                        if(!Blocks.isStrong(map[saved]))         map[saved] = '.';
+                        if(!Blocks.isStrong(map[saved + 1]))     map[saved + 1] = '.';
+                        if(!Blocks.isStrong(map[saved - 1]))     map[saved - 1] = '.';
+                        if(!Blocks.isStrong(map[saved + WIDTH])) map[saved + WIDTH] = '.';
+                        if(!Blocks.isStrong(map[saved - WIDTH])) map[saved - WIDTH] = '.';
+                        
+                        if(!(map[saved - 1 - WIDTH] >= '0' && map[saved - 1 - WIDTH] <= '9') && !Blocks.isStrong(map[saved -1 - WIDTH]) && map[saved - 1 - WIDTH] != '.') {
+                            if(!Blocks.isStrong(map[saved - 2 - WIDTH * 2]))
+                                map[saved - 2 - WIDTH * 2] = map[saved - 1 - WIDTH];
+                            map[saved - 1 - WIDTH] = '.';
                         }
+                        
+                        if(!(map[saved + 1 - WIDTH] >= '0' && map[saved + 1 - WIDTH] <= '9') && !Blocks.isStrong(map[saved + 1 - WIDTH]) && map[saved + 1 - WIDTH] != '.') {
+                            if(!Blocks.isStrong(map[saved + 2 - WIDTH * 2]))
+                                map[saved + 2 - WIDTH * 2] = map[saved + 1 - WIDTH];
+                            map[saved + 1 - WIDTH] = '.';
+                        }
+                        
+                        if(!(map[saved + 1 + WIDTH] >= '0' && map[saved + 1 + WIDTH] <= '9') && !Blocks.isStrong(map[saved + 1 + WIDTH]) && map[saved + 1 + WIDTH] != '.') {
+                            if(!Blocks.isStrong(map[saved + 2 + WIDTH * 2]))
+                                map[saved + 2 + WIDTH * 2] = map[saved + 1 + WIDTH];
+                            map[saved + 1 + WIDTH] = '.';
+                        }
+                        
+                        if(!(map[saved - 1 + WIDTH] >= '0' && map[saved - 1 + WIDTH] <= '9') && !Blocks.isStrong(map[saved - 1 + WIDTH]) && map[saved - 1 + WIDTH] != '.') {
+                            if(!Blocks.isStrong(map[saved - 2 + WIDTH * 2]))
+                                map[saved - 2 + WIDTH * 2] = map[saved - 1 + WIDTH];
+                            map[saved - 1 + WIDTH] = '.';
+                        }
+                        
+                        fire(saved - 2);
+                        fire(saved + 2);
+                        fire(saved + WIDTH * 2);
+                    } catch(ArrayIndexOutOfBoundsException e) {}
+                    for(int i = 0; i < 7; i++) {
                         if(!Blocks.isStrong(map[saved]))
-                            map[saved] = '.';
-                    } catch(Exception ex) {
-                        ex.printStackTrace();
+                            map[saved] = (char)((int)'0' + i);
+                        if(!slow)
+                            Thread.sleep(30);
+                        else
+                            Thread.sleep(110);
                     }
+                    if(!Blocks.isStrong(map[saved]))
+                        map[saved] = '.';
+                } catch(Exception ex) {
+                    ex.printStackTrace();
                 }
-            }.start();
-        } else {
-            sendMessage("/b " + addr);
-        }
+            }
+        }.start();
+        
+        if(gameState == 2) sendMessage("/b " + addr);
     }
     
     private static void shootRight(int addr) {
-        if(gameState != 2 || selected != -1) {
+        if(gameState != 2) {
             new Thread() {
                 public void run() {
                     try {
@@ -262,7 +258,7 @@ public class Main extends JPanel {
         }
     }
     private static void shootLeft(int addr) {
-        if(gameState != 2 || selected != -1) {
+        if(gameState != 2) {
             new Thread() {
                 public void run() {
                     try {
@@ -835,8 +831,8 @@ public class Main extends JPanel {
                                         for(int i = 0; i < 3; i++) {
                                             if(map[selected - WIDTH] == '.') {
                                                 selected -= WIDTH;
-                                                map[selected] = map[selected + WIDTH];
-                                                map[selected + WIDTH] = '.';
+                                                setBlock(selected, map[selected + WIDTH]);
+                                                setBlock(selected + WIDTH, '.');
                                             }
                                             Thread.sleep(150);
                                         }
@@ -860,10 +856,10 @@ public class Main extends JPanel {
                         return;
                     }
                     /* включение/выключение "физики" */
-                    else if(e.getKeyCode() == KeyEvent.VK_F6 && !ph) {
+                    else if(e.getKeyCode() == KeyEvent.VK_F6 && !ph && gameState != 2) {
                         ph = true;
                         return;
-                    } else if(e.getKeyCode() == KeyEvent.VK_F6 && ph) {
+                    } else if(e.getKeyCode() == KeyEvent.VK_F6 && ph && gameState != 2) {
                         ph = false;
                         return;
                     }
@@ -986,15 +982,14 @@ public class Main extends JPanel {
                         else if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
                             setBlock(selectedBlockAddr(), '.');
                         else if(e.getKeyCode() == KeyEvent.VK_DELETE) {
-                            map[selected] = '.';
-                            selected = -1;
+                            setBlock(selected, '.');
                         /* поставить огонь */
                         } else if(e.getKeyChar() == 'f' && map[selectedBlockAddr()] != '.' &&
                                   !Blocks.isFireResistant(map[selectedBlockAddr()])) {
                             fire(selectedBlockAddr());
                         } else if(e.getKeyChar() == 'F' && map[selectedBlockAddr()] != '.')
                             fire2(selectedBlockAddr());
-                        /* выбрать блок */
+                        /* выбрать блок под прицелом */
                         else if(e.getKeyCode() == KeyEvent.VK_SPACE && selected == -1 && map[selectedBlockAddr()] != '.')
                             selected = selectedBlockAddr();
                         /* убрать выделение */
@@ -1010,13 +1005,13 @@ public class Main extends JPanel {
                             shootRight(selectedBlockAddr());
                         /* отражение объектов */
                         else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == '~')
-                            map[selected] = ',';
+                            setBlock(selected, ',');
                         else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == ',')
-                            map[selected] = '~';
+                            setBlock(selected, '~');
                         else if(e.getKeyCode() == KeyEvent.VK_Q)
-                            map[selected] = Blocks.getLeftC(map[selected]);
+                            setBlock(selected, Blocks.getLeftC(map[selected]));
                         else if(e.getKeyCode() == KeyEvent.VK_E)
-                            map[selected] = Blocks.getRightC(map[selected]);
+                            setBlock(selected, Blocks.getRightC(map[selected]));
                         /* поставить блок */
                         else if(e.getKeyCode() == KeyEvent.VK_C)
                             setBlock(selectedBlockAddr(), currentBlock);
@@ -1081,9 +1076,9 @@ public class Main extends JPanel {
                                     try {
                                         int i;
                                         for(i = selected + WIDTH * 2; map[i] == '.'; i += WIDTH) {
-                                            map[i] = 'b';
-                                            Thread.sleep(slow ? 70 : 30);
-                                            map[i] = '.';
+                                            setBlock(i, 'b');
+                                            Thread.sleep(slow ? 90 : 40);
+                                            setBlock(i, '.');
                                         }
                                         boom(i);
                                     } catch(Exception e) {}
@@ -1093,20 +1088,20 @@ public class Main extends JPanel {
                         }
                         /* операции с выделенным блоком */
                         else if(e.getKeyCode() == KeyEvent.VK_W && selected != -1 && (map[selected - WIDTH] == '.' || Blocks.isWater(map[selected - WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                            map[selected - WIDTH] = map[selected];
-                            map[selected] = '.';
+                            setBlock(selected - WIDTH, map[selected]);
+                            setBlock(selected, '.');
                             selected -= WIDTH;
                         } else if(e.getKeyCode() == KeyEvent.VK_S && selected != -1 && (map[selected + WIDTH] == '.' || Blocks.isWater(map[selected + WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                            map[selected + WIDTH] = map[selected];
-                            map[selected] = '.';
+                            setBlock(selected + WIDTH, map[selected]);
+                            setBlock(selected, '.');
                             selected += WIDTH;
                         } else if(e.getKeyCode() == KeyEvent.VK_A && selected != -1 && (map[selected - 1] == '.' || Blocks.isWater(map[selected - 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                            map[selected - 1] = map[selected];
-                            map[selected] = '.';
+                            setBlock(selected - 1, map[selected]);
+                            setBlock(selected, '.');
                             selected--;
                         } else if(e.getKeyCode() == KeyEvent.VK_D && selected != -1 && (map[selected + 1] == '.' || Blocks.isWater(map[selected + 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                            map[selected + 1] = map[selected];
-                            map[selected] = '.';
+                            setBlock(selected + 1, map[selected]);
+                            setBlock(selected, '.');
                             selected++;
                         }
                         else if(e.getKeyCode() == KeyEvent.VK_PERIOD) {
@@ -1132,7 +1127,7 @@ public class Main extends JPanel {
                             setbg_tfR.addKeyListener(new KeyListener() {
                                 public void keyPressed(KeyEvent e) {
                                     if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                                        if(gameState != 2 || selected != -1) bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+                                        if(gameState != 2) bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
                                         else sendMessage("/B " + setbg_tfR.getText() + " " + setbg_tfG.getText() + " " + setbg_tfB.getText());
                                         setbg_fr.setVisible(false);
                                     }
@@ -1143,7 +1138,7 @@ public class Main extends JPanel {
                             setbg_tfG.addKeyListener(new KeyListener() {
                                 public void keyPressed(KeyEvent e) {
                                     if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                                        if(gameState != 2 || selected != -1) bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+                                        if(gameState != 2) bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
                                         else sendMessage("/B " + setbg_tfR.getText() + " " + setbg_tfG.getText() + " " + setbg_tfB.getText());
                                         setbg_fr.setVisible(false);
                                     }
@@ -1154,7 +1149,7 @@ public class Main extends JPanel {
                             setbg_tfB.addKeyListener(new KeyListener() {
                                 public void keyPressed(KeyEvent e) {
                                     if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                                        if(gameState != 2 || selected != -1) bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+                                        if(gameState != 2) bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
                                         else sendMessage("/B " + setbg_tfR.getText() + " " + setbg_tfG.getText() + " " + setbg_tfB.getText());
                                         setbg_fr.setVisible(false);
                                     }
@@ -1164,7 +1159,7 @@ public class Main extends JPanel {
                             });
                             setbg_b.addActionListener(new java.awt.event.ActionListener() {
                                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                                    if(gameState != 2 || selected != -1) bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
+                                    if(gameState != 2) bgColor = new Color(Integer.parseInt(setbg_tfR.getText()), Integer.parseInt(setbg_tfG.getText()), Integer.parseInt(setbg_tfB.getText()));
                                     else sendMessage("/B " + setbg_tfR.getText() + " " + setbg_tfG.getText() + " " + setbg_tfB.getText());
                                     setbg_fr.setVisible(false);
                                 }
@@ -1336,8 +1331,8 @@ public class Main extends JPanel {
                         while(following && !jump && selected > WIDTH && !Blocks.isHelicopter(map[selected]) && !Blocks.isEraser(map[selected]) && map[selected + WIDTH] == '.' && ph) {
                             selected += WIDTH;
                             cameraStart = selected - (selectedBlockAddr() - cameraStart);
-                            map[selected] = map[selected - WIDTH];
-                            map[selected - WIDTH] = '.';
+                            setBlock(selected, map[selected - WIDTH]);
+                            setBlock(selected - WIDTH, '.');
                             fr.repaint();
                             Thread.sleep(30);
                         }
@@ -1666,13 +1661,13 @@ public class Main extends JPanel {
                                         map[ii++] = line[i];
                                 }
                                 sc.close();
-                                
-                                try {
-                                    sc = new Scanner(new File("current/adminPos"));
-                                    adminPos = Integer.parseInt(sc.nextLine());
-                                    sc.close();
-                                } catch(Exception ex) {}
                             }
+                            
+                            try {
+                                Scanner sc = new Scanner(new File("current/adminPos"));
+                                adminPos = Integer.parseInt(sc.nextLine());
+                                sc.close();
+                            } catch(Exception ex) {}
                             /******************/
                             
                             Thread.sleep(400);
