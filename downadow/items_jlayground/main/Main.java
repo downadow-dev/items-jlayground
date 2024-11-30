@@ -1333,7 +1333,7 @@ public class Main extends JPanel {
                         else if(following && selected == -1)
                             following = false;
                         
-                        while(following && !jump && selected > WIDTH && !Blocks.isHelicopter(map[selected]) && !Blocks.isEraser(map[selected]) && map[selected + WIDTH] == '.') {
+                        while(following && !jump && selected > WIDTH && !Blocks.isHelicopter(map[selected]) && !Blocks.isEraser(map[selected]) && map[selected + WIDTH] == '.' && ph) {
                             selected += WIDTH;
                             cameraStart = selected - (selectedBlockAddr() - cameraStart);
                             map[selected] = map[selected - WIDTH];
