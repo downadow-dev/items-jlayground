@@ -1008,13 +1008,13 @@ public class Main extends JPanel {
                             shootRight(selectedBlockAddr());
                         /* отражение объектов */
                         else if(e.getKeyCode() == KeyEvent.VK_Q && map[selected] == '~')
-                            setBlock(selected, ',');
+                            map[selected] = ',';
                         else if(e.getKeyCode() == KeyEvent.VK_E && map[selected] == ',')
-                            setBlock(selected, '~');
+                            map[selected] = '~';
                         else if(e.getKeyCode() == KeyEvent.VK_Q)
-                            setBlock(selected, Blocks.getLeftC(map[selected]));
+                            map[selected] = Blocks.getLeftC(map[selected]);
                         else if(e.getKeyCode() == KeyEvent.VK_E)
-                            setBlock(selected, Blocks.getRightC(map[selected]));
+                            map[selected] = Blocks.getRightC(map[selected]);
                         /* поставить блок */
                         else if(e.getKeyCode() == KeyEvent.VK_C)
                             setBlock(selectedBlockAddr(), currentBlock);
