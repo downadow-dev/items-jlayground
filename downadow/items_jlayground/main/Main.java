@@ -1313,7 +1313,7 @@ public class Main extends JPanel {
                                 }
                             }
                         }
-                        try {Thread.sleep(40);} catch(Exception e) {}
+                        try {Thread.sleep(80);} catch(Exception e) {}
                     }
                 }
             }.start();
