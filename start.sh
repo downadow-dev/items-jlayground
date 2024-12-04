@@ -64,10 +64,10 @@ if [[ "$1" == '-c' ]]; then
     
     while true; do
         curl -o current/map "$2/current/map" 2> /dev/null
-        curl -o current/adminPos "$2/current/adminPos" 2> /dev/null
-        if [[ "$(cat current/msg)" != "" ]]; then
-            curl "$2/msg.php?m=$(php -r 'echo urlencode(file_get_contents("current/msg"));')" 2> /dev/null
-            : > current/msg
+        curl -o res/adminPos "$2/res/adminPos" 2> /dev/null
+        if [[ "$(cat res/msg)" != "" ]]; then
+            curl "$2/msg.php?m=$(php -r 'echo urlencode(file_get_contents("res/msg"));')" 2> /dev/null
+            : > res/msg
         fi
         sleep 0.4
     done

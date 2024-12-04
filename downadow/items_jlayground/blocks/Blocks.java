@@ -6,11 +6,9 @@ public class Blocks {
     private static Simple[] blocks = new Simple[512];
     private static Tank[] tanks = new Tank[256];
     private static Helicopter[] helicopters = new Helicopter[256];
-    private static Water[] waterTypes = new Water[10];
-    private static Arrow[] arrows = new Arrow[10];
+    private static Water[] waterTypes = new Water[16];
     
-    private static int blocksLength = 0, tanksLength = 0, helicoptersLength = 0,
-        waterTypesLength = 0, arrowsLength = 0;
+    private static int blocksLength = 0, tanksLength = 0, helicoptersLength = 0, waterTypesLength = 0;
     
     public static final int defaultX = 0, defaultY = 0, defaultW = 50, defaultH = 50;
     
@@ -82,25 +80,6 @@ public class Blocks {
         waterTypesLength++;
     }
     
-    public static void addArrow(char c, char leftC, char rightC, Image texture,
-                                boolean isFallen, boolean isStrong, boolean isFireResistant,
-                                int x, int y, int w, int h) {
-        arrows[arrowsLength] = new Arrow();
-        arrows[arrowsLength].c = c;
-        arrows[arrowsLength].leftC = leftC;
-        arrows[arrowsLength].rightC = rightC;
-        arrows[arrowsLength].texture = texture;
-        arrows[arrowsLength].isFallen = isFallen;
-        arrows[arrowsLength].isStrong = isStrong;
-        arrows[arrowsLength].isFireResistant = isFireResistant;
-        arrows[arrowsLength].x = x;
-        arrows[arrowsLength].y = y;
-        arrows[arrowsLength].w = w;
-        arrows[arrowsLength].h = h;
-        
-        arrowsLength++;
-    }
-    
     /* определение типа */
     
     public static boolean isSimple(char c) {
@@ -131,13 +110,6 @@ public class Blocks {
         return false;
     }
     
-    public static boolean isArrow(char c) {
-        for(int i = 0; i < arrowsLength; i++)
-            if(arrows[i].c == c)
-                return true;
-        return false;
-    }
-    
     /* получение атрибутов */
     
     public static char getLeftC(char c) {
@@ -150,9 +122,6 @@ public class Blocks {
         for(int i = 0; i < helicoptersLength; i++)
             if(helicopters[i].c == c)
                 return helicopters[i].leftC;
-        for(int i = 0; i < arrowsLength; i++)
-            if(arrows[i].c == c)
-                return arrows[i].leftC;
         return c;
     }
     
@@ -166,9 +135,6 @@ public class Blocks {
         for(int i = 0; i < helicoptersLength; i++)
             if(helicopters[i].c == c)
                 return helicopters[i].rightC;
-        for(int i = 0; i < arrowsLength; i++)
-            if(arrows[i].c == c)
-                return arrows[i].rightC;
         return c;
     }
     
@@ -185,9 +151,6 @@ public class Blocks {
         for(int i = 0; i < waterTypesLength; i++)
             if(waterTypes[i].c == c)
                 return waterTypes[i].texture;
-        for(int i = 0; i < arrowsLength; i++)
-            if(arrows[i].c == c)
-                return arrows[i].texture;
         return null;
     }
     
@@ -195,10 +158,7 @@ public class Blocks {
         for(int i = 0; i < blocksLength; i++)
             if(blocks[i].c == c)
                 return blocks[i].isFallen;
-        for(int i = 0; i < arrowsLength; i++)
-            if(arrows[i].c == c)
-                return arrows[i].isFallen;
-        if(isTank(c)) return true;
+        if(isTank(c) || c == ':' || c == ';') return true;
         return false;
     }
     
@@ -212,9 +172,6 @@ public class Blocks {
         for(int i = 0; i < helicoptersLength; i++)
             if(helicopters[i].c == c)
                 return helicopters[i].isStrong;
-        for(int i = 0; i < arrowsLength; i++)
-            if(arrows[i].c == c)
-                return arrows[i].isStrong;
         for(int i = 0; i < waterTypesLength; i++)
             if(waterTypes[i].c == c)
                 return true;
@@ -232,9 +189,6 @@ public class Blocks {
         for(int i = 0; i < blocksLength; i++)
             if(blocks[i].c == c)
                 return blocks[i].isFireResistant;
-        for(int i = 0; i < arrowsLength; i++)
-            if(arrows[i].c == c)
-                return arrows[i].isFireResistant;
         return true;
     }
     
@@ -255,9 +209,6 @@ public class Blocks {
         for(int i = 0; i < helicoptersLength; i++)
             if(helicopters[i].c == c)
                 return helicopters[i].x;
-        for(int i = 0; i < arrowsLength; i++)
-            if(arrows[i].c == c)
-                return arrows[i].x;
         return defaultX;
     }
     
@@ -271,9 +222,6 @@ public class Blocks {
         for(int i = 0; i < helicoptersLength; i++)
             if(helicopters[i].c == c)
                 return helicopters[i].y;
-        for(int i = 0; i < arrowsLength; i++)
-            if(arrows[i].c == c)
-                return arrows[i].y;
         return defaultY;
     }
     
@@ -287,9 +235,6 @@ public class Blocks {
         for(int i = 0; i < helicoptersLength; i++)
             if(helicopters[i].c == c)
                 return helicopters[i].w;
-        for(int i = 0; i < arrowsLength; i++)
-            if(arrows[i].c == c)
-                return arrows[i].w;
         return defaultW;
     }
     
@@ -303,9 +248,6 @@ public class Blocks {
         for(int i = 0; i < helicoptersLength; i++)
             if(helicopters[i].c == c)
                 return helicopters[i].h;
-        for(int i = 0; i < arrowsLength; i++)
-            if(arrows[i].c == c)
-                return arrows[i].h;
         return defaultH;
     }
     

@@ -34,7 +34,7 @@ public class Main extends JPanel {
     
     private static boolean programmingMode = false;
     
-    private static String behavior = "", cmsg = "";
+    private static String behavior = "", cmsg = "", selectNumber = "";
     private static int behaviorSelected = 0;
     
     private static boolean ui = true;
@@ -442,45 +442,6 @@ public class Main extends JPanel {
                     }
                     
                     Blocks.addWaterType(c, texture);
-                } else if(tokens[0].equals("type:arrow")) {
-                    char c = '\0', leftC = '\0', rightC = '\0';
-                    Image texture = null;
-                    boolean isFallen = false;
-                    boolean isStrong = false;
-                    boolean isFireResistant = false;
-                    int x = Blocks.defaultX, y = Blocks.defaultY, w = Blocks.defaultW, h = Blocks.defaultH;
-                    
-                    for(int i = 1; i < tokens.length; i++) {
-                        if(tokens[i].startsWith("c:")) {
-                            c = tokens[i].toCharArray()[2];
-                            if(tokens[i].length() > 3) {
-                                leftC = tokens[i].toCharArray()[3];
-                                rightC = tokens[i].toCharArray()[4];
-                            } else {
-                                leftC = c;
-                                rightC = c;
-                            }
-                        } else if(tokens[i].startsWith("texture:")) {
-                            texture = new ImageIcon("current/images/" + tokens[i].split(":")[1]).getImage();
-                        } else if(tokens[i].equals("fallen")) {
-                            isFallen = true;
-                        } else if(tokens[i].equals("strong")) {
-                            isStrong = true;
-                        } else if(tokens[i].equals("fire_resistant")) {
-                            isFireResistant = true;
-                        } else if(tokens[i].startsWith("x:")) {
-                            x = Integer.parseInt(tokens[i].split(":")[1]);
-                        } else if(tokens[i].startsWith("y:")) {
-                            y = Integer.parseInt(tokens[i].split(":")[1]);
-                        } else if(tokens[i].startsWith("w:")) {
-                            w = Integer.parseInt(tokens[i].split(":")[1]);
-                        } else if(tokens[i].startsWith("h:")) {
-                            h = Integer.parseInt(tokens[i].split(":")[1]);
-                        }
-                    }
-                    
-                    Blocks.addArrow(c, leftC, rightC, texture, isFallen, isStrong,
-                        isFireResistant, x, y, w, h);
                 } else {
                     throw new Exception("unknown type `" + tokens[0] + "`");
                 }
@@ -730,41 +691,19 @@ public class Main extends JPanel {
                         
                         return;
                     }
-                    if(select && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                        JFrame select_fr = new JFrame("выбор блока (введите число символа в кодировке)");
-                        select_fr.setAlwaysOnTop(true);
-                        select_fr.setSize(300, 100);
-                        select_fr.setResizable(false);
-                        select_fr.setLocationRelativeTo(null);
-                        JPanel select_p = new JPanel();
-                        select_p.setBounds(0, 0, 300, 100);
-                        select_fr.setLayout(null);
-                        JTextField select_tf = new JTextField(16);
-                        JButton select_b = new JButton("Готово");
-    
-                        select_tf.addKeyListener(new KeyListener() {
-                            public void keyPressed(KeyEvent e) {
-                                if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                                    currentBlock = (char)Integer.parseInt(select_tf.getText());
-                                    select = false;
-                                    select_fr.setVisible(false);
-                                }
-                            }
-                            public void keyTyped(KeyEvent e) {}
-                            public void keyReleased(KeyEvent e) {}
-                        });
-                        select_b.addActionListener(new java.awt.event.ActionListener() {
-                            public void actionPerformed(java.awt.event.ActionEvent e) {
-                                currentBlock = (char)Integer.parseInt(select_tf.getText());
-                                select = false;
-                                select_fr.setVisible(false);
-                            }
-                        });
-    
-                        select_p.add(select_tf);
-                        select_p.add(select_b);
-                        select_fr.add(select_p);
-                        select_fr.setVisible(true);
+                    if(select && e.getKeyChar() == 033) {
+                        select = false;
+                        selectNumber = "";
+                        return;
+                    }
+                    if(select && e.getKeyChar() >= '0' && e.getKeyChar() <= '9') {
+                        selectNumber += "" + e.getKeyChar();
+                        return;
+                    }
+                    if(select && !selectNumber.isEmpty()) {
+                        currentBlock = (char)Integer.parseInt(selectNumber);
+                        selectNumber = "";
+                        select = false;
                         return;
                     }
                     if(select && e.getKeyChar() != 65535) {
@@ -1108,7 +1047,7 @@ public class Main extends JPanel {
                             selected++;
                         }
                         /* удалить всю воду */
-                        else if(e.getKeyCode() == KeyEvent.VK_PERIOD) {
+                        else if(e.getKeyCode() == KeyEvent.VK_F8) {
                             noWater = true;
                         }
                         /* изменить цвет фона */
@@ -1364,7 +1303,7 @@ public class Main extends JPanel {
                     while(true) {
                         try {
                             if(!cmsg.isEmpty()) {
-                                FileWriter fw = new FileWriter("current/msg");
+                                FileWriter fw = new FileWriter("res/msg");
                                 fw.write(cmsg);
                                 fw.close();
                                 cmsg = "";
@@ -1383,25 +1322,25 @@ public class Main extends JPanel {
                     while(true) {
                             for(int i = 0; i < map.length; i++) {
                                 try {
-                                    if(Blocks.isArrow(map[i]) && Blocks.getLeftC(map[i]) == map[i] && (Blocks.isSticky(map[i - 1]) || Blocks.isSticky(map[i + 1]) || Blocks.isSticky(map[i - WIDTH]) || Blocks.isSticky(map[i + WIDTH]))) {
+                                    if((map[i] == ':' || map[i] == ';') && (Blocks.isSticky(map[i - 1]) || Blocks.isSticky(map[i + 1]) || Blocks.isSticky(map[i - WIDTH])) || Blocks.isSticky(map[i + WIDTH])) {
                                         continue;
-                                    } else if(Blocks.isArrow(map[i]) && Blocks.getLeftC(map[i]) == map[i] && map[i - 1] == '.') {
-                                        map[i - 1] = map[i];
+                                    } else if(map[i] == ':' && map[i - 1] == '.') {
                                         map[i] = '.';
-                                    } else if(Blocks.isArrow(map[i]) && Blocks.getLeftC(map[i]) == map[i] && map[i - 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH - 1] == '.') {
-                                        map[i - WIDTH - 1] = map[i];
+                                        map[i - 1] = ':';
+                                    } else if(map[i] == ':' && map[i - 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH - 1] == '.') {
                                         map[i] = '.';
-                                    } else if(Blocks.isArrow(map[i]) && Blocks.getRightC(map[i]) == map[i] && map[i + 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH + 1] == '.') {
-                                        map[i - WIDTH + 1] = map[i];
+                                        map[i - WIDTH - 1] = ':';
+                                    } else if(map[i] == ';' && map[i + 1] != '.' && map[i - WIDTH] == '.' && map[i - WIDTH + 1] == '.') {
                                         map[i] = '.';
-                                    } else if(Blocks.isArrow(map[i]) && Blocks.getLeftC(map[i]) == map[i]) {
-                                        map[i] = Blocks.getRightC(map[i]);
-                                    } else if(Blocks.isArrow(map[i]) && Blocks.getRightC(map[i]) == map[i] && map[i + 1] == '.') {
-                                        map[i + 1] = map[i];
+                                        map[i - WIDTH + 1] = ';';
+                                    } else if(map[i] == ':') {
+                                        map[i] = ';';
+                                    } else if(map[i] == ';' && map[i + 1] == '.') {
                                         map[i] = '.';
+                                        map[i + 1] = ';';
                                         i++;
-                                    } else if(Blocks.isArrow(map[i]) && Blocks.getRightC(map[i]) == map[i]) {
-                                        map[i] = Blocks.getLeftC(map[i]);
+                                    } else if(map[i] == ';') {
+                                        map[i] = ':';
                                     }
                                 } catch(Exception e) {}
                             }
@@ -1592,12 +1531,12 @@ public class Main extends JPanel {
                             }
                             fw.close();
                             
-                            fw = new FileWriter("current/adminPos");
+                            fw = new FileWriter("res/adminPos");
                             fw.write("" + selectedBlockAddr());
                             fw.close();
                             
                             try {
-                                Scanner sc = new Scanner(new File("current/msg"));
+                                Scanner sc = new Scanner(new File("res/msg"));
                                 String[] messages = sc.nextLine().split(";;;");
                                 sc.close();
                                 
@@ -1632,7 +1571,7 @@ public class Main extends JPanel {
                                         
                                         message = "";
                                         
-                                        fw = new FileWriter("current/msg");
+                                        fw = new FileWriter("res/msg");
                                         fw.write("");
                                         fw.close();
                                     }
@@ -1668,7 +1607,7 @@ public class Main extends JPanel {
                             }
                             
                             try {
-                                Scanner sc = new Scanner(new File("current/adminPos"));
+                                Scanner sc = new Scanner(new File("res/adminPos"));
                                 adminPos = Integer.parseInt(sc.nextLine());
                                 sc.close();
                             } catch(Exception ex) {}
@@ -1701,7 +1640,7 @@ public class Main extends JPanel {
                             } catch(IllegalArgumentException e) {}
                         }
                         if(rain != -1)
-                            g.drawImage(new ImageIcon("current/images/engine/rain" + rain + ".png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
+                            g.drawImage(new ImageIcon("res/rain" + rain + ".png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
                     }
                     
                     if(map[iii] == '~' || map[iii] == ',') {
@@ -1715,6 +1654,10 @@ public class Main extends JPanel {
                             g.setColor(new Color(255, 255, 255));
                             g.drawString((map[iii] == ',' ? "<" : ">"), ii * Blocks.defaultW + 5, i * Blocks.defaultH + 5);
                         }
+                    } else if(map[iii] == ':') {
+                        g.drawImage(new ImageIcon("res/left.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
+                    } else if(map[iii] == ';') {
+                        g.drawImage(new ImageIcon("res/right.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
                     } else if(map[iii] == '%') {
                         g.setColor(new Color(255, 160, 0));
                         g.fillRect(ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
@@ -1740,17 +1683,17 @@ public class Main extends JPanel {
             for(int ii = 0; ii < 22; ii++) {
                 try {
                     if(Main.map[iii] == 'f') {
-                        g.drawImage(new ImageIcon("current/images/engine/fire.png").getImage(), ii * Blocks.defaultW - Blocks.defaultW / 2, i * Blocks.defaultH - Blocks.defaultH * 2, Blocks.defaultW * 3, Blocks.defaultH * 3, null);
+                        g.drawImage(new ImageIcon("res/fire.png").getImage(), ii * Blocks.defaultW - Blocks.defaultW / 2, i * Blocks.defaultH - Blocks.defaultH * 2, Blocks.defaultW * 3, Blocks.defaultH * 3, null);
                         if(rain != -1 && selected == -1)
                             Main.map[iii] = 'b';
                     } else if(Main.map[iii] == 'F')
-                        g.drawImage(new ImageIcon("current/images/engine/fire2.png").getImage(), ii * Blocks.defaultW - Blocks.defaultW / 2, i * Blocks.defaultH - Blocks.defaultH * 2, Blocks.defaultW * 3, Blocks.defaultH * 3, null);
+                        g.drawImage(new ImageIcon("res/fire2.png").getImage(), ii * Blocks.defaultW - Blocks.defaultW / 2, i * Blocks.defaultH - Blocks.defaultH * 2, Blocks.defaultW * 3, Blocks.defaultH * 3, null);
                     else if((int)Main.map[iii] >= (int)'0' && (int)Main.map[iii] <= (int)'9')
-                        g.drawImage(new ImageIcon("current/images/engine/boom" + Main.map[iii] + ".png").getImage(), ii * Blocks.defaultW - Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW * 3, Blocks.defaultH * 3, null);
+                        g.drawImage(new ImageIcon("res/boom" + Main.map[iii] + ".png").getImage(), ii * Blocks.defaultW - Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW * 3, Blocks.defaultH * 3, null);
                     else if(map[iii] == 'p') {
-                        g.drawImage(new ImageIcon("current/images/engine/portal0.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW, Blocks.defaultH * 2, null);
+                        g.drawImage(new ImageIcon("res/portal0.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW, Blocks.defaultH * 2, null);
                     } else if(map[iii] == 'P') {
-                        g.drawImage(new ImageIcon("current/images/engine/portal1.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW, Blocks.defaultH * 2, null);
+                        g.drawImage(new ImageIcon("res/portal1.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW, Blocks.defaultH * 2, null);
                     } else if((map[iii] >= 'а' && map[iii] <= 'я') || (map[iii] >= 'А' && map[iii] <= 'Я') || map[iii] == '-' || map[iii] == '!' || map[iii] == '?' || map[iii] == 'ё' || map[iii] == 'Ё') {
                         g.setColor(new Color(255, 255, 255));
                         g.setFont(new Font("Monospaced", Font.PLAIN, Blocks.defaultW));
@@ -1782,20 +1725,20 @@ public class Main extends JPanel {
                 for(int ii = 0; ii < 22; ii++) {
                     try {
                         if(forBoom[iii] && !programmingMode) {
-                            g.drawImage(new ImageIcon("current/images/engine/red.png").getImage(), ii * Blocks.defaultW - Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW * 3, Blocks.defaultH, null);
-                            g.drawImage(new ImageIcon("current/images/engine/red.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW, Blocks.defaultH * 3, null);
+                            g.drawImage(new ImageIcon("res/red.png").getImage(), ii * Blocks.defaultW - Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW * 3, Blocks.defaultH, null);
+                            g.drawImage(new ImageIcon("res/red.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW, Blocks.defaultH * 3, null);
                         } else if(behaviorSelected2 != -1 && iii == behaviorSelected2 && programmingMode)
-                            g.drawImage(new ImageIcon("current/images/engine/red.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
+                            g.drawImage(new ImageIcon("res/red.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
                         else if(gameState == 2 && iii == adminPos)
-                            g.drawImage(new ImageIcon("current/images/engine/pricel.png").getImage(), ii * Blocks.defaultW + Blocks.defaultW / 2, i * Blocks.defaultH + Blocks.defaultH / 2, 12, 8, null);
+                            g.drawImage(new ImageIcon("res/pricel.png").getImage(), ii * Blocks.defaultW + Blocks.defaultW / 2, i * Blocks.defaultH + Blocks.defaultH / 2, 12, 8, null);
                     } catch(ArrayIndexOutOfBoundsException e) {}
                     iii++;
                 }
                 iii += WIDTH - 22;
             }
             
-            g.drawImage(new ImageIcon("current/images/engine/pricel.png").getImage(), 1024 / 2 + 8, 700 / 2 - 30, 12, 8, null);
-            g.drawImage(new ImageIcon("current/images/engine/vignette.png").getImage(), 0, 0, 1024, 728, null);
+            g.drawImage(new ImageIcon("res/pricel.png").getImage(), 1024 / 2 + 8, 700 / 2 - 30, 12, 8, null);
+            g.drawImage(new ImageIcon("res/vignette.png").getImage(), 0, 0, 1024, 728, null);
             
             g.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 14));
             g.setColor(new Color(255, 255, 0));
@@ -1823,7 +1766,7 @@ public class Main extends JPanel {
             
             g.setColor(new Color(255, 255, 255));
             g.drawString("" + selectedBlockAddr(), 15, 40);
-            try {g.drawString("" + map[selectedBlockAddr()] + " [" + (select ? "???" : currentBlock) + "]", 65, 40);} catch(ArrayIndexOutOfBoundsException e) {}
+            try {g.drawString("" + map[selectedBlockAddr()] + " [" + (select ? ("?" + (selectNumber.isEmpty() ? "?" : selectNumber) + "?") : currentBlock) + "]", 65, 40);} catch(ArrayIndexOutOfBoundsException e) {}
             
             g.setColor(new Color(250, 250, 250));
             g.setFont(new Font("Monospaced", Font.BOLD, 20));
@@ -1836,13 +1779,13 @@ public class Main extends JPanel {
             if(gameState == 1) g.drawString(message, 15, 60);
             
             if(help && !programmingMode) {
-                g.drawImage(new ImageIcon("current/images/engine/black.png").getImage(), 0, 0, 1024, 728, null);
+                g.drawImage(new ImageIcon("res/black.png").getImage(), 0, 0, 1024, 728, null);
                 
                 String[] helpMessageSplitted = helpMessage.split("\n");
                 for(int i = 0; i < helpMessageSplitted.length; i++)
                     g.drawString(helpMessageSplitted[i], 15, (i + 1) * 18);
             } else if(help && programmingMode) {
-                g.drawImage(new ImageIcon("current/images/engine/black.png").getImage(), 0, 0, 1024, 728, null);
+                g.drawImage(new ImageIcon("res/black.png").getImage(), 0, 0, 1024, 728, null);
                 
                 g.setFont(new Font("Monospaced", Font.PLAIN, 15));
                 

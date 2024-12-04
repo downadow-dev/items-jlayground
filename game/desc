@@ -58,9 +58,6 @@ type:simple c:t texture:stone.png fire_resistant
 type:simple c:# texture:reshetka.png fire_resistant
 # паутина
 type:simple c:U texture:web.png fire_resistant
-# стрелка
-type:arrow c:::; texture:left.png fallen fire_resistant
-type:arrow c:;:; texture:right.png fallen fire_resistant
 # компьютер
 type:simple c:h texture:computer.png fire_resistant fallen
 # ящик
