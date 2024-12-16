@@ -30,6 +30,8 @@ public class Main extends JPanel {
     
     private static int behaviorSelected2 = -1;
     
+    private static int helpIndex = 0;
+    
     private static boolean jump = false, blockHelicopter = false;
     
     private static boolean programmingMode = false;
@@ -467,6 +469,13 @@ public class Main extends JPanel {
         fr.addKeyListener(new KeyListener() {
             public void keyPressed(KeyEvent e) {
                 try {
+                    if(e.getKeyCode() == KeyEvent.VK_UP && help && helpIndex > 0) {
+                        helpIndex--;
+                        return;
+                    } else if(e.getKeyCode() == KeyEvent.VK_DOWN && help) {
+                        helpIndex++;
+                        return;
+                    }
                     /* режим программирования поведения */
                     if(programmingMode) {
                         if(select && e.getKeyChar() != ' ' && e.getKeyChar() != ':' && e.getKeyChar() != (char)65535) {
@@ -1782,8 +1791,8 @@ public class Main extends JPanel {
                 g.drawImage(new ImageIcon("res/black.png").getImage(), 0, 0, 1024, 728, null);
                 
                 String[] helpMessageSplitted = helpMessage.split("\n");
-                for(int i = 0; i < helpMessageSplitted.length; i++)
-                    g.drawString(helpMessageSplitted[i], 15, (i + 1) * 18);
+                for(int i = helpIndex; i < helpMessageSplitted.length; i++)
+                    g.drawString(helpMessageSplitted[i], 15, (i + 1 - helpIndex) * 18);
             } else if(help && programmingMode) {
                 g.drawImage(new ImageIcon("res/black.png").getImage(), 0, 0, 1024, 728, null);
                 
