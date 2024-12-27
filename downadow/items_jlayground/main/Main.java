@@ -937,7 +937,7 @@ public class Main extends JPanel {
                         } else if(e.getKeyChar() == 'f' && map[selectedBlockAddr()] != '.' &&
                                   !Blocks.isFireResistant(map[selectedBlockAddr()])) {
                             fire(selectedBlockAddr());
-                        } else if(e.getKeyChar() == 'F' && map[selectedBlockAddr()] != '.')
+                        } else if(e.getKeyChar() == 'F' && map[selectedBlockAddr()] != '.' && !Blocks.isWater(map[selectedBlockAddr()]))
                             fire2(selectedBlockAddr());
                         /* выбрать блок под прицелом */
                         else if(e.getKeyCode() == KeyEvent.VK_SPACE && selected == -1 && map[selectedBlockAddr()] != '.')
@@ -946,7 +946,8 @@ public class Main extends JPanel {
                         else if(e.getKeyCode() == KeyEvent.VK_SPACE && selected != -1) {
                             if(gameState == 2) setBlock(selected, map[selected]);
                             selected = -1;
-                        } /* выбор блока */
+                        }
+                        /* выбор блока */
                         else if(e.getKeyCode() == KeyEvent.VK_X)
                             select = true;
                         /* бросать блок */
@@ -1040,19 +1041,39 @@ public class Main extends JPanel {
                         /* операции с выделенным блоком */
                         else if(e.getKeyCode() == KeyEvent.VK_W && selected != -1 && (map[selected - WIDTH] == '.' || Blocks.isWater(map[selected - WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
                             map[selected - WIDTH] = map[selected];
-                            map[selected] = '.';
+                            
+                            if(!Blocks.isEraser(map[selected]))
+                                map[selected] = '.';
+                            else
+                                setBlock(selected, '.');
+                            
                             selected -= WIDTH;
                         } else if(e.getKeyCode() == KeyEvent.VK_S && selected != -1 && (map[selected + WIDTH] == '.' || Blocks.isWater(map[selected + WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
                             map[selected + WIDTH] = map[selected];
-                            map[selected] = '.';
+                            
+                            if(!Blocks.isEraser(map[selected]))
+                                map[selected] = '.';
+                            else
+                                setBlock(selected, '.');
+                            
                             selected += WIDTH;
                         } else if(e.getKeyCode() == KeyEvent.VK_A && selected != -1 && (map[selected - 1] == '.' || Blocks.isWater(map[selected - 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
                             map[selected - 1] = map[selected];
-                            map[selected] = '.';
+                            
+                            if(!Blocks.isEraser(map[selected]))
+                                map[selected] = '.';
+                            else
+                                setBlock(selected, '.');
+                            
                             selected--;
                         } else if(e.getKeyCode() == KeyEvent.VK_D && selected != -1 && (map[selected + 1] == '.' || Blocks.isWater(map[selected + 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
                             map[selected + 1] = map[selected];
-                            map[selected] = '.';
+                            
+                            if(!Blocks.isEraser(map[selected]))
+                                map[selected] = '.';
+                            else
+                                setBlock(selected, '.');
+                            
                             selected++;
                         }
                         /* удалить всю воду */
