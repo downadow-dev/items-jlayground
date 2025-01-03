@@ -433,6 +433,10 @@ public class Main extends JPanel {
                         Blocks.addHelicopter(c, leftC, rightC, texture, c2, isStrong, x, y, w, h);
                 } else if(tokens[0].equals("type:water")) {
                     char c = '\0';
+                    int x = Blocks.defaultX;
+                    int y = Blocks.defaultY;
+                    int w = Blocks.defaultW;
+                    int h = Blocks.defaultH;
                     Image texture = null;
                     
                     for(int i = 1; i < tokens.length; i++) {
@@ -440,10 +444,18 @@ public class Main extends JPanel {
                             c = tokens[i].toCharArray()[2];
                         } else if(tokens[i].startsWith("texture:")) {
                             texture = new ImageIcon("current/images/" + tokens[i].split(":")[1]).getImage();
+                        } else if(tokens[i].startsWith("x:")) {
+                            x = Integer.parseInt(tokens[i].split(":")[1]);
+                        } else if(tokens[i].startsWith("y:")) {
+                            y = Integer.parseInt(tokens[i].split(":")[1]);
+                        } else if(tokens[i].startsWith("w:")) {
+                            w = Integer.parseInt(tokens[i].split(":")[1]);
+                        } else if(tokens[i].startsWith("h:")) {
+                            h = Integer.parseInt(tokens[i].split(":")[1]);
                         }
                     }
                     
-                    Blocks.addWaterType(c, texture);
+                    Blocks.addWaterType(c, texture, x, y, w, h);
                 } else {
                     throw new Exception("unknown type `" + tokens[0] + "`");
                 }
@@ -1244,20 +1256,15 @@ public class Main extends JPanel {
                         for(int i = 0; i < map.length; i++) {
                             if(ph) {
                                 try {
-                                    /* работа батута */
-                                    if(map[i] == '%' && (map[i - WIDTH] != '.' && map[i - WIDTH * 2] == '.' && map[i - WIDTH * 3] == '.' && map[i - WIDTH * 4] == '.')) {
-                                        map[i - WIDTH * 4] = map[i - WIDTH];
-                                        map[i - WIDTH] = '.';
-                                    }
                                     /* работа порталов */
-                                    else if(map[i] == 'p') {
+                                    if(map[i] == 'p') {
                                         for(int ii = 0; ii < map.length - 1; ii++) {
                                             if(map[ii] == 'P') {
-                                                if(map[i + 1] != '.')
+                                                if(Blocks.isFallen(map[i + 1]))
                                                     map[ii - 1] = map[i + 1];
-                                                if(map[i - 1] != '.')
+                                                if(Blocks.isFallen(map[i - 1]))
                                                     map[ii + 1] = map[i - 1];
-                                                if(map[i - WIDTH] != '.')
+                                                if(Blocks.isFallen(map[i - WIDTH]))
                                                     map[ii + WIDTH] = map[i - WIDTH];
                                     
                                                 map[i - 1] = '.';
@@ -1268,12 +1275,20 @@ public class Main extends JPanel {
                                         }
                                     }
                                     /* работа блоков движения */
-                                    else if(map[i] == '~' && map[i - WIDTH] != '.' && !Blocks.isWater(map[i - WIDTH]) && map[i - WIDTH] != '~' && map[i - WIDTH + 1] == '.') {
+                                    else if(map[i] == '~' && map[i - WIDTH] != '.' && !Blocks.isWater(map[i - WIDTH]) && map[i - WIDTH + 1] == '.') {
                                         map[i - WIDTH + 1] = map[i - WIDTH];
                                         map[i - WIDTH] = '.';
                                         Thread.sleep(!slow ? 200 : 500);
-                                    } else if(map[i] == ',' && map[i - WIDTH] != '.' && !Blocks.isWater(map[i - WIDTH]) && map[i - WIDTH] != '~' && map[i - WIDTH - 1] == '.') {
+                                    } else if(map[i] == '~' && map[i - WIDTH] != '.' && !Blocks.isWater(map[i - WIDTH]) && map[i - WIDTH + 1] != '.' && map[i - WIDTH * 2 + 1] == '.' && map[i - WIDTH * 2] == '.') {
+                                        map[i - WIDTH * 2 + 1] = map[i - WIDTH];
+                                        map[i - WIDTH] = '.';
+                                        Thread.sleep(!slow ? 200 : 500);
+                                    } else if(map[i] == ',' && map[i - WIDTH] != '.' && !Blocks.isWater(map[i - WIDTH]) && map[i - WIDTH - 1] == '.') {
                                         map[i - WIDTH - 1] = map[i - WIDTH];
+                                        map[i - WIDTH] = '.';
+                                        Thread.sleep(!slow ? 200 : 500);
+                                    } else if(map[i] == ',' && map[i - WIDTH] != '.' && !Blocks.isWater(map[i - WIDTH]) && map[i - WIDTH - 1] != '.' && map[i - WIDTH * 2 - 1] == '.' && map[i - WIDTH * 2] == '.') {
+                                        map[i - WIDTH * 2 - 1] = map[i - WIDTH];
                                         map[i - WIDTH] = '.';
                                         Thread.sleep(!slow ? 200 : 500);
                                     }
@@ -1688,9 +1703,6 @@ public class Main extends JPanel {
                         g.drawImage(new ImageIcon("res/left.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
                     } else if(map[iii] == ';') {
                         g.drawImage(new ImageIcon("res/right.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
-                    } else if(map[iii] == '%') {
-                        g.setColor(new Color(255, 160, 0));
-                        g.fillRect(ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
                     } else if(map[iii] == 'b') {
                         g.setColor(new Color(5, 5, 5));
                         g.fillRect(ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
@@ -1724,7 +1736,7 @@ public class Main extends JPanel {
                         g.drawImage(new ImageIcon("res/portal0.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW, Blocks.defaultH * 2, null);
                     } else if(map[iii] == 'P') {
                         g.drawImage(new ImageIcon("res/portal1.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW, Blocks.defaultH * 2, null);
-                    } else if((map[iii] >= 'а' && map[iii] <= 'я') || (map[iii] >= 'А' && map[iii] <= 'Я') || map[iii] == '-' || map[iii] == '!' || map[iii] == '?' || map[iii] == 'ё' || map[iii] == 'Ё') {
+                    } else if(Blocks.isUnknown(map[iii])) {
                         g.setColor(new Color(255, 255, 255));
                         g.setFont(new Font("Monospaced", Font.PLAIN, Blocks.defaultW));
                         g.drawString("" + map[iii], ii * Blocks.defaultW + Blocks.defaultW / 4, i * Blocks.defaultH + Blocks.defaultH);

@@ -72,15 +72,39 @@ public class Blocks {
         helicoptersLength++;
     }
     
-    public static void addWaterType(char c, Image texture) {
+    public static void addWaterType(char c, Image texture, int x, int y, int w, int h) {
         waterTypes[waterTypesLength] = new Water();
         waterTypes[waterTypesLength].c = c;
         waterTypes[waterTypesLength].texture = texture;
+        waterTypes[waterTypesLength].x = x;
+        waterTypes[waterTypesLength].y = y;
+        waterTypes[waterTypesLength].w = w;
+        waterTypes[waterTypesLength].h = h;
         
         waterTypesLength++;
     }
     
     /* определение типа */
+    
+    public static boolean isUnknown(char c) {
+        if(c == '~' || c == ',' || c == ':' || c == ';' || c == 'b' ||
+           c == 'f' || c == 'F' || c == 'p' || c == 'P' || c == '.')
+            return false;
+        
+        for(int i = 0; i < blocksLength; i++)
+            if(blocks[i].c == c)
+                return false;
+        for(int i = 0; i < tanksLength; i++)
+            if(tanks[i].c == c)
+                return false;
+        for(int i = 0; i < helicoptersLength; i++)
+            if(helicopters[i].c == c)
+                return false;
+        for(int i = 0; i < waterTypesLength; i++)
+            if(waterTypes[i].c == c)
+                return false;
+        return true;
+    }
     
     public static boolean isSimple(char c) {
         for(int i = 0; i < blocksLength; i++)
@@ -209,6 +233,9 @@ public class Blocks {
         for(int i = 0; i < helicoptersLength; i++)
             if(helicopters[i].c == c)
                 return helicopters[i].x;
+        for(int i = 0; i < waterTypesLength; i++)
+            if(waterTypes[i].c == c)
+                return waterTypes[i].x;
         return defaultX;
     }
     
@@ -222,6 +249,9 @@ public class Blocks {
         for(int i = 0; i < helicoptersLength; i++)
             if(helicopters[i].c == c)
                 return helicopters[i].y;
+        for(int i = 0; i < waterTypesLength; i++)
+            if(waterTypes[i].c == c)
+                return waterTypes[i].y;
         return defaultY;
     }
     
@@ -235,6 +265,9 @@ public class Blocks {
         for(int i = 0; i < helicoptersLength; i++)
             if(helicopters[i].c == c)
                 return helicopters[i].w;
+        for(int i = 0; i < waterTypesLength; i++)
+            if(waterTypes[i].c == c)
+                return waterTypes[i].w;
         return defaultW;
     }
     
@@ -248,6 +281,9 @@ public class Blocks {
         for(int i = 0; i < helicoptersLength; i++)
             if(helicopters[i].c == c)
                 return helicopters[i].h;
+        for(int i = 0; i < waterTypesLength; i++)
+            if(waterTypes[i].c == c)
+                return waterTypes[i].h;
         return defaultH;
     }
     
