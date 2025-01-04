@@ -23,8 +23,9 @@ public class Main extends JPanel {
     private static char[] map = new char[WIDTH * HEIGHT];
     
     private static boolean[] forBoom = new boolean[WIDTH * HEIGHT];
+    private static boolean[] lightMap = new boolean[WIDTH * HEIGHT];
     
-    private static boolean ph = true, following = false;
+    private static boolean ph = true, following = false, night = false;
     
     private static Color bgColor = new Color(80, 80, 80);
     
@@ -347,6 +348,8 @@ public class Main extends JPanel {
                     boolean isSticky = false;
                     boolean isFireResistant = false;
                     boolean isEraser = false;
+                    boolean isTranslucent = false;
+                    int light = 0;
                     int x = Blocks.defaultX;
                     int y = Blocks.defaultY;
                     int w = Blocks.defaultW;
@@ -374,6 +377,10 @@ public class Main extends JPanel {
                             isFireResistant = true;
                         } else if(tokens[i].equals("eraser")) {
                             isEraser = true;
+                        } else if(tokens[i].equals("translucent")) {
+                            isTranslucent = true;
+                        } else if(tokens[i].startsWith("light:")) {
+                            light = Integer.parseInt(tokens[i].split(":")[1]);
                         } else if(tokens[i].startsWith("x:")) {
                             x = Integer.parseInt(tokens[i].split(":")[1]);
                         } else if(tokens[i].startsWith("y:")) {
@@ -386,7 +393,7 @@ public class Main extends JPanel {
                     }
                     
                     Blocks.addSimple(c, leftC, rightC, texture, isFallen, isStrong, isSticky,
-                        isFireResistant, isEraser, x, y, w, h);
+                        isFireResistant, isEraser, isTranslucent, light, x, y, w, h);
                 } else if(tokens[0].equals("type:tank") || tokens[0].equals("type:helicopter")) {
                     char c = '\0';
                     char leftC = c;
@@ -825,6 +832,14 @@ public class Main extends JPanel {
                         ph = false;
                         return;
                     }
+                    /* включение/выключение ночи */
+                    else if(e.getKeyCode() == KeyEvent.VK_N && !night) {
+                        night = true;
+                        return;
+                    } else if(e.getKeyCode() == KeyEvent.VK_N && night) {
+                        night = false;
+                        return;
+                    }
                     /* включение/выключение следования за объектом */
                     else if(e.getKeyCode() == KeyEvent.VK_F7 && !following) {
                         following = true;
@@ -1171,6 +1186,72 @@ public class Main extends JPanel {
         fr.setVisible(true);
         startTime = System.currentTimeMillis();
         
+        /* обновление света */
+        new Thread() {
+            public void run() {
+                boolean[] tmp = new boolean[map.length];
+                while(true) {
+                    try {
+                        for(int i = 0; i < tmp.length; i++)
+                            tmp[i] = false;
+                        
+                        /* общее освещение */
+                        if(!night) {
+                            for(int i = WIDTH; i < WIDTH * 2; i++) {
+                                for(int ii = i; ii < map.length && Blocks.isTranslucent(map[ii]); ii += WIDTH + 1)
+                                    tmp[ii] = true;
+                            }
+                            
+                            for(int i = WIDTH * 2 - 1; i >= WIDTH; i--) {
+                                for(int ii = i; ii < map.length && Blocks.isTranslucent(map[ii]); ii += WIDTH - 1)
+                                    tmp[ii] = true;
+                            }
+                            
+                            for(int i = WIDTH; i < WIDTH * 2; i++) {
+                                for(int ii = i; ii < map.length && Blocks.isTranslucent(map[ii]); ii += WIDTH)
+                                    tmp[ii] = true;
+                            }
+                        }
+                        
+                        /* свет от блоков */
+                        for(int i = 0; i < lightMap.length; i++) {
+                            if(Blocks.getLight(map[i]) > 0) {
+                                tmp[i - 1]     = true;
+                                tmp[i + 1]     = true;
+                                tmp[i - WIDTH] = true;
+                                tmp[i + WIDTH] = true;
+                                
+                                int left = Blocks.getLight(map[i]);
+                                for(int ii = i; left > 0 && (Blocks.isTranslucent(map[ii]) || ii == i); ii -= WIDTH, left--) {
+                                    for(int iii = ii; (iii - ii) < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii++) {
+                                        tmp[iii] = true;
+                                    }
+                                    for(int iii = ii; -(iii - ii) < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii--) {
+                                        tmp[iii] = true;
+                                    }
+                                }
+                                left = Blocks.getLight(map[i]);
+                                for(int ii = i; left > 0 && (Blocks.isTranslucent(map[ii]) || ii == i); ii += WIDTH, left--) {
+                                    for(int iii = ii; (iii - ii) < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii++) {
+                                        tmp[iii] = true;
+                                    }
+                                    for(int iii = ii; -(iii - ii) < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii--) {
+                                        tmp[iii] = true;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        for(int i = 0; i < lightMap.length; i++) {
+                            lightMap[i] = tmp[i];
+                        }
+                        
+                        Thread.sleep(1000);
+                    } catch(Exception e) { e.printStackTrace(); }
+                }
+            }
+        }.start();
+        
         /* "физика" и пр. */
         if(gameState != 2) {
             new Thread() {
@@ -1260,11 +1341,11 @@ public class Main extends JPanel {
                                     if(map[i] == 'p') {
                                         for(int ii = 0; ii < map.length - 1; ii++) {
                                             if(map[ii] == 'P') {
-                                                if(Blocks.isFallen(map[i + 1]))
+                                                if(map[i + 1] != '.')
                                                     map[ii - 1] = map[i + 1];
-                                                if(Blocks.isFallen(map[i - 1]))
+                                                if(map[i - 1] != '.')
                                                     map[ii + 1] = map[i - 1];
-                                                if(Blocks.isFallen(map[i - WIDTH]))
+                                                if(map[i - WIDTH] != '.')
                                                     map[ii + WIDTH] = map[i - WIDTH];
                                     
                                                 map[i - 1] = '.';
@@ -1761,11 +1842,13 @@ public class Main extends JPanel {
         }
         /*********************************/
         
-        if(ui) {
-            iii = cameraStart;
-            for(int i = 0; i < 17; i++) {
-                for(int ii = 0; ii < 22; ii++) {
-                    try {
+        iii = cameraStart;
+        for(int i = 0; i < 17; i++) {
+            for(int ii = 0; ii < 22; ii++) {
+                try {
+                    if(!lightMap[iii])
+                        g.drawImage(new ImageIcon("res/black" + ((lightMap[iii - 1] || lightMap[iii + 1] || lightMap[iii - WIDTH] || lightMap[iii + WIDTH]) ? "2" : "") + ".png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
+                    if(ui) {
                         if(forBoom[iii] && !programmingMode) {
                             g.drawImage(new ImageIcon("res/red.png").getImage(), ii * Blocks.defaultW - Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW * 3, Blocks.defaultH, null);
                             g.drawImage(new ImageIcon("res/red.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW, Blocks.defaultH * 3, null);
@@ -1773,12 +1856,14 @@ public class Main extends JPanel {
                             g.drawImage(new ImageIcon("res/red.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
                         else if(gameState == 2 && iii == adminPos)
                             g.drawImage(new ImageIcon("res/pricel.png").getImage(), ii * Blocks.defaultW + Blocks.defaultW / 2, i * Blocks.defaultH + Blocks.defaultH / 2, 12, 8, null);
-                    } catch(ArrayIndexOutOfBoundsException e) {}
-                    iii++;
-                }
-                iii += WIDTH - 22;
+                    }
+                } catch(ArrayIndexOutOfBoundsException e) {}
+                iii++;
             }
-            
+            iii += WIDTH - 22;
+        }
+        
+        if(ui) {
             g.drawImage(new ImageIcon("res/pricel.png").getImage(), 1024 / 2 + 8, 700 / 2 - 30, 12, 8, null);
             g.drawImage(new ImageIcon("res/vignette.png").getImage(), 0, 0, 1024, 728, null);
             

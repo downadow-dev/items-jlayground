@@ -10,6 +10,8 @@ public class Simple {
     boolean isSticky;
     boolean isFireResistant;
     boolean isEraser;
+    boolean isTranslucent;
+    int light;
     int x, y, w, h;
 }
 

@@ -17,6 +17,7 @@ public class Blocks {
     public static void addSimple(char c, char leftC, char rightC, Image texture,
                                  boolean isFallen, boolean isStrong, boolean isSticky,
                                  boolean isFireResistant, boolean isEraser,
+                                 boolean isTranslucent, int light,
                                  int x, int y, int w, int h) {
         blocks[blocksLength] = new Simple();
         blocks[blocksLength].c = c;
@@ -28,6 +29,8 @@ public class Blocks {
         blocks[blocksLength].isSticky = isSticky;
         blocks[blocksLength].isFireResistant = isFireResistant;
         blocks[blocksLength].isEraser = isEraser;
+        blocks[blocksLength].isTranslucent = isTranslucent;
+        blocks[blocksLength].light = light;
         blocks[blocksLength].x = x;
         blocks[blocksLength].y = y;
         blocks[blocksLength].w = w;
@@ -221,6 +224,28 @@ public class Blocks {
             if(blocks[i].c == c)
                 return blocks[i].isEraser;
         return false;
+    }
+    
+    public static boolean isTranslucent(char c) {
+        if(c == '.' || c == ';' || c == ':' || c == 'p' || c == 'P') return true;
+        
+        for(int i = 0; i < waterTypesLength; i++)
+            if(waterTypes[i].c == c)
+                return true;
+        for(int i = 0; i < blocksLength; i++)
+            if(blocks[i].c == c)
+                return blocks[i].isTranslucent;
+        
+        return false;
+    }
+    
+    public static int getLight(char c) {
+        if(c == 'f' || c == 'F') return 5;
+        
+        for(int i = 0; i < blocksLength; i++)
+            if(blocks[i].c == c)
+                return blocks[i].light;
+        return 0;
     }
     
     public static int getTextureX(char c) {
