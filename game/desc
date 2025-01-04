@@ -59,7 +59,7 @@ type:simple c:# texture:reshetka.png translucent fire_resistant
 # паутина
 type:simple c:U texture:web.png translucent fire_resistant
 # компьютер
-type:simple c:h texture:computer.png fire_resistant fallen
+type:simple c:h texture:computer.png light:1 fire_resistant fallen
 # ящик
 type:simple c:X texture:box2.png fallen x:-100 w:100
 # тумбочка
@@ -69,15 +69,15 @@ type:simple c:K texture:block4.png translucent fallen
 # "военный" блок
 type:simple c:O texture:block2.png fire_resistant
 # лампа
-type:simple c:^ texture:white.png light:6 fire_resistant x:-25 y:-25 w:100 h:100
+type:simple c:^ texture:white.png light:9 fire_resistant x:-25 y:-25 w:100 h:100
 # красный блок
-type:simple c:v texture:red.png fire_resistant x:-15 y:-15 w:80 h:80
+type:simple c:v texture:red.png light:2 fire_resistant x:-15 y:-15 w:80 h:80
 # чёрный блок
 type:simple c:J texture:black.png fire_resistant x:-15 y:-15 w:80 h:80
 # синий блок
-type:simple c:E texture:blue.png fire_resistant x:-20 y:-20 w:90 h:90
+type:simple c:E texture:blue.png light:2 fire_resistant x:-20 y:-20 w:90 h:90
 # зелёный блок
-type:simple c:G texture:green.png fire_resistant x:-15 y:-15 w:80 h:80
+type:simple c:G texture:green.png light:2 fire_resistant x:-15 y:-15 w:80 h:80
 # железные палки
 type:simple c:Y texture:door2.png fire_resistant
 type:simple c:& texture:stick2.png fire_resistant
