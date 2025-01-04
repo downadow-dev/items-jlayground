@@ -232,6 +232,12 @@ public class Blocks {
         for(int i = 0; i < waterTypesLength; i++)
             if(waterTypes[i].c == c)
                 return true;
+        for(int i = 0; i < tanksLength; i++)
+            if(tanks[i].c == c)
+                return true;
+        for(int i = 0; i < helicoptersLength; i++)
+            if(helicopters[i].c == c)
+                return true;
         for(int i = 0; i < blocksLength; i++)
             if(blocks[i].c == c)
                 return blocks[i].isTranslucent;

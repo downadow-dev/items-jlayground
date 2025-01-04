@@ -7,11 +7,11 @@ type:simple c:w texture:W.png
 # блок-стиралка
 type:simple c:k texture:X.png translucent eraser fire_resistant
 # машины
-type:simple c:cCc texture:car0.png fallen x:-50 y:-16 w:150 h:66
-type:simple c:CCc texture:car1.png fallen x:-50 y:-16 w:150 h:66
+type:simple c:cCc texture:car0.png translucent fallen x:-50 y:-16 w:150 h:66
+type:simple c:CCc texture:car1.png translucent fallen x:-50 y:-16 w:150 h:66
 
-type:simple c:qQq texture:car2_0.png fallen x:-60 y:-24 w:160 h:74
-type:simple c:QQq texture:car2_1.png fallen x:-60 y:-24 w:160 h:74
+type:simple c:qQq texture:car2_0.png translucent fallen x:-60 y:-24 w:160 h:74
+type:simple c:QQq texture:car2_1.png translucent fallen x:-60 y:-24 w:160 h:74
 # "бомба"
 type:simple c:" texture:bomb.png y:-50 h:100 fallen fire_resistant
 # стул
@@ -33,12 +33,12 @@ type:simple c:l texture:lestnica.png translucent fallen
 # стекло
 type:simple c:g texture:glass.png translucent fire_resistant
 # кровать
-type:simple c:ddD texture:bed.png fallen x:-50 w:100
-type:simple c:DdD texture:bed_right.png fallen x:-50 w:100
+type:simple c:ddD texture:bed.png translucent fallen x:-50 w:100
+type:simple c:DdD texture:bed_right.png translucent fallen x:-50 w:100
 # коробка
 type:simple c:@ texture:box.png translucent fallen x:-50 y:-50 w:100 h:100
 # палка
-type:simple c:| texture:door_or_stick.png fallen
+type:simple c:| texture:door_or_stick.png translucent fallen
 # вертолёт
 type:helicopter c://\ c2:I texture:helicopter_10.png x:-50 y:-16 w:150 h:66
 type:helicopter c:\/\ c2:i texture:helicopter_00.png x:-50 y:-16 w:150 h:66
@@ -79,7 +79,7 @@ type:simple c:E texture:blue.png light:2 fire_resistant x:-20 y:-20 w:90 h:90
 # зелёный блок
 type:simple c:G texture:green.png light:2 fire_resistant x:-15 y:-15 w:80 h:80
 # железные палки
-type:simple c:Y texture:door2.png fire_resistant
-type:simple c:& texture:stick2.png fire_resistant
+type:simple c:Y texture:door2.png translucent fire_resistant
+type:simple c:& texture:stick2.png translucent fire_resistant
 # белый блок
 type:simple c:N texture:block0.png fire_resistant
