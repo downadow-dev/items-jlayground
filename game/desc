@@ -38,7 +38,7 @@ type:simple c:DdD texture:bed_right.png translucent fallen x:-50 w:100
 # коробка
 type:simple c:@ texture:box.png translucent fallen x:-50 y:-50 w:100 h:100
 # палка
-type:simple c:| texture:door_or_stick.png translucent fallen
+type:simple c:| texture:door_or_stick.png fallen
 # вертолёт
 type:helicopter c://\ c2:I texture:helicopter_10.png x:-50 y:-16 w:150 h:66
 type:helicopter c:\/\ c2:i texture:helicopter_00.png x:-50 y:-16 w:150 h:66
@@ -79,7 +79,7 @@ type:simple c:E texture:blue.png light:2 fire_resistant x:-20 y:-20 w:90 h:90
 # зелёный блок
 type:simple c:G texture:green.png light:2 fire_resistant x:-15 y:-15 w:80 h:80
 # железные палки
-type:simple c:Y texture:door2.png translucent fire_resistant
-type:simple c:& texture:stick2.png translucent fire_resistant
+type:simple c:Y texture:door2.png fire_resistant
+type:simple c:& texture:stick2.png fire_resistant
 # белый блок
 type:simple c:N texture:block0.png fire_resistant

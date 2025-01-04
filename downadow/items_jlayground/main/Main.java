@@ -1766,11 +1766,6 @@ public class Main extends JPanel {
                             } catch(IllegalArgumentException e) {}
                         }
                         
-                        try {
-                            if(!lightMap[iii])
-                                g.drawImage(new ImageIcon("res/black" + ((lightMap[iii - 1] || lightMap[iii + 1] || lightMap[iii - WIDTH] || lightMap[iii + WIDTH]) ? "2" : "") + ".png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
-                        } catch(Exception e) {}
-                        
                         if(rain != -1)
                             g.drawImage(new ImageIcon("res/rain" + rain + ".png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
                     }
@@ -1848,11 +1843,16 @@ public class Main extends JPanel {
         }
         /*********************************/
         
-        if(ui) {
-            iii = cameraStart;
-            for(int i = 0; i < 17; i++) {
-                for(int ii = 0; ii < 22; ii++) {
+        iii = cameraStart;
+        for(int i = 0; i < 17; i++) {
+            for(int ii = 0; ii < 22; ii++) {
+                try {
                     try {
+                        if(!lightMap[iii] && ((!lightMap[iii - 1] && !lightMap[iii + 1] && !lightMap[iii - WIDTH] && !lightMap[iii + WIDTH]) || map[iii] == '.'))
+                            g.drawImage(new ImageIcon("res/black" + ((lightMap[iii - 1] || lightMap[iii + 1] || lightMap[iii - WIDTH] || lightMap[iii + WIDTH]) ? "2" : "") + ".png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
+                    } catch(Exception e) {}
+                    
+                    if(ui) {
                         if(forBoom[iii] && !programmingMode) {
                             g.drawImage(new ImageIcon("res/red.png").getImage(), ii * Blocks.defaultW - Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW * 3, Blocks.defaultH, null);
                             g.drawImage(new ImageIcon("res/red.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH - Blocks.defaultH, Blocks.defaultW, Blocks.defaultH * 3, null);
@@ -1860,12 +1860,14 @@ public class Main extends JPanel {
                             g.drawImage(new ImageIcon("res/red.png").getImage(), ii * Blocks.defaultW, i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH, null);
                         else if(gameState == 2 && iii == adminPos)
                             g.drawImage(new ImageIcon("res/pricel.png").getImage(), ii * Blocks.defaultW + Blocks.defaultW / 2, i * Blocks.defaultH + Blocks.defaultH / 2, 12, 8, null);
-                    } catch(ArrayIndexOutOfBoundsException e) {}
-                    iii++;
-                }
-                iii += WIDTH - 22;
+                    }
+                } catch(ArrayIndexOutOfBoundsException e) {}
+                iii++;
             }
-            
+            iii += WIDTH - 22;
+        }
+        
+        if(ui) {
             g.drawImage(new ImageIcon("res/pricel.png").getImage(), 1024 / 2 + 8, 700 / 2 - 30, 12, 8, null);
             g.drawImage(new ImageIcon("res/vignette.png").getImage(), 0, 0, 1024, 728, null);
             
