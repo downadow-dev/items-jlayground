@@ -522,6 +522,11 @@ public class Main extends JPanel {
                             selectz = false;
                             if(gameState == 2) sendMessage("/p " + behavior);
                             return;
+                        } else if(selectz && e.getKeyCode() == KeyEvent.VK_L) {
+                            behavior += "wait:light ";
+                            selectz = false;
+                            if(gameState == 2) sendMessage("/p " + behavior);
+                            return;
                         }
                         
                         else if(step) {
@@ -1575,6 +1580,14 @@ public class Main extends JPanel {
                                     } else if(behaviorSplitted[i].equals("wait:left")) {
                                         while(map[behaviorSelected - 1] == '.' && !behavior.isEmpty())
                                             Thread.sleep(40);
+                                    } else if(behaviorSplitted[i].equals("wait:light")) {
+                                        while(!lightMap[behaviorSelected] &&
+                                              !lightMap[behaviorSelected - 1] &&
+                                              !lightMap[behaviorSelected + 1] &&
+                                              !lightMap[behaviorSelected - WIDTH] &&
+                                              !lightMap[behaviorSelected + WIDTH] &&
+                                              !behavior.isEmpty())
+                                            Thread.sleep(40);
                                     } else if(behaviorSplitted[i].equals("wait")) {
                                         while(map[behaviorSelected - 1] == '.'     &&
                                               map[behaviorSelected + 1] == '.'     &&
@@ -1934,7 +1947,7 @@ public class Main extends JPanel {
                 g.drawString("<Insert>........:   изменение кода в текстовом режиме", 20, 240);
                 g.drawString("0123456789-.....:   ~<...> (приостановить выполнение на 50/100/200/.../1000/5000 миллисекунд", 20, 260);
                 g.drawString("Z...............:   wait (ждать любого столкновения)", 20, 280);
-                g.drawString("z, а после w/a/s/d: wait:up/left/down/right (ждать столкновения в опр. стороне)", 20, 300);
+                g.drawString("z, затем w/a/s/d/l: wait:up/left/down/right/light (ждать столкновения в опр. стороне, ждать свет)", 20, 300);
                 g.drawString("<F5>............:   выход из режима программирования", 20, 320);
                 g.drawString("<F1>............:   скрыть/показать эту помощь", 20, 340);
                 g.drawString("T...............:   tp:<адрес блока под прицелом>", 20, 360);
