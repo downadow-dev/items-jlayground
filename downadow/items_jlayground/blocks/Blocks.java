@@ -227,7 +227,7 @@ public class Blocks {
     }
     
     public static boolean isTranslucent(char c) {
-        if(c == '.' || c == ';' || c == ':' || c == 'p' || c == 'P' || isUnknown(c)) return true;
+        if(c == '.' || c == ';' || c == ':' || isUnknown(c)) return true;
         
         for(int i = 0; i < waterTypesLength; i++)
             if(waterTypes[i].c == c)
@@ -247,6 +247,7 @@ public class Blocks {
     
     public static int getLight(char c) {
         if(c == 'f' || c == 'F') return 5;
+        else if(c == 'p' || c == 'P') return 3;
         
         for(int i = 0; i < blocksLength; i++)
             if(blocks[i].c == c)
