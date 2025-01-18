@@ -39,7 +39,7 @@ ip addr
 Данный проект сгенерирован с помощью [gdx-liftoff](https://github.com/libgdx/gdx-liftoff) версии `1.13.1.0`.
 Лицензия Items Jlayground (включая часть данных шаблона) и gdx-liftoff — Apache License 2.0.
 
-### gdx-lifoff: Credits
+### gdx-liftoff: Credits
 
 The project was forked from the [`czyzby/gdx-setup`](https://github.com/czyzby/gdx-setup) repository.
 [@czyzby](https://github.com/czyzby) and [@kotcrab](https://github.com/kotcrab) created the original application,
