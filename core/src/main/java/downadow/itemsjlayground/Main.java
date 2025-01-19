@@ -53,7 +53,7 @@ public class Main implements ApplicationListener {
     boolean done, retval;
     String[] rpList;
     String root;
-    int selectedRp = -1;
+    int selectedRp = -1, autoSaveSec = 0;
     
     /* ширина и высота карты в объектах */
     private final int WIDTH = 250, HEIGHT = 60;
@@ -1131,7 +1131,7 @@ public class Main implements ApplicationListener {
                 
                 font.getData().setScale(0.5f);
                 if(!fill)
-                    font.draw(batch, "" + (System.currentTimeMillis() - startTime) / 60000 + " min", 15, 728 - 20);
+                    font.draw(batch, "" + (System.currentTimeMillis() - startTime) / 60000 + " min   " + autoSaveSec, 15, 728 - 20);
                 else
                     font.draw(batch, "Выберите сторону...", 15, 728 - 20);
                 
@@ -1597,7 +1597,8 @@ public class Main implements ApplicationListener {
                 public void run() {
                     while(true) {
                         try {
-                            Thread.sleep(30000);
+                            for(autoSaveSec = 30; autoSaveSec > 0; autoSaveSec--)
+                                Thread.sleep(1000);
                             
                             Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString(behavior + "\n", false);
                             Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString(bgColorRed + " " + bgColorGreen + " " + bgColorBlue + "\n", true);
