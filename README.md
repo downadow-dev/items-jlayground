@@ -1,4 +1,4 @@
-# ![box](https://github.com/downadow-dev/items-jlayground/raw/main/game/images/superbricks.png) Items Jlayground
+# ![superbricks](https://github.com/downadow-dev/items-jlayground/raw/main/game/images/superbricks.png) Items Jlayground
 
 **Items Jlayground** — это свободная игра-песочница, в которой игроку
 предоставляется свобода _строить, разрушать, программировать, взрывать,
