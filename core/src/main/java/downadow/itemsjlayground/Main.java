@@ -639,6 +639,7 @@ public class Main implements ApplicationListener {
                     } else if(touch.x > 200 && touch.x < 300 && touch.y > 200 && touch.y < 300 && selected != -1) {
                         return keyDown(Input.Keys.E);
                     } else if(touch.x > 0 && touch.x < 200 && touch.y > 600 && touch.y < 728) {
+                        select = false;
                         return keyUp(Input.Keys.X);
                     } else if(touch.x > 900 && touch.x < 1200 && touch.y > 0 && touch.y < 300) {
                         for(boolean val : forBoom)
