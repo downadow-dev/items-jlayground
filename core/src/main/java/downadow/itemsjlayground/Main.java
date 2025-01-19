@@ -1293,7 +1293,7 @@ public class Main implements ApplicationListener {
     private void fire(int addr) {
         if(gameState != 2) {
             final int saved = addr;
-            if(!Blocks.isFireResistant(map[saved])) {
+            if(saved >= WIDTH && saved < map.length - WIDTH && !Blocks.isFireResistant(map[saved])) {
                 map[saved] = 'f';
 
                 new Thread() {
@@ -1328,8 +1328,10 @@ public class Main implements ApplicationListener {
     private void fire2(int addr) {
         if(gameState != 2) {
             final int saved = addr;
+            if((!(saved >= WIDTH && saved < map.length - WIDTH)) || Blocks.isWater(map[saved]))
+                return;
             map[saved] = 'F';
-
+            
             new Thread() {
                 public void run() {
                     try {
