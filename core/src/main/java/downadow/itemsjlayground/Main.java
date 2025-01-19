@@ -876,7 +876,7 @@ public class Main implements ApplicationListener {
         scene = S_INFO;
         
         if(!Gdx.files.external(root + "/lastUrl").exists())
-            Gdx.files.external(root + "/lastUrl").writeString("https://github.com/downadow-dev/items-jlayground/raw/main/game", false);
+            Gdx.files.external(root + "/lastUrl").writeString("https://raw.githubusercontent.com/downadow-dev/items-jlayground/main/game", false);
         
         updateRpList();
         Blocks.init();
