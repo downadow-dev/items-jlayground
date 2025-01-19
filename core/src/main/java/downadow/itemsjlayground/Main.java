@@ -872,7 +872,7 @@ public class Main implements ApplicationListener {
         shape = new ShapeRenderer();
         viewport = new FitViewport(1200, 728);
         font = new BitmapFont(Gdx.files.internal("font/NotoSansMonoRegular.fnt"), false);
-        font.setFixedWidthGlyphs("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~*ЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮёйцукенгшщзхъфывапролджэячсмитьбю█");
+        font.setFixedWidthGlyphs("\n ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~*ЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮёйцукенгшщзхъфывапролджэячсмитьбю█");
         
         scene = S_INFO;
         
