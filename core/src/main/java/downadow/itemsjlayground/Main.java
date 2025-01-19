@@ -415,7 +415,7 @@ public class Main implements ApplicationListener {
                                             
                                             new Thread() {
                                                 public void run() {
-                                                    try {Thread.sleep(25);} catch(Exception ex) {}
+                                                    try {Thread.sleep(60);} catch(Exception ex) {}
                                                     map[selected] = Blocks.getC2(map[selected]);
                                                 }
                                             }.start();
@@ -431,7 +431,7 @@ public class Main implements ApplicationListener {
                                             
                                             new Thread() {
                                                 public void run() {
-                                                    try {Thread.sleep(25);} catch(Exception ex) {}
+                                                    try {Thread.sleep(60);} catch(Exception ex) {}
                                                     map[selected] = Blocks.getC2(map[selected]);
                                                 }
                                             }.start();
