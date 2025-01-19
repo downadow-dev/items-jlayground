@@ -180,16 +180,16 @@ public class Main implements ApplicationListener {
                         } else if(key == Input.Keys.LEFT && !fill && !help) {
                             cameraStart--;
                             return true;
-                        } else if(key == Input.Keys.O) {
-                            cameraStart -= 3;
-                            return true;
-                        } else if(key == Input.Keys.P) {
-                            cameraStart += 3;
-                            return true;
                         }
                         
-                        if(!programmingMode) {
-                            if(key == Input.Keys.F1) {
+                        if(!programmingMode && !writeMessage) {
+                            if(key == Input.Keys.O) {
+                                cameraStart -= 3;
+                                return true;
+                            } else if(key == Input.Keys.P) {
+                                cameraStart += 3;
+                                return true;
+                            } else if(key == Input.Keys.F1) {
                                 help = (help ? false : true);
                                 return true;
                             } else if(key == Input.Keys.C) {
@@ -530,34 +530,32 @@ public class Main implements ApplicationListener {
                             return true;
                         }
                         
-                        if(!programmingMode) {
-                            if(key == Input.Keys.X) {
-                                select = true;
-                                if(Gdx.app.getType() == Application.ApplicationType.Android)
-                                    Gdx.input.setOnscreenKeyboardVisible(true);
-                                return true;
+                        if((!programmingMode && !writeMessage) && key == Input.Keys.X) {
+                            select = true;
+                            if(Gdx.app.getType() == Application.ApplicationType.Android)
+                                Gdx.input.setOnscreenKeyboardVisible(true);
+                            return true;
+                        }
+                            
+                        /* написать сообщение */
+                        else if(key == Input.Keys.F7 && gameState == 2 && !writeMessage) {
+                            text = "";
+                            writeMessage = true;
+                            if(Gdx.app.getType() == Application.ApplicationType.Android)
+                                Gdx.input.setOnscreenKeyboardVisible(true);
+                            return true;
+                        } else if(key == Input.Keys.F7 && gameState == 2) {
+                            if(Gdx.app.getType() == Application.ApplicationType.Android)
+                                Gdx.input.setOnscreenKeyboardVisible(false);
+                            
+                            if(!text.isEmpty()) {
+                                sendMessage(text);
+                                text = "";
                             }
                             
-                            /* написать сообщение */
-                            else if(key == Input.Keys.F7 && gameState == 2 && !writeMessage) {
-                                text = "";
-                                writeMessage = true;
-                                if(Gdx.app.getType() == Application.ApplicationType.Android)
-                                    Gdx.input.setOnscreenKeyboardVisible(true);
-                                return true;
-                            } else if(key == Input.Keys.F7 && gameState == 2) {
-                                if(Gdx.app.getType() == Application.ApplicationType.Android)
-                                    Gdx.input.setOnscreenKeyboardVisible(false);
-                                
-                                if(!text.isEmpty()) {
-                                    sendMessage(text);
-                                    text = "";
-                                }
-                                
-                                writeMessage = false;
-                                
-                                return true;
-                            }
+                            writeMessage = false;
+                            
+                            return true;
                         }
                     } catch(Exception ex) {}
                 }
@@ -571,6 +569,7 @@ public class Main implements ApplicationListener {
                 
                 if(scene == S_INFO) {
                     scene = S_MENU;
+                    text = Gdx.files.external(root + "/lastUrl").readString();
                     return true;
                 } else if(scene == S_MENU) {
                     if(touch.x > 15 && touch.x < 940 && touch.y > 640 && touch.y < 680 && Gdx.app.getType() == Application.ApplicationType.Android) {
@@ -778,7 +777,7 @@ public class Main implements ApplicationListener {
                         selectNumber = "";
                         new Thread() {
                             public void run() {
-                                try { Thread.sleep(250); } catch(Exception e) {}
+                                try { Thread.sleep(240); } catch(Exception e) {}
                                 select = false;
                             }
                         }.start();
@@ -790,7 +789,7 @@ public class Main implements ApplicationListener {
                         currentBlock = c;
                         new Thread() {
                             public void run() {
-                                try { Thread.sleep(250); } catch(Exception e) {}
+                                try { Thread.sleep(240); } catch(Exception e) {}
                                 select = false;
                             }
                         }.start();
@@ -815,43 +814,50 @@ public class Main implements ApplicationListener {
                         if(Gdx.app.getType() == Application.ApplicationType.Android)
                             Gdx.input.setOnscreenKeyboardVisible(false);
                         
-                        String mapDir;
-                        if(!downloadFile(text + "/name", Gdx.files.external(root + "/name")))
-                            mapDir = "rp" + new Random().nextInt(1000000000);
-                        else
-                            mapDir = Gdx.files.external(root + "/name").readString().replace("\n", "") + "_" + new Random().nextInt(1000000);
-                        
-                        Gdx.files.external(root + "/rp_list.txt").writeString(mapDir + "\n", true);
-                        if(!downloadFile(text + "/desc", Gdx.files.external(root + "/" + mapDir + "/desc"))) {
-                            text = "ERROR!!!";
-                            return true;
-                        }
-                        
-                        if(!downloadFile(text + "/map", Gdx.files.external(root + "/" + mapDir + "/map"))) {
-                            text = "ERROR!!!";
-                            return true;
-                        }
-                        
-                        if(!downloadFile(text + "/help", Gdx.files.external(root + "/" + mapDir + "/help"))) {
-                            text = "ERROR!!!";
-                            return true;
-                        }
-                        
-                        String[] lines = Gdx.files.external(root + "/" + mapDir + "/desc").readString().replace("\r", "").split("\n");
-                        for(String line : lines) {
-                            String[] tokens = line.split(" ");
-                            for(String tkn : tokens) {
-                                if(tkn.startsWith("texture:")) {
-                                    if(!downloadFile(text + "/images/" + tkn.split(":")[1], Gdx.files.external(root + "/" + mapDir + "/images/" + tkn.split(":")[1]))) {
-                                        text = "ERROR!!!";
-                                        return true;
+                        new Thread() {
+                            public void run() {
+                                Gdx.files.external(root + "/lastUrl").writeString(text, false);
+                                
+                                String mapDir;
+                                if(!downloadFile(text + "/name", Gdx.files.external(root + "/name")))
+                                    mapDir = "rp" + new Random().nextInt(1000000000);
+                                else
+                                    mapDir = Gdx.files.external(root + "/name").readString().replace("\n", "") + "_" + new Random().nextInt(1000000);
+                                
+                                Gdx.files.external(root + "/rp_list.txt").writeString(mapDir + "\n", true);
+                                if(!downloadFile(text + "/desc", Gdx.files.external(root + "/" + mapDir + "/desc"))) {
+                                    text = "ERROR!!!";
+                                    return;
+                                }
+                                
+                                if(!downloadFile(text + "/map", Gdx.files.external(root + "/" + mapDir + "/map"))) {
+                                    text = "ERROR!!!";
+                                    return;
+                                }
+                                
+                                if(!downloadFile(text + "/help", Gdx.files.external(root + "/" + mapDir + "/help"))) {
+                                    text = "ERROR!!!";
+                                    return;
+                                }
+                                
+                                String[] lines = Gdx.files.external(root + "/" + mapDir + "/desc").readString().replace("\r", "").split("\n");
+                                for(String line : lines) {
+                                    String[] tokens = line.split(" ");
+                                    for(String tkn : tokens) {
+                                        if(tkn.startsWith("texture:")) {
+                                            if(!downloadFile(text + "/images/" + tkn.split(":")[1], Gdx.files.external(root + "/" + mapDir + "/images/" + tkn.split(":")[1]))) {
+                                                text = "ERROR!!!";
+                                                return;
+                                            }
+                                        }
                                     }
                                 }
+                                
+                                text = "(done)";
+                                updateRpList();
                             }
-                        }
+                        }.start();
                         
-                        text = "(done)";
-                        updateRpList();
                         return true;
                     }
                 }
@@ -868,6 +874,9 @@ public class Main implements ApplicationListener {
         font.setFixedWidthGlyphs("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~*ЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮёйцукенгшщзхъфывапролджэячсмитьбю█");
         
         scene = S_INFO;
+        
+        if(!Gdx.files.external(root + "/lastUrl").exists())
+            Gdx.files.external(root + "/lastUrl").writeString("https://github.com/downadow-dev/items-jlayground/raw/main/game", false);
         
         updateRpList();
         Blocks.init();
