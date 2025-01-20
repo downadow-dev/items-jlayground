@@ -331,15 +331,6 @@ public class Main implements ApplicationListener {
                                     fill = true;
                                 else if(key == Input.Keys.F4 && fill)
                                     fill = false;
-                                /* перемещение камеры */
-                                else if(key == Input.Keys.UP)
-                                    cameraStart -= WIDTH;
-                                else if(key == Input.Keys.DOWN)
-                                    cameraStart += WIDTH;
-                                else if(key == Input.Keys.RIGHT)
-                                    cameraStart++;
-                                else if(key == Input.Keys.LEFT)
-                                    cameraStart--;
                                 /* показать/скрыть помощь */
                                 else if(key == Input.Keys.F1 && !help && ui)
                                     help = true;
@@ -363,7 +354,7 @@ public class Main implements ApplicationListener {
                                 else if(key == Input.Keys.F && map[selectedBlockAddr()] != '.' &&
                                           !Blocks.isFireResistant(map[selectedBlockAddr()])) {
                                     fire(selectedBlockAddr());
-                                } else if(key == Input.Keys.V && map[selectedBlockAddr()] != '.' && !Blocks.isWater(map[selectedBlockAddr()]))
+                                } else if(key == Input.Keys.V && map[selectedBlockAddr()] != '.')
                                     fire2(selectedBlockAddr());
                                 /* выбрать блок под прицелом */
                                 else if(key == Input.Keys.SPACE && selected == -1 && map[selectedBlockAddr()] != '.')
