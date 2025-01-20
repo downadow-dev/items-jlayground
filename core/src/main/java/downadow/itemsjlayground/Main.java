@@ -631,6 +631,7 @@ public class Main implements ApplicationListener {
                         return keyDown(Input.Keys.E);
                     } else if(touch.x > 0 && touch.x < 200 && touch.y > 600 && touch.y < 728) {
                         select = false;
+                        selectNumber = "";
                         return keyUp(Input.Keys.X);
                     } else if(touch.x > 900 && touch.x < 1200 && touch.y > 0 && touch.y < 300) {
                         for(boolean val : forBoom)
@@ -765,7 +766,7 @@ public class Main implements ApplicationListener {
                     if(select && !selectNumber.isEmpty()) {
                         if(Gdx.app.getType() == Application.ApplicationType.Android)
                             Gdx.input.setOnscreenKeyboardVisible(false);
-                        currentBlock = (char)Integer.parseInt(selectNumber);
+                        try { currentBlock = (char)Integer.parseInt(selectNumber); } catch(Exception ex) {}
                         selectNumber = "";
                         new Thread() {
                             public void run() {
