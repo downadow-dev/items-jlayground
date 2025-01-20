@@ -1131,7 +1131,7 @@ public class Main implements ApplicationListener {
                 
                 font.getData().setScale(0.5f);
                 if(!fill)
-                    font.draw(batch, "" + (System.currentTimeMillis() - startTime) / 60000 + " min   " + autoSaveSec, 15, 728 - 20);
+                    font.draw(batch, "" + (System.currentTimeMillis() - startTime) / 60000 + " min   " + (gameState != 2 ? autoSaveSec : ""), 15, 728 - 20);
                 else
                     font.draw(batch, "Выберите сторону...", 15, 728 - 20);
                 
