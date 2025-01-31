@@ -184,10 +184,10 @@ public class Main implements ApplicationListener {
                         
                         if(!programmingMode && !writeMessage) {
                             if(key == Input.Keys.O) {
-                                cameraStart -= 3;
+                                cameraStart -= 4;
                                 return true;
                             } else if(key == Input.Keys.P) {
-                                cameraStart += 3;
+                                cameraStart += 4;
                                 return true;
                             } else if(key == Input.Keys.F1) {
                                 help = (help ? false : true);
@@ -2112,7 +2112,7 @@ public class Main implements ApplicationListener {
                                     /* выполнение команд */
                                     if(message.startsWith("/")) {
                                         message = message.split(" <")[0];
-                                        String[] command = message.subSequence(1, message.length()).toString().split(" ");
+                                        String[] command = message.substring(1).split(" ");
                                         
                                         if(command[0].startsWith("c")) {
                                             char[] chrs = command[2].toCharArray();
@@ -2131,7 +2131,7 @@ public class Main implements ApplicationListener {
                                         } else if(command[0].startsWith("b")) {
                                             boom(Integer.parseInt(command[1]));
                                         } else if(command[0].equals("p")) {
-                                            behavior = message.subSequence(3, message.length()).toString();
+                                            behavior = message.substring(3);
                                         } else if(command[0].startsWith("B")) {
                                             bgColorRed = Integer.parseInt(command[1]);
                                             bgColorGreen = Integer.parseInt(command[2]);
