@@ -36,6 +36,7 @@ public class Main implements ApplicationListener {
     BitmapFont font;
     HttpRequestBuilder rqbuilder;
     short scene;
+    boolean pleaseWait = false;
     final short S_INFO = 0,
         S_MENU = 1,
         S_CLIENT_MENU = 2,
@@ -184,10 +185,10 @@ public class Main implements ApplicationListener {
                         
                         if(!programmingMode && !writeMessage) {
                             if(key == Input.Keys.O) {
-                                cameraStart -= 4;
+                                cameraStart -= 5;
                                 return true;
                             } else if(key == Input.Keys.P) {
-                                cameraStart += 4;
+                                cameraStart += 5;
                                 return true;
                             } else if(key == Input.Keys.F1) {
                                 help = (help ? false : true);
@@ -403,8 +404,10 @@ public class Main implements ApplicationListener {
                                             
                                             new Thread() {
                                                 public void run() {
-                                                    try {Thread.sleep(60);} catch(Exception ex) {}
-                                                    map[selected] = Blocks.getC2(map[selected]);
+                                                    try {
+                                                        Thread.sleep(60);
+                                                        map[selected] = Blocks.getC2(map[selected]);
+                                                    } catch(Exception ex) {}
                                                 }
                                             }.start();
                                             
@@ -419,8 +422,10 @@ public class Main implements ApplicationListener {
                                             
                                             new Thread() {
                                                 public void run() {
-                                                    try {Thread.sleep(60);} catch(Exception ex) {}
-                                                    map[selected] = Blocks.getC2(map[selected]);
+                                                    try {
+                                                        Thread.sleep(60);
+                                                        map[selected] = Blocks.getC2(map[selected]);
+                                                    } catch(Exception ex) {}
                                                 }
                                             }.start();
                                             
@@ -582,7 +587,7 @@ public class Main implements ApplicationListener {
                         try {
                             startGame();
                             return true;
-                        } catch(Exception ex) {}
+                        } catch(Exception ex) { pleaseWait = false; }
                     } else if(touch.x > 275 && touch.x < (275 + 250) && touch.y > 50 && touch.y < 80) {
                         try {
                             text = "";
@@ -594,7 +599,7 @@ public class Main implements ApplicationListener {
                             gameState = 1;
                             startGame();
                             return true;
-                        } catch(Exception ex) {}
+                        } catch(Exception ex) { pleaseWait = false; }
                     }
                 } else if(scene == S_CLIENT_MENU) {
                     if(touch.x > 15 && touch.x < 940 && touch.y > 640 && touch.y < 680 && Gdx.app.getType() == Application.ApplicationType.Android) {
@@ -630,7 +635,7 @@ public class Main implements ApplicationListener {
                         select = false;
                         selectNumber = "";
                         return keyUp(Input.Keys.X);
-                    } else if(touch.x > 900 && touch.x < 1200 && touch.y > 0 && touch.y < 300) {
+                    } else if(touch.x > 700 && touch.x < 1200 && touch.y > 0 && touch.y < 500) {
                         for(boolean val : forBoom)
                             if(val && selected == -1)
                                 return keyDown(Input.Keys.ENTER);
@@ -699,7 +704,9 @@ public class Main implements ApplicationListener {
                         gameState = 2;
                         connectUrl = text;
                         text = "";
-                        startGame();
+                        try {
+                            startGame();
+                        } catch(Exception ex) { pleaseWait = false; }
                         
                         return true;
                     }
@@ -804,6 +811,7 @@ public class Main implements ApplicationListener {
                         if(Gdx.app.getType() == Application.ApplicationType.Android)
                             Gdx.input.setOnscreenKeyboardVisible(false);
                         
+                        pleaseWait = true;
                         new Thread() {
                             public void run() {
                                 Gdx.files.external(root + "/lastUrl").writeString(text, false);
@@ -816,17 +824,17 @@ public class Main implements ApplicationListener {
                                 
                                 Gdx.files.external(root + "/rp_list.txt").writeString(mapDir + "\n", true);
                                 if(!downloadFile(text + "/desc", Gdx.files.external(root + "/" + mapDir + "/desc"))) {
-                                    text = "ERROR!!!";
+                                    text = "ERROR!!!"; pleaseWait = false;
                                     return;
                                 }
                                 
                                 if(!downloadFile(text + "/map", Gdx.files.external(root + "/" + mapDir + "/map"))) {
-                                    text = "ERROR!!!";
+                                    text = "ERROR!!!"; pleaseWait = false;
                                     return;
                                 }
                                 
                                 if(!downloadFile(text + "/help", Gdx.files.external(root + "/" + mapDir + "/help"))) {
-                                    text = "ERROR!!!";
+                                    text = "ERROR!!!"; pleaseWait = false;
                                     return;
                                 }
                                 
@@ -836,7 +844,7 @@ public class Main implements ApplicationListener {
                                     for(String tkn : tokens) {
                                         if(tkn.startsWith("texture:")) {
                                             if(!downloadFile(text + "/images/" + tkn.split(":")[1], Gdx.files.external(root + "/" + mapDir + "/images/" + tkn.split(":")[1]))) {
-                                                text = "ERROR!!!";
+                                                text = "ERROR!!!"; pleaseWait = false;
                                                 return;
                                             }
                                         }
@@ -844,6 +852,7 @@ public class Main implements ApplicationListener {
                                 }
                                 
                                 text = "(done)";
+                                pleaseWait = false;
                                 updateRpList();
                             }
                         }.start();
@@ -946,6 +955,8 @@ public class Main implements ApplicationListener {
                 batch.begin(); noEnd = true;
                 font.getData().setScale(0.6f);
                 font.draw(batch, (scene != S_CLIENT_MENU ? "HTTP-адрес для загрузки ресурспака" : "HTTP-адрес сервера"), 15, 700);
+                if(pleaseWait)
+                    font.draw(batch, "пожалуйста, подождите...", 920, 705);
                 font.draw(batch, text + "█", 15, 660);
                 if(scene != S_CLIENT_MENU) {
                     font.draw(batch, "Ресурспаки", 15, 620);
@@ -1422,6 +1433,8 @@ public class Main implements ApplicationListener {
     private long startTime = 0;
     
     private void startGame() {
+        pleaseWait = true;
+        
         if(gameState == 1)
             Gdx.files.external(root + "/msg.php").writeString("<?php file_put_contents('msg', $_GET['m'] . ' <' . $_SERVER['REMOTE_ADDR'] . '>'); ?>\n", false);
         
@@ -1578,6 +1591,7 @@ public class Main implements ApplicationListener {
         }
         
         startTime = System.currentTimeMillis();
+        pleaseWait = false;
         scene = S_GAME;
         
         /* автосохранение карты */
