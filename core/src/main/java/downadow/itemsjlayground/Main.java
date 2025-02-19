@@ -196,7 +196,7 @@ public class Main implements ApplicationListener {
                             } else if(key == Input.Keys.C) {
                                 setBlock(selectedBlockAddr(), currentBlock);
                                 return true;
-                            } else if(key == Input.Keys.S && select == -1) {
+                            } else if(key == Input.Keys.S && selected == -1) {
                                 Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString(behavior + "\n", false);
                                 Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString(bgColorRed + " " + bgColorGreen + " " + bgColorBlue + "\n", true);
                                 int iii = 0;
