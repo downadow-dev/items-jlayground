@@ -37,7 +37,6 @@ public class Main implements ApplicationListener {
     HttpRequestBuilder rqbuilder;
     short scene;
     boolean pleaseWait = false, msgSaved = false;
-    int areYouSure = -1;
     final short S_INFO = 0,
         S_MENU = 1,
         S_CLIENT_MENU = 2,
