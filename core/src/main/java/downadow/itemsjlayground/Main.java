@@ -36,7 +36,8 @@ public class Main implements ApplicationListener {
     BitmapFont font;
     HttpRequestBuilder rqbuilder;
     short scene;
-    boolean pleaseWait = false;
+    boolean pleaseWait = false, msgSaved = false;
+    int areYouSure = -1;
     final short S_INFO = 0,
         S_MENU = 1,
         S_CLIENT_MENU = 2,
@@ -54,7 +55,7 @@ public class Main implements ApplicationListener {
     boolean done, retval;
     String[] rpList;
     String root;
-    int selectedRp = -1, autoSaveSec = 0;
+    int selectedRp = -1;
     
     /* ширина и высота карты в объектах */
     private final int WIDTH = 250, HEIGHT = 60;
@@ -191,10 +192,23 @@ public class Main implements ApplicationListener {
                                 cameraStart += 5;
                                 return true;
                             } else if(key == Input.Keys.F1) {
-                                help = (help ? false : true);
+                                help = !help;
                                 return true;
                             } else if(key == Input.Keys.C) {
                                 setBlock(selectedBlockAddr(), currentBlock);
+                                return true;
+                            } else if(key == Input.Keys.S) {
+                                Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString(behavior + "\n", false);
+                                Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString(bgColorRed + " " + bgColorGreen + " " + bgColorBlue + "\n", true);
+                                int iii = 0;
+                                for(int i = 0; i < HEIGHT; i++) {
+                                    for(int ii = 0; ii < WIDTH; ii++) {
+                                        Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString("" + map[iii], true);
+                                        iii++;
+                                    }
+                                    Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString("\n", true);
+                                }
+                                msgSaved = !msgSaved;
                                 return true;
                             } else if(key == Input.Keys.BACKSPACE) {
                                 setBlock(selectedBlockAddr(), '.');
@@ -281,11 +295,8 @@ public class Main implements ApplicationListener {
                                 return true;
                             }
                             /* включение/выключение "физики" */
-                            else if(key == Input.Keys.F6 && !ph && gameState != 2) {
-                                ph = true;
-                                return true;
-                            } else if(key == Input.Keys.F6 && ph && gameState != 2) {
-                                ph = false;
+                            else if(key == Input.Keys.F6 && gameState != 2) {
+                                ph = !ph;
                                 return true;
                             }
                             /* изменение цвета фона */
@@ -319,29 +330,20 @@ public class Main implements ApplicationListener {
                                 return true;
                             }
                             /* включение/выключение ночи */
-                            else if(key == Input.Keys.N && !night) {
-                                night = true;
-                                return true;
-                            } else if(key == Input.Keys.N && night) {
-                                night = false;
+                            else if(key == Input.Keys.N) {
+                                night = !night;
                                 return true;
                             }
                             
                             if(!block) {
-                                if(key == Input.Keys.F4 && !fill)
-                                    fill = true;
-                                else if(key == Input.Keys.F4 && fill)
-                                    fill = false;
+                                if(key == Input.Keys.F4)
+                                    fill = !fill;
                                 /* показать/скрыть помощь */
-                                else if(key == Input.Keys.F1 && !help && ui)
-                                    help = true;
-                                else if(key == Input.Keys.F1 && help && ui)
-                                    help = false;
+                                else if(key == Input.Keys.F1 && ui)
+                                    help = !help;
                                 /* включить/выключить замедление времени */
-                                else if(key == Input.Keys.F2 && !slow)
-                                    slow = true;
-                                else if(key == Input.Keys.F2 && slow)
-                                    slow = false;
+                                else if(key == Input.Keys.F2)
+                                    slow = !slow;
                                 /*******************************/
                                 else if(key == Input.Keys.F10) {
                                     rain = (rain == -1 ? 0 : -1);
@@ -670,7 +672,8 @@ public class Main implements ApplicationListener {
                         return keyDown(Input.Keys.F6);
                     } else if(touch.x > 1090 && touch.x < 1190 && touch.y > 518 && touch.y < 618) {
                         return keyUp(Input.Keys.F7);
-                    }
+                    } else if(touch.y > 640)
+                        return keyDown(Input.Keys.S);
                 }
                 
                 return false;
@@ -1131,7 +1134,7 @@ public class Main implements ApplicationListener {
                 
                 font.getData().setScale(0.5f);
                 if(!fill)
-                    font.draw(batch, "" + (System.currentTimeMillis() - startTime) / 60000 + " min   " + (gameState != 2 ? autoSaveSec : ""), 15, 728 - 20);
+                    font.draw(batch, "" + (System.currentTimeMillis() - startTime) / 60000 + " min", 15, 728 - 20);
                 else
                     font.draw(batch, "Выберите сторону...", 15, 728 - 20);
                 
@@ -1201,6 +1204,8 @@ public class Main implements ApplicationListener {
                 if(gameState == 1) font.draw(batch, message, 15, 728 - 60);
                 else if(gameState == 2 && writeMessage) font.draw(batch, text + "█", 15, 728 - 60);
                 
+                if(msgSaved) font.draw(batch, "сохранено", 15, 728 - 80);
+                
                 if(help && !programmingMode) {
                     batch.draw(blackTexture, 0, 0, 1200, 728);
                     
@@ -1251,7 +1256,7 @@ public class Main implements ApplicationListener {
                             setDone(true);
                         }
                     });
-                    Thread.sleep(20000);
+                    Thread.sleep(10000);
                     Pools.free(rq);
                 } catch(Exception ex) {}
                 setDone(true);
@@ -1593,31 +1598,6 @@ public class Main implements ApplicationListener {
         startTime = System.currentTimeMillis();
         pleaseWait = false;
         scene = S_GAME;
-        
-        /* автосохранение карты */
-        if(gameState != 2) {
-            new Thread() {
-                public void run() {
-                    while(true) {
-                        try {
-                            for(autoSaveSec = 30; autoSaveSec > 0; autoSaveSec--)
-                                Thread.sleep(1000);
-                            
-                            Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString(behavior + "\n", false);
-                            Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString(bgColorRed + " " + bgColorGreen + " " + bgColorBlue + "\n", true);
-                            int iii = 0;
-                            for(int i = 0; i < HEIGHT; i++) {
-                                for(int ii = 0; ii < WIDTH; ii++) {
-                                    Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString("" + map[iii], true);
-                                    iii++;
-                                }
-                                Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString("\n", true);
-                            }
-                        } catch(Exception ex) {}
-                    }
-                }
-            }.start();
-        }
         
         /* обновление света */
         new Thread() {
