@@ -1255,8 +1255,7 @@ public class Main implements ApplicationListener {
                             setDone(true);
                         }
                     });
-                    while(!done);
-                    Thread.sleep(100);
+                    Thread.sleep(30000);
                     Pools.free(rq);
                 } catch(Exception ex) {}
                 setDone(true);
