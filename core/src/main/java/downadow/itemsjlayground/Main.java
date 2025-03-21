@@ -563,7 +563,6 @@ public class Main implements ApplicationListener {
                 
                 if(scene == S_INFO) {
                     scene = S_MENU;
-                    text = Gdx.files.external(root + "/lastUrl").readString();
                     return true;
                 } else if(scene == S_MENU) {
                     if(touch.x > 15 && touch.x < 940 && touch.y > 640 && touch.y < 680 && Gdx.app.getType() == Application.ApplicationType.Android) {
@@ -816,8 +815,6 @@ public class Main implements ApplicationListener {
                         pleaseWait = true;
                         new Thread() {
                             public void run() {
-                                Gdx.files.external(root + "/lastUrl").writeString(text, false);
-                                
                                 String mapDir;
                                 if(!downloadFile(text + "/name", Gdx.files.external(root + "/name")))
                                     mapDir = "rp" + new Random().nextInt(1000000000);
@@ -875,9 +872,6 @@ public class Main implements ApplicationListener {
         font.setFixedWidthGlyphs(" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~*ЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮёйцукенгшщзхъфывапролджэячсмитьбю█№—");
         
         scene = S_INFO;
-        
-        if(!Gdx.files.external(root + "/lastUrl").exists())
-            Gdx.files.external(root + "/lastUrl").writeString("https://raw.githubusercontent.com/downadow-dev/items-jlayground/main/game", false);
         
         updateRpList();
         Blocks.init();
