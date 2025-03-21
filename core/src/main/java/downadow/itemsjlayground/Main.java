@@ -881,6 +881,16 @@ public class Main implements ApplicationListener {
         
         updateRpList();
         Blocks.init();
+        
+        if(rpList != null)
+            for(String name : rpList)
+                if(name.equals("game"))
+                    return;
+        
+        Gdx.files.internal("game").copyTo(Gdx.files.external(root));
+        Gdx.files.external(root + "/rp_list.txt").writeString("game\n", true);
+        
+        updateRpList();
     }
     
     public void resize(int width, int height) {
@@ -911,7 +921,7 @@ public class Main implements ApplicationListener {
             batch.end(); noEnd = false;
             shape.setProjectionMatrix(viewport.getCamera().combined);
             shape.begin(ShapeRenderer.ShapeType.Filled); noShapeEnd = true;
-            shape.setColor(new Color(0.6f, 0.6f, 1f, 1f));
+            shape.setColor(new Color(0.55f, 0.55f, 1f, 1f));
             shape.rect(0, 0, 1200, 728);
             shape.end(); noShapeEnd = false;
             if(scene == S_INFO) {
@@ -922,13 +932,13 @@ public class Main implements ApplicationListener {
                 font.getData().setScale(0.65f);
                 font.draw(batch, "Items Jlayground — это свободная игра-песочница, в которой игроку", 10, 680);
                 font.draw(batch, "предоставляется свобода строить, разрушать, программировать, взрывать,", 10, 660);
-                font.draw(batch, "летать на вертолёте, стрелять из танка и другое. Игра написана на Java", 10, 640);
-                font.draw(batch, "с использованием LibGDX. Items Jlayground поддерживает многопользова-", 10, 620);
-                font.draw(batch, "тельскую игру. Автор игры — downadow.", 10, 600);
+                font.draw(batch, "летать на вертолёте, стрелять из танка и другое.  Игра написана на Java", 10, 640);
+                font.draw(batch, "с использованием LibGDX.  Items Jlayground поддерживает многопользова-", 10, 620);
+                font.draw(batch, "тельскую игру.  Автор игры — downadow.", 10, 600);
                 
                 font.draw(batch, "Мир Items Jlayground представляет собой одномерный массив с заданными", 10, 560);
-                font.draw(batch, "шириной (250) и высотой (60). Ячейка может определяться как отсутствие", 10, 540);
-                font.draw(batch, "блока (.), либо танк, либо вертолёт, либо вода, либо примитив. Примитивы", 10, 520);
+                font.draw(batch, "шириной (250) и высотой (60).  Ячейка может определяться как отсутствие", 10, 540);
+                font.draw(batch, "блока (.), либо танк, либо вертолёт, либо вода, либо примитив.  Примитивы", 10, 520);
                 font.draw(batch, "могут иметь множество атрибутов (падающий, крепкий, липкий и т. д.).", 10, 500);
                 
                 font.getData().setScale(0.5f);
