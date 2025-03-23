@@ -185,10 +185,10 @@ public class Main implements ApplicationListener {
                         
                         if(!programmingMode && !writeMessage) {
                             if(key == Input.Keys.O) {
-                                cameraStart -= 5;
+                                cameraStart -= 8;
                                 return true;
                             } else if(key == Input.Keys.P) {
-                                cameraStart += 5;
+                                cameraStart += 8;
                                 return true;
                             } else if(key == Input.Keys.F1) {
                                 help = !help;
@@ -213,10 +213,10 @@ public class Main implements ApplicationListener {
                                 setBlock(selectedBlockAddr(), '.');
                                 return true;
                             } else if(key == Input.Keys.UP && help && helpIndex > 0) {
-                                helpIndex -= 2;
+                                helpIndex -= 4;
                                 return true;
                             } else if(key == Input.Keys.DOWN && help) {
-                                helpIndex += 2;
+                                helpIndex += 4;
                                 return true;
                             } else if(key == Input.Keys.LEFT && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() - 1] == '.') {
                                 for(int i = selectedBlockAddr() - 1; map[i] == '.'; i--)
@@ -513,6 +513,7 @@ public class Main implements ApplicationListener {
                                 Gdx.input.setOnscreenKeyboardVisible(true);
                             
                             programmingMode = true;
+                            msgSaved = false;
                             return true;
                         }
                         else if(key == Input.Keys.F5 && programmingMode) {
@@ -535,6 +536,7 @@ public class Main implements ApplicationListener {
                         else if(key == Input.Keys.F7 && gameState == 2 && !writeMessage) {
                             text = "";
                             writeMessage = true;
+                            msgSaved = false;
                             if(Gdx.app.getType() == Application.ApplicationType.Android)
                                 Gdx.input.setOnscreenKeyboardVisible(true);
                             return true;
@@ -670,7 +672,7 @@ public class Main implements ApplicationListener {
                         return keyDown(Input.Keys.F6);
                     } else if(touch.x > 1090 && touch.x < 1190 && touch.y > 518 && touch.y < 618) {
                         return keyUp(Input.Keys.F7);
-                    } else if(touch.y > 640)
+                    } else if(touch.x > 0 && touch.x < 1200 && touch.y > 640)
                         return keyDown(Input.Keys.S);
                 }
                 
@@ -811,6 +813,9 @@ public class Main implements ApplicationListener {
                     } else {
                         if(Gdx.app.getType() == Application.ApplicationType.Android)
                             Gdx.input.setOnscreenKeyboardVisible(false);
+                        
+                        if(text.isEmpty())
+                            return true;
                         
                         pleaseWait = true;
                         new Thread() {
@@ -1259,7 +1264,7 @@ public class Main implements ApplicationListener {
                             setDone(true);
                         }
                     });
-                    Thread.sleep(30000);
+                    Thread.sleep(35000);
                     Pools.free(rq);
                 } catch(Exception ex) {}
                 setDone(true);
