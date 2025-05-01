@@ -55,6 +55,7 @@ public class Main implements ApplicationListener {
     String[] rpList;
     String root;
     int selectedRp = -1;
+    boolean up = false, down = false, left = false, right = false;
     
     /* ширина и высота карты в объектах */
     private final int WIDTH = 250, HEIGHT = 60;
@@ -168,18 +169,93 @@ public class Main implements ApplicationListener {
                     try {
                         if(select)
                             return false;
-                        
-                        if(key == Input.Keys.UP && !fill && !help) {
+                        /* "прыжок" */
+                        else if(key == Input.Keys.UP && selected != -1 && ((!Blocks.isHelicopter(map[selected]) && !Blocks.isEraser(map[selected])) && ph)) {
+                            new Thread() {
+                                public void run() {
+                                    try {
+                                        jump = true;
+                                        
+                                        if(map[selected + WIDTH] != '.') {
+                                            for(int i = 0; i < 3; i++) {
+                                                if(map[selected - WIDTH] == '.') {
+                                                    selected -= WIDTH;
+                                                    map[selected] = map[selected + WIDTH];
+                                                    map[selected + WIDTH] = '.';
+                                                }
+                                                Thread.sleep(150);
+                                            }
+                                        }
+                                        Thread.sleep(200);
+                                        
+                                        jump = false;
+                                    } catch(Exception e) {}
+                                }
+                            }.start();
+                            
+                            return true;
+                        /* перемещение выделенного блока */
+                        } else if(key == Input.Keys.UP && selected != -1 && (map[selected - WIDTH] == '.' || Blocks.isWater(map[selected - WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
+                            map[selected - WIDTH] = map[selected];
+                            
+                            if(!Blocks.isEraser(map[selected]))
+                                map[selected] = '.';
+                            else
+                                setBlock(selected, '.');
+                            
+                            selected -= WIDTH;
+                            
+                            up = true;
+                        } else if(key == Input.Keys.DOWN && selected != -1 && (map[selected + WIDTH] == '.' || Blocks.isWater(map[selected + WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
+                            map[selected + WIDTH] = map[selected];
+                            
+                            if(!Blocks.isEraser(map[selected]))
+                                map[selected] = '.';
+                            else
+                                setBlock(selected, '.');
+                            
+                            selected += WIDTH;
+                            
+                            down = true;
+                        } else if(key == Input.Keys.LEFT && selected != -1 && (map[selected - 1] == '.' || Blocks.isWater(map[selected - 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
+                            map[selected - 1] = map[selected];
+                            
+                            if(!Blocks.isEraser(map[selected]))
+                                map[selected] = '.';
+                            else
+                                setBlock(selected, '.');
+                            
+                            selected--;
+                            
+                            left = true;
+                        } else if(key == Input.Keys.RIGHT && selected != -1 && (map[selected + 1] == '.' || Blocks.isWater(map[selected + 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
+                            map[selected + 1] = map[selected];
+                            
+                            if(!Blocks.isEraser(map[selected]))
+                                map[selected] = '.';
+                            else
+                                setBlock(selected, '.');
+                            
+                            selected++;
+                            
+                            right = true;
+                        }
+                        /* перемещение */
+                        else if(key == Input.Keys.UP && !fill && !help) {
                             cameraStart -= WIDTH;
+                            up = true;
                             return true;
                         } else if(key == Input.Keys.DOWN && !fill && !help) {
                             cameraStart += WIDTH;
+                            down = true;
                             return true;
                         } else if(key == Input.Keys.RIGHT && !fill && !help) {
                             cameraStart++;
+                            right = true;
                             return true;
                         } else if(key == Input.Keys.LEFT && !fill && !help) {
                             cameraStart--;
+                            left = true;
                             return true;
                         }
                         
@@ -265,32 +341,6 @@ public class Main implements ApplicationListener {
                                 for(int i = selectedBlockAddr() - WIDTH; map[i] != '.'; i -= WIDTH)
                                     setBlock(i, map[selectedBlockAddr()]);
                                 fill = false;
-                                return true;
-                            }
-                            /* "прыжок" */
-                            else if(key == Input.Keys.W && selected != -1 && ((!Blocks.isHelicopter(map[selected]) && !Blocks.isEraser(map[selected])) && ph)) {
-                                new Thread() {
-                                    public void run() {
-                                        try {
-                                            jump = true;
-                                            
-                                            if(map[selected + WIDTH] != '.') {
-                                                for(int i = 0; i < 3; i++) {
-                                                    if(map[selected - WIDTH] == '.') {
-                                                        selected -= WIDTH;
-                                                        map[selected] = map[selected + WIDTH];
-                                                        map[selected + WIDTH] = '.';
-                                                    }
-                                                    Thread.sleep(150);
-                                                }
-                                            }
-                                            Thread.sleep(200);
-                                            
-                                            jump = false;
-                                        } catch(Exception e) {}
-                                    }
-                                }.start();
-                                
                                 return true;
                             }
                             /* включение/выключение "физики" */
@@ -450,44 +500,6 @@ public class Main implements ApplicationListener {
                                         }
                                     }.start();
                                 }
-                                /* операции с выделенным блоком */
-                                else if(key == Input.Keys.W && selected != -1 && (map[selected - WIDTH] == '.' || Blocks.isWater(map[selected - WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                                    map[selected - WIDTH] = map[selected];
-                                    
-                                    if(!Blocks.isEraser(map[selected]))
-                                        map[selected] = '.';
-                                    else
-                                        setBlock(selected, '.');
-                                    
-                                    selected -= WIDTH;
-                                } else if(key == Input.Keys.S && selected != -1 && (map[selected + WIDTH] == '.' || Blocks.isWater(map[selected + WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                                    map[selected + WIDTH] = map[selected];
-                                    
-                                    if(!Blocks.isEraser(map[selected]))
-                                        map[selected] = '.';
-                                    else
-                                        setBlock(selected, '.');
-                                    
-                                    selected += WIDTH;
-                                } else if(key == Input.Keys.A && selected != -1 && (map[selected - 1] == '.' || Blocks.isWater(map[selected - 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                                    map[selected - 1] = map[selected];
-                                    
-                                    if(!Blocks.isEraser(map[selected]))
-                                        map[selected] = '.';
-                                    else
-                                        setBlock(selected, '.');
-                                    
-                                    selected--;
-                                } else if(key == Input.Keys.D && selected != -1 && (map[selected + 1] == '.' || Blocks.isWater(map[selected + 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                                    map[selected + 1] = map[selected];
-                                    
-                                    if(!Blocks.isEraser(map[selected]))
-                                        map[selected] = '.';
-                                    else
-                                        setBlock(selected, '.');
-                                    
-                                    selected++;
-                                }
                                 /* удалить всю воду */
                                 else if(key == Input.Keys.F8) {
                                     noWater = true;
@@ -506,6 +518,15 @@ public class Main implements ApplicationListener {
                     try {
                         if(select)
                             return false;
+                        
+                        else if(key == Input.Keys.UP)
+                            up = false;
+                        else if(key == Input.Keys.DOWN)
+                            down = false;
+                        else if(key == Input.Keys.LEFT)
+                            left = false;
+                        else if(key == Input.Keys.RIGHT)
+                            right = false;
                         
                         /* включить/выключить режим изменения поведения */
                         else if(key == Input.Keys.F5 && !programmingMode) {
@@ -556,6 +577,17 @@ public class Main implements ApplicationListener {
                     } catch(Exception ex) {}
                 }
                 
+                return false;
+            }
+            
+            public boolean touchUp(int x, int y, int ptr, int btn) {
+                if(scene == S_GAME && Gdx.app.getType() == Application.ApplicationType.Android) {
+                    up    = false;
+                    down  = false;
+                    left  = false;
+                    right = false;
+                    return true;
+                }
                 return false;
             }
             
@@ -614,17 +646,17 @@ public class Main implements ApplicationListener {
                 /* мобильное управление */
                 else if(scene == S_GAME && Gdx.app.getType() == Application.ApplicationType.Android) {
                     if(touch.x > 0 && touch.x < 100 && touch.y > 100 && touch.y < 200) {
-                        return keyDown(selected != -1 ? Input.Keys.A : Input.Keys.LEFT);
+                        return keyDown(Input.Keys.LEFT);
                     } else if(touch.x > 0 && touch.x < 100 && touch.y > 0 && touch.y < 100) {
                         return keyDown(Input.Keys.O);
                     } else if(touch.x > 200 && touch.x < 300 && touch.y > 100 && touch.y < 200) {
-                        return keyDown(selected != -1 ? Input.Keys.D : Input.Keys.RIGHT);
+                        return keyDown(Input.Keys.RIGHT);
                     } else if(touch.x > 200 && touch.x < 300 && touch.y > 0 && touch.y < 100) {
                         return keyDown(Input.Keys.P);
                     } else if(touch.x > 100 && touch.x < 200 && touch.y > 200 && touch.y < 300) {
-                        return keyDown(selected != -1 ? Input.Keys.W : Input.Keys.UP);
+                        return keyDown(Input.Keys.UP);
                     } else if(touch.x > 100 && touch.x < 200 && touch.y > 0 && touch.y < 100) {
-                        return keyDown(selected != -1 ? Input.Keys.S : Input.Keys.DOWN);
+                        return keyDown(Input.Keys.DOWN);
                     } else if(touch.x > 100 && touch.x < 200 && touch.y > 100 && touch.y < 200) {
                         return keyDown(Input.Keys.SPACE);
                     } else if(touch.x > 1090 && touch.x < 1190 && touch.y > 618 && touch.y < 718) {
@@ -1606,6 +1638,76 @@ public class Main implements ApplicationListener {
         startTime = System.currentTimeMillis();
         pleaseWait = false;
         scene = S_GAME;
+        
+        /* перемещение */
+        new Thread() {
+            public void run() {
+                boolean mvWait = false;
+                
+                while(true) {
+                    try {
+                        while(!(up || down || left || right)) {
+                            mvWait = true;
+                            Thread.sleep(500);
+                        }
+                        if(mvWait) {
+                            mvWait = false;
+                            Thread.sleep(200);
+                        }
+                        
+                        Thread.sleep(50);
+                        
+                        if(up && selected != -1 && (map[selected - WIDTH] == '.' || Blocks.isWater(map[selected - WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
+                            map[selected - WIDTH] = map[selected];
+                            
+                            if(!Blocks.isEraser(map[selected]))
+                                map[selected] = '.';
+                            else
+                                setBlock(selected, '.');
+                            
+                            selected -= WIDTH;
+                        }
+                        if(down && selected != -1 && (map[selected + WIDTH] == '.' || Blocks.isWater(map[selected + WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
+                            map[selected + WIDTH] = map[selected];
+                            
+                            if(!Blocks.isEraser(map[selected]))
+                                map[selected] = '.';
+                            else
+                                setBlock(selected, '.');
+                            
+                            selected += WIDTH;
+                        }
+                        if(left && selected != -1 && (map[selected - 1] == '.' || Blocks.isWater(map[selected - 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
+                            map[selected - 1] = map[selected];
+                            
+                            if(!Blocks.isEraser(map[selected]))
+                                map[selected] = '.';
+                            else
+                                setBlock(selected, '.');
+                            
+                            selected--;
+                        }
+                        if(right && selected != -1 && (map[selected + 1] == '.' || Blocks.isWater(map[selected + 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
+                            map[selected + 1] = map[selected];
+                            
+                            if(!Blocks.isEraser(map[selected]))
+                                map[selected] = '.';
+                            else
+                                setBlock(selected, '.');
+                            
+                            selected++;
+                        }
+                        
+                        if(selected == -1) {
+                            if(up)    cameraStart -= WIDTH;
+                            if(down)  cameraStart += WIDTH;
+                            if(left)  cameraStart--;
+                            if(right) cameraStart++;
+                        }
+                    } catch(Exception ex) {}
+                }
+            }
+        }.start();
         
         /* обновление света */
         new Thread() {
