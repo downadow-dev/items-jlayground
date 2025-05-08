@@ -48,13 +48,14 @@ public class Main implements ApplicationListener {
         fireBtnTexture, fire2BtnTexture, boomBtnTexture, delBoomBtnTexture,
         nightBtnTexture, rainBtnTexture, slowBtnTexture, uiBtnTexture,
         qBtnTexture, eBtnTexture, moreBtnTexture, bgColorBtnTexture,
-        programmingModeBtnTexture, chatBtnTexture, phBtnTexture;
+        programmingModeBtnTexture, chatBtnTexture, phBtnTexture,
+        activatedTexture, unactivatedTexture;
     Texture[] boomTextures, rainTextures;
     String text;
     boolean done, retval;
     String[] rpList;
     String root;
-    int selectedRp = -1;
+    int selectedRp = 0;
     boolean up = false, down = false, left = false, right = false;
     
     /* ширина и высота карты в объектах */
@@ -133,6 +134,8 @@ public class Main implements ApplicationListener {
         pricelTexture = new Texture("pricel.png");
         rightTexture = new Texture("right.png");
         leftTexture = new Texture("left.png");
+        activatedTexture = new Texture("activated.png");
+        unactivatedTexture = new Texture("unactivated.png");
         portal0Texture = new Texture("portal0.png");
         portal1Texture = new Texture("portal1.png");
         rainTextures = new Texture[] {new Texture("rain0.png"), new Texture("rain1.png"),
@@ -351,7 +354,7 @@ public class Main implements ApplicationListener {
                             /* изменение цвета фона */
                             else if(key == Input.Keys.F3) {
                                 colorPointer++;
-                                if(colorPointer == 5)
+                                if(colorPointer == 6)
                                     colorPointer = 0;
                                 
                                 if(colorPointer == 0) {
@@ -374,6 +377,10 @@ public class Main implements ApplicationListener {
                                     bgColorRed = 160;
                                     bgColorGreen = 160;
                                     bgColorBlue = 255;
+                                } else if(colorPointer == 5) {
+                                    bgColorRed = 130;
+                                    bgColorGreen = 90;
+                                    bgColorBlue = 190;
                                 }
                                 
                                 return true;
@@ -1126,6 +1133,10 @@ public class Main implements ApplicationListener {
                             batch.draw(portal0Texture, ii * Blocks.defaultW, 728 - ((i + 1) * Blocks.defaultH), Blocks.defaultW, Blocks.defaultH * 2);
                         } else if(map[iii] == 'P') {
                             batch.draw(portal1Texture, ii * Blocks.defaultW, 728 - ((i + 1) * Blocks.defaultH), Blocks.defaultW, Blocks.defaultH * 2);
+                        } else if(map[iii] == '%') {
+                            batch.draw(activatedTexture, ii * Blocks.defaultW, 728 - ((i + 1) * Blocks.defaultH), Blocks.defaultW, Blocks.defaultH);
+                        } else if(map[iii] == '—') {
+                            batch.draw(unactivatedTexture, ii * Blocks.defaultW, 728 - ((i + 1) * Blocks.defaultH), Blocks.defaultW, Blocks.defaultH);
                         } else if(Blocks.isUnknown(map[iii])) {
                             font.getData().setScale(2f);
                             font.draw(batch, "" + map[iii], ii * Blocks.defaultW + Blocks.defaultW / 4, 728 - (i + 1) * Blocks.defaultH);
@@ -1781,6 +1792,72 @@ public class Main implements ApplicationListener {
                 public void run() {
                     while(true) {
                         try {
+                            /* логика активаторов */
+                            for(int i = WIDTH; i < map.length - WIDTH; i++) {
+                                if(map[i] == '%' && map[i - WIDTH] == '—')
+                                    map[i - WIDTH] = '%';
+                                if(map[i] == '%' && map[i + WIDTH] == '—')
+                                    map[i + WIDTH] = '%';
+                                if(map[i] == '%' && map[i + 1] == '—')
+                                    map[i + 1] = '%';
+                                if(map[i] == '%' && map[i - 1] == '—')
+                                    map[i - 1] = '%';
+                                
+                                if(map[i] == '%' && map[i - WIDTH] != '.' && map[i - WIDTH] != '%') {
+                                    char old = map[i - WIDTH];
+                                    
+                                    if(Blocks.getLeftC(map[i - WIDTH]) == map[i - WIDTH])
+                                        map[i - WIDTH] = Blocks.getRightC(map[i - WIDTH]);
+                                    else if(Blocks.getRightC(map[i - WIDTH]) == map[i - WIDTH])
+                                        map[i - WIDTH] = Blocks.getLeftC(map[i - WIDTH]);
+                                    
+                                    if(map[i - WIDTH] != old)
+                                        map[i] = '—';
+                                }
+                                if(map[i] == '%' && map[i + WIDTH] != '.' && map[i + WIDTH] != '%') {
+                                    char old = map[i + WIDTH];
+                                    
+                                    if(Blocks.getLeftC(map[i + WIDTH]) == map[i + WIDTH])
+                                        map[i + WIDTH] = Blocks.getRightC(map[i + WIDTH]);
+                                    else if(Blocks.getRightC(map[i + WIDTH]) == map[i + WIDTH])
+                                        map[i + WIDTH] = Blocks.getLeftC(map[i + WIDTH]);
+                                    
+                                    if(map[i + WIDTH] != old)
+                                        map[i] = '—';
+                                }
+                                if(map[i] == '%' && map[i - 1] != '.' && map[i - 1] != '%') {
+                                    char old = map[i - 1];
+                                    
+                                    if(Blocks.getLeftC(map[i - 1]) == map[i - 1])
+                                        map[i - 1] = Blocks.getRightC(map[i - 1]);
+                                    else if(Blocks.getRightC(map[i - 1]) == map[i - 1])
+                                        map[i - 1] = Blocks.getLeftC(map[i - 1]);
+                                    
+                                    if(map[i - 1] != old)
+                                        map[i] = '—';
+                                }
+                                if(map[i] == '%' && map[i + 1] != '.' && map[i + 1] != '%') {
+                                    char old = map[i + 1];
+                                    
+                                    if(Blocks.getLeftC(map[i + 1]) == map[i + 1])
+                                        map[i + 1] = Blocks.getRightC(map[i + 1]);
+                                    else if(Blocks.getRightC(map[i + 1]) == map[i + 1])
+                                        map[i + 1] = Blocks.getLeftC(map[i + 1]);
+                                    
+                                    if(map[i + 1] != old)
+                                        map[i] = '—';
+                                }
+                            }
+                            Thread.sleep(40);
+                        } catch(Exception ex) {}
+                    }
+                }
+            }.start();
+            
+            new Thread() {
+                public void run() {
+                    while(true) {
+                        try {
                             for(int i = map.length - WIDTH; i > WIDTH; i--) {
                                 if(ph) {
                                     if(selected == -1 && Blocks.isFallen(map[i]) && (map[i + WIDTH] == '.' || Blocks.isWater(map[i + WIDTH]) ||
@@ -1955,7 +2032,7 @@ public class Main implements ApplicationListener {
                                 Net.HttpRequest rq;
                                 
                                 String m = "";
-                                for(byte c : cmsg.getBytes("UTF-8")) {
+                                for(byte c : cmsg.getBytes(java.nio.charset.StandardCharsets.UTF_8)) {
                                     if(c == (byte)' ') m += "+";
                                     else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_' || c == '-') m += "" + (char)c;
                                     else {
@@ -2036,8 +2113,23 @@ public class Main implements ApplicationListener {
                                         behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
                                     }
                                     /* no_sel */
-                                    else if(behaviorSplitted[i].split(":")[0].equals("no_sel")) {
+                                    else if(behaviorSplitted[i].equals("no_sel")) {
                                         behaviorSelected = 0;
+                                    }
+                                    /* find */
+                                    else if(behaviorSplitted[i].split(":")[0].equals("find") && behaviorSelected == 0) {
+                                        char need = behaviorSplitted[i].split(":")[1].toCharArray()[0];
+                                        
+                                        findLoop:
+                                        while(true) {
+                                            for(int j = 0; j < map.length; j++) {
+                                                if(map[j] == need) {
+                                                    behaviorSelected = j;
+                                                    break findLoop;
+                                                }
+                                            }
+                                            Thread.sleep(40);
+                                        }
                                     }
                                     /* перемещение */
                                     else if(behaviorSplitted[i].equals("up")) {

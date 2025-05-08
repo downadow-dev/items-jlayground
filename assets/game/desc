@@ -12,8 +12,8 @@ type:simple c:CCc texture:car1.png translucent fallen x:-50 y:-16 w:150 h:66
 
 type:simple c:qQq texture:car2_0.png translucent fallen x:-60 y:-24 w:160 h:74
 type:simple c:QQq texture:car2_1.png translucent fallen x:-60 y:-24 w:160 h:74
-# "бомба"
-type:simple c:" texture:bomb.png y:-50 h:100 fallen fire_resistant
+# оранжевый блок
+type:simple c:" texture:orange.png fire_resistant
 # стул
 type:simple c:mmM texture:l_stul.png translucent y:-50 h:100 fallen
 type:simple c:MmM texture:r_stul.png translucent y:-50 h:100 fallen
