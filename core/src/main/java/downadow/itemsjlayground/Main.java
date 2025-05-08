@@ -170,6 +170,12 @@ public class Main implements ApplicationListener {
             public boolean keyDown(int key) {
                 if(scene == S_GAME) {
                     try {
+                        if(selected != -1 && (map[selected] == '.' || Blocks.isWater(map[selected]))) {
+                            if(Blocks.isWater(map[selected]) && gameState != 2)
+                                noWater = true;
+                            selected = -1;
+                        }
+                        
                         if(select)
                             return false;
                         /* "прыжок" */
@@ -263,12 +269,30 @@ public class Main implements ApplicationListener {
                         }
                         
                         if(!programmingMode && !writeMessage) {
-                            if(key == Input.Keys.O) {
-                                cameraStart -= 8;
+                            if(key == Input.Keys.O && selected == -1) {
+                                cameraStart--;
                                 return true;
-                            } else if(key == Input.Keys.P) {
-                                cameraStart += 8;
+                            } else if(key == Input.Keys.O && (map[selected - 1] == '.' || Blocks.isWater(map[selected - 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
+                                map[selected - 1] = map[selected];
+                                
+                                if(!Blocks.isEraser(map[selected]))
+                                    map[selected] = '.';
+                                else
+                                    setBlock(selected, '.');
+                                
+                                selected--;
+                            } else if(key == Input.Keys.P && selected == -1) {
+                                cameraStart++;
                                 return true;
+                            } else if(key == Input.Keys.P && (map[selected + 1] == '.' || Blocks.isWater(map[selected + 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
+                                map[selected + 1] = map[selected];
+                                
+                                if(!Blocks.isEraser(map[selected]))
+                                    map[selected] = '.';
+                                else
+                                    setBlock(selected, '.');
+                                
+                                selected++;
                             } else if(key == Input.Keys.F1) {
                                 help = !help;
                                 return true;
@@ -968,9 +992,9 @@ public class Main implements ApplicationListener {
                 
                 batch.draw(blackTexture, 0, 0, 1200, 728);
                 font.getData().setScale(0.65f);
-                font.draw(batch, "Items Jlayground — это свободная игра-песочница, в которой игроку", 10, 680);
-                font.draw(batch, "предоставляется свобода строить, разрушать, программировать, взрывать,", 10, 660);
-                font.draw(batch, "летать на вертолёте, стрелять из танка и другое.  Игра написана на Java", 10, 640);
+                font.draw(batch, "Items Jlayground — это свободная игра-песочница, в которой игрок", 10, 680);
+                font.draw(batch, "способен строить, разрушать, программировать, взрывать, летать", 10, 660);
+                font.draw(batch, "на вертолёте, стрелять из танка и другое.  Игра написана на Java", 10, 640);
                 font.draw(batch, "с использованием LibGDX.  Items Jlayground поддерживает многопользова-", 10, 620);
                 font.draw(batch, "тельскую игру.  Автор игры — downadow.", 10, 600);
                 
@@ -1989,12 +2013,6 @@ public class Main implements ApplicationListener {
             public void run() {
                 while(true) {
                     try {
-                        if(selected != -1 && (map[selected] == '.' || Blocks.isWater(map[selected]))) {
-                            if(Blocks.isWater(map[selected]) && gameState != 2)
-                                noWater = true;
-                            selected = -1;
-                        }
-                        
                         if(selected != -1)
                             cameraStart = selected - (selectedBlockAddr() - cameraStart);
                         
