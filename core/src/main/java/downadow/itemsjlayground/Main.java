@@ -48,8 +48,7 @@ public class Main implements ApplicationListener {
         fireBtnTexture, fire2BtnTexture, boomBtnTexture, delBoomBtnTexture,
         nightBtnTexture, rainBtnTexture, slowBtnTexture, uiBtnTexture,
         qBtnTexture, eBtnTexture, moreBtnTexture, bgColorBtnTexture,
-        programmingModeBtnTexture, chatBtnTexture, phBtnTexture,
-        activatedTexture, unactivatedTexture;
+        programmingModeBtnTexture, chatBtnTexture, phBtnTexture;
     Texture[] boomTextures, rainTextures;
     String text;
     boolean done, retval;
@@ -81,7 +80,6 @@ public class Main implements ApplicationListener {
     private boolean programmingMode = false;
     
     private String behavior = "", cmsg = "", selectNumber = "";
-    private int behaviorSelected = 0;
     
     private boolean ui = true;
     /* блокировка управления */
@@ -134,8 +132,6 @@ public class Main implements ApplicationListener {
         pricelTexture = new Texture("pricel.png");
         rightTexture = new Texture("right.png");
         leftTexture = new Texture("left.png");
-        activatedTexture = new Texture("activated.png");
-        unactivatedTexture = new Texture("unactivated.png");
         portal0Texture = new Texture("portal0.png");
         portal1Texture = new Texture("portal1.png");
         rainTextures = new Texture[] {new Texture("rain0.png"), new Texture("rain1.png"),
@@ -1157,10 +1153,6 @@ public class Main implements ApplicationListener {
                             batch.draw(portal0Texture, ii * Blocks.defaultW, 728 - ((i + 1) * Blocks.defaultH), Blocks.defaultW, Blocks.defaultH * 2);
                         } else if(map[iii] == 'P') {
                             batch.draw(portal1Texture, ii * Blocks.defaultW, 728 - ((i + 1) * Blocks.defaultH), Blocks.defaultW, Blocks.defaultH * 2);
-                        } else if(map[iii] == '%') {
-                            batch.draw(activatedTexture, ii * Blocks.defaultW, 728 - ((i + 1) * Blocks.defaultH), Blocks.defaultW, Blocks.defaultH);
-                        } else if(map[iii] == '—') {
-                            batch.draw(unactivatedTexture, ii * Blocks.defaultW, 728 - ((i + 1) * Blocks.defaultH), Blocks.defaultW, Blocks.defaultH);
                         } else if(Blocks.isUnknown(map[iii])) {
                             font.getData().setScale(2f);
                             font.draw(batch, "" + map[iii], ii * Blocks.defaultW + Blocks.defaultW / 4, 728 - (i + 1) * Blocks.defaultH);
@@ -1816,72 +1808,6 @@ public class Main implements ApplicationListener {
                 public void run() {
                     while(true) {
                         try {
-                            /* логика активаторов */
-                            for(int i = WIDTH; i < map.length - WIDTH; i++) {
-                                if(map[i] == '%' && map[i - WIDTH] == '—')
-                                    map[i - WIDTH] = '%';
-                                if(map[i] == '%' && map[i + WIDTH] == '—')
-                                    map[i + WIDTH] = '%';
-                                if(map[i] == '%' && map[i + 1] == '—')
-                                    map[i + 1] = '%';
-                                if(map[i] == '%' && map[i - 1] == '—')
-                                    map[i - 1] = '%';
-                                
-                                if(map[i] == '%' && map[i - WIDTH] != '.' && map[i - WIDTH] != '%') {
-                                    char old = map[i - WIDTH];
-                                    
-                                    if(Blocks.getLeftC(map[i - WIDTH]) == map[i - WIDTH])
-                                        map[i - WIDTH] = Blocks.getRightC(map[i - WIDTH]);
-                                    else if(Blocks.getRightC(map[i - WIDTH]) == map[i - WIDTH])
-                                        map[i - WIDTH] = Blocks.getLeftC(map[i - WIDTH]);
-                                    
-                                    if(map[i - WIDTH] != old)
-                                        map[i] = '—';
-                                }
-                                if(map[i] == '%' && map[i + WIDTH] != '.' && map[i + WIDTH] != '%') {
-                                    char old = map[i + WIDTH];
-                                    
-                                    if(Blocks.getLeftC(map[i + WIDTH]) == map[i + WIDTH])
-                                        map[i + WIDTH] = Blocks.getRightC(map[i + WIDTH]);
-                                    else if(Blocks.getRightC(map[i + WIDTH]) == map[i + WIDTH])
-                                        map[i + WIDTH] = Blocks.getLeftC(map[i + WIDTH]);
-                                    
-                                    if(map[i + WIDTH] != old)
-                                        map[i] = '—';
-                                }
-                                if(map[i] == '%' && map[i - 1] != '.' && map[i - 1] != '%') {
-                                    char old = map[i - 1];
-                                    
-                                    if(Blocks.getLeftC(map[i - 1]) == map[i - 1])
-                                        map[i - 1] = Blocks.getRightC(map[i - 1]);
-                                    else if(Blocks.getRightC(map[i - 1]) == map[i - 1])
-                                        map[i - 1] = Blocks.getLeftC(map[i - 1]);
-                                    
-                                    if(map[i - 1] != old)
-                                        map[i] = '—';
-                                }
-                                if(map[i] == '%' && map[i + 1] != '.' && map[i + 1] != '%') {
-                                    char old = map[i + 1];
-                                    
-                                    if(Blocks.getLeftC(map[i + 1]) == map[i + 1])
-                                        map[i + 1] = Blocks.getRightC(map[i + 1]);
-                                    else if(Blocks.getRightC(map[i + 1]) == map[i + 1])
-                                        map[i + 1] = Blocks.getLeftC(map[i + 1]);
-                                    
-                                    if(map[i + 1] != old)
-                                        map[i] = '—';
-                                }
-                            }
-                            Thread.sleep(40);
-                        } catch(Exception ex) {}
-                    }
-                }
-            }.start();
-            
-            new Thread() {
-                public void run() {
-                    while(true) {
-                        try {
                             for(int i = map.length - WIDTH; i > WIDTH; i--) {
                                 if(ph) {
                                     if(selected == -1 && Blocks.isFallen(map[i]) && (map[i + WIDTH] == '.' || Blocks.isWater(map[i + WIDTH]) ||
@@ -2114,188 +2040,201 @@ public class Main implements ApplicationListener {
             }.start();
             
             /* выполнение поведения */
-            new Thread() {
-                public void run() {
-                    while(true) {
-                        try {
-                            if(!behavior.isEmpty() && ph) {
-                                String[] behaviorSplitted = behavior.split(" ");
-                                
-                                for(int i = 0; i < behaviorSplitted.length; i++) {
-                                    behaviorSplitted[i] = behaviorSplitted[i].replace("selected", "" + (selected != -1 ? selected : selectedBlockAddr()));
-                                    
-                                    if(behaviorSplitted[i].isEmpty())
+            for(int thread = 0; thread < 4; thread++) {
+                final int thrd = thread;
+                new Thread() {
+                    public void run() {
+                        int behaviorSelected = 0;
+                        while(true) {
+                            try {
+                                if(!behavior.isEmpty() && ph && !programmingMode) {
+                                    if(behavior.split(" | ").length <= thrd) {
+                                        Thread.sleep(500);
                                         continue;
-                                    /* sel */
-                                    else if(behaviorSplitted[i].split(":")[0].equals("sel") && behaviorSelected == 0) {
-                                        behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
                                     }
-                                    /* no_sel */
-                                    else if(behaviorSplitted[i].equals("no_sel")) {
-                                        behaviorSelected = 0;
-                                    }
-                                    /* find */
-                                    else if(behaviorSplitted[i].split(":")[0].equals("find") && behaviorSelected == 0) {
-                                        char need = behaviorSplitted[i].split(":")[1].toCharArray()[0];
+                                    
+                                    String[] behaviorSplitted = behavior.split(" \\| ")[thrd].split(" ");
+                                    
+                                    for(int i = 0; i < behaviorSplitted.length; i++) {
+                                        behaviorSplitted[i] = behaviorSplitted[i].replace("selected", "" + (selected != -1 ? selected : selectedBlockAddr()));
                                         
-                                        findLoop:
-                                        while(true) {
-                                            for(int j = 0; j < map.length; j++) {
-                                                if(map[j] == need) {
-                                                    behaviorSelected = j;
-                                                    break findLoop;
-                                                }
-                                            }
-                                            Thread.sleep(40);
+                                        if(behaviorSplitted[i].isEmpty())
+                                            continue;
+                                        /* sel */
+                                        else if(behaviorSplitted[i].split(":")[0].equals("sel") && behaviorSelected == 0) {
+                                            behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
                                         }
-                                    }
-                                    /* перемещение */
-                                    else if(behaviorSplitted[i].equals("up")) {
-                                        map[behaviorSelected - WIDTH] = map[behaviorSelected];
-                                        map[behaviorSelected] = '.';
-                                        behaviorSelected -= WIDTH;
-                                    } else if(behaviorSplitted[i].equals("down")) {
-                                        map[behaviorSelected + WIDTH] = map[behaviorSelected];
-                                        map[behaviorSelected] = '.';
-                                        behaviorSelected += WIDTH;
-                                    } else if(behaviorSplitted[i].equals("right")) {
-                                        map[behaviorSelected + 1] = map[behaviorSelected];
-                                        map[behaviorSelected] = '.';
-                                        behaviorSelected++;
-                                    } else if(behaviorSplitted[i].equals("left")) {
-                                        map[behaviorSelected - 1] = map[behaviorSelected];
-                                        map[behaviorSelected] = '.';
-                                        behaviorSelected--;
-                                    } else if(behaviorSplitted[i].equals("up:lift")) {
-                                        map[behaviorSelected - WIDTH * 2] = map[behaviorSelected - WIDTH];
-                                        map[behaviorSelected - WIDTH] = map[behaviorSelected];
-                                        map[behaviorSelected] = '.';
-                                        behaviorSelected -= WIDTH;
-                                    } else if(behaviorSplitted[i].equals("down:lift")) {
-                                        map[behaviorSelected + WIDTH * 2] = map[behaviorSelected + WIDTH];
-                                        map[behaviorSelected + WIDTH] = map[behaviorSelected];
-                                        map[behaviorSelected] = '.';
-                                        behaviorSelected += WIDTH;
-                                    } else if(behaviorSplitted[i].equals("right:lift")) {
-                                        map[behaviorSelected + 2] = map[behaviorSelected + 1];
-                                        map[behaviorSelected + 1] = map[behaviorSelected];
-                                        map[behaviorSelected] = '.';
-                                        behaviorSelected++;
-                                    } else if(behaviorSplitted[i].equals("left:lift")) {
-                                        map[behaviorSelected - 2] = map[behaviorSelected - 1];
-                                        map[behaviorSelected - 1] = map[behaviorSelected];
-                                        map[behaviorSelected] = '.';
-                                        behaviorSelected--;
-                                    } else if(behaviorSplitted[i].equals("up:copy")) {
-                                        map[behaviorSelected - WIDTH] = map[behaviorSelected];
-                                        behaviorSelected -= WIDTH;
-                                    } else if(behaviorSplitted[i].equals("down:copy")) {
-                                        map[behaviorSelected + WIDTH] = map[behaviorSelected];
-                                        behaviorSelected += WIDTH;
-                                    } else if(behaviorSplitted[i].equals("right:copy")) {
-                                        map[behaviorSelected + 1] = map[behaviorSelected];
-                                        behaviorSelected++;
-                                    } else if(behaviorSplitted[i].equals("left:copy")) {
-                                        map[behaviorSelected - 1] = map[behaviorSelected];
-                                        behaviorSelected--;
-                                    }
-                                    /* fire, fire2 и boom */
-                                    else if(behaviorSplitted[i].split(":")[0].equals("fire")) {
-                                        fire(behaviorSelected);
-                                    } else if(behaviorSplitted[i].split(":")[0].equals("fire2")) {
-                                        fire2(behaviorSelected);
-                                    } else if(behaviorSplitted[i].split(":")[0].equals("boom")) {
-                                        boom(behaviorSelected);
-                                    }
-                                    /* set */
-                                    else if(behaviorSplitted[i].split(":")[0].equals("set")) {
-                                        map[behaviorSelected] = behaviorSplitted[i].split(":")[1].toCharArray()[0];
-                                    }
-                                    /* ~<...> */
-                                    else if(behaviorSplitted[i].startsWith("~")) {
-                                        Thread.sleep(!slow ? Integer.parseInt(behaviorSplitted[i].replace("~", "")) : Integer.parseInt(behaviorSplitted[i].replace("~", "")) * 2);
-                                    }
-                                    /* wait */
-                                    else if(behaviorSplitted[i].equals("wait:up")) {
-                                        while(map[behaviorSelected - WIDTH] == '.' && !behavior.isEmpty())
-                                            Thread.sleep(40);
-                                    } else if(behaviorSplitted[i].equals("wait:down")) {
-                                        while(map[behaviorSelected + WIDTH] == '.' && !behavior.isEmpty())
-                                            Thread.sleep(40);
-                                    } else if(behaviorSplitted[i].equals("wait:right")) {
-                                        while(map[behaviorSelected + 1] == '.' && !behavior.isEmpty())
-                                            Thread.sleep(40);
-                                    } else if(behaviorSplitted[i].equals("wait:left")) {
-                                        while(map[behaviorSelected - 1] == '.' && !behavior.isEmpty())
-                                            Thread.sleep(40);
-                                    } else if(behaviorSplitted[i].equals("wait:light")) {
-                                        while(!lightMap[behaviorSelected] &&
-                                              !lightMap[behaviorSelected - 1] &&
-                                              !lightMap[behaviorSelected + 1] &&
-                                              !lightMap[behaviorSelected - WIDTH] &&
-                                              !lightMap[behaviorSelected + WIDTH] &&
-                                              !behavior.isEmpty())
-                                            Thread.sleep(40);
-                                    } else if(behaviorSplitted[i].equals("wait")) {
-                                        while(map[behaviorSelected - 1] == '.'     &&
-                                              map[behaviorSelected + 1] == '.'     &&
-                                              map[behaviorSelected + WIDTH] == '.' &&
-                                              map[behaviorSelected - WIDTH] == '.' && !behavior.isEmpty())
-                                            Thread.sleep(40);
-                                    }
-                                    /* tp */
-                                    else if(behaviorSplitted[i].startsWith("tp:")) {
-                                        map[Integer.parseInt(behaviorSplitted[i].split(":")[1])] = map[behaviorSelected];
-                                        map[behaviorSelected] = '.';
-                                        behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
-                                    }
-                                    /* step */
-                                    else if(behaviorSplitted[i].startsWith("step:")) {
-                                        int delay  = Integer.parseInt(behaviorSplitted[i].split(":")[2]),
-                                            target = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
-                                        
-                                        while(behaviorSelected != target && !behavior.isEmpty()) {
-                                            if(behaviorSelected / WIDTH < target / WIDTH && map[behaviorSelected + WIDTH] == '.') {
-                                                map[behaviorSelected + WIDTH] = map[behaviorSelected];
-                                                map[behaviorSelected] = '.';
-                                                behaviorSelected += WIDTH;
-                                            } else if(behaviorSelected / WIDTH < target / WIDTH && map[behaviorSelected + WIDTH] != '.') {
-                                                break;
-                                            } else if(behaviorSelected / WIDTH > target / WIDTH && map[behaviorSelected - WIDTH] == '.') {
-                                                map[behaviorSelected - WIDTH] = map[behaviorSelected];
-                                                map[behaviorSelected] = '.';
-                                                behaviorSelected -= WIDTH;
-                                            } else if(behaviorSelected / WIDTH > target / WIDTH && map[behaviorSelected - WIDTH] != '.') {
-                                                break;
-                                            }
+                                        /* no_sel */
+                                        else if(behaviorSplitted[i].equals("no_sel")) {
+                                            behaviorSelected = 0;
+                                        }
+                                        /* find */
+                                        else if(behaviorSplitted[i].split(":")[0].equals("find") && behaviorSelected == 0) {
+                                            char need = behaviorSplitted[i].split(":")[1].toCharArray()[0];
                                             
-                                            if(behaviorSelected % WIDTH < target % WIDTH && map[behaviorSelected + 1] == '.') {
-                                                map[behaviorSelected + 1] = map[behaviorSelected];
-                                                map[behaviorSelected] = '.';
-                                                behaviorSelected++;
-                                            } else if(behaviorSelected % WIDTH < target % WIDTH && map[behaviorSelected + 1] != '.') {
-                                                break;
-                                            } else if(behaviorSelected % WIDTH > target % WIDTH && map[behaviorSelected - 1] == '.') {
-                                                map[behaviorSelected - 1] = map[behaviorSelected];
-                                                map[behaviorSelected] = '.';
-                                                behaviorSelected--;
-                                            } else if(behaviorSelected % WIDTH > target % WIDTH && map[behaviorSelected - 1] != '.') {
-                                                break;
+                                            findLoop:
+                                            while(!behavior.isEmpty() && ph && !programmingMode) {
+                                                for(int j = 0; j < map.length; j++) {
+                                                    if(map[j] == need) {
+                                                        behaviorSelected = j;
+                                                        break findLoop;
+                                                    }
+                                                }
+                                                Thread.sleep(40);
                                             }
+                                        }
+                                        /* перемещение */
+                                        else if(behaviorSplitted[i].equals("up")) {
+                                            map[behaviorSelected - WIDTH] = map[behaviorSelected];
+                                            map[behaviorSelected] = '.';
+                                            behaviorSelected -= WIDTH;
+                                        } else if(behaviorSplitted[i].equals("down")) {
+                                            map[behaviorSelected + WIDTH] = map[behaviorSelected];
+                                            map[behaviorSelected] = '.';
+                                            behaviorSelected += WIDTH;
+                                        } else if(behaviorSplitted[i].equals("right")) {
+                                            map[behaviorSelected + 1] = map[behaviorSelected];
+                                            map[behaviorSelected] = '.';
+                                            behaviorSelected++;
+                                        } else if(behaviorSplitted[i].equals("left")) {
+                                            map[behaviorSelected - 1] = map[behaviorSelected];
+                                            map[behaviorSelected] = '.';
+                                            behaviorSelected--;
+                                        } else if(behaviorSplitted[i].equals("up:lift")) {
+                                            map[behaviorSelected - WIDTH * 2] = map[behaviorSelected - WIDTH];
+                                            map[behaviorSelected - WIDTH] = map[behaviorSelected];
+                                            map[behaviorSelected] = '.';
+                                            behaviorSelected -= WIDTH;
+                                        } else if(behaviorSplitted[i].equals("down:lift")) {
+                                            map[behaviorSelected + WIDTH * 2] = map[behaviorSelected + WIDTH];
+                                            map[behaviorSelected + WIDTH] = map[behaviorSelected];
+                                            map[behaviorSelected] = '.';
+                                            behaviorSelected += WIDTH;
+                                        } else if(behaviorSplitted[i].equals("right:lift")) {
+                                            map[behaviorSelected + 2] = map[behaviorSelected + 1];
+                                            map[behaviorSelected + 1] = map[behaviorSelected];
+                                            map[behaviorSelected] = '.';
+                                            behaviorSelected++;
+                                        } else if(behaviorSplitted[i].equals("left:lift")) {
+                                            map[behaviorSelected - 2] = map[behaviorSelected - 1];
+                                            map[behaviorSelected - 1] = map[behaviorSelected];
+                                            map[behaviorSelected] = '.';
+                                            behaviorSelected--;
+                                        } else if(behaviorSplitted[i].equals("up:copy")) {
+                                            map[behaviorSelected - WIDTH] = map[behaviorSelected];
+                                            behaviorSelected -= WIDTH;
+                                        } else if(behaviorSplitted[i].equals("down:copy")) {
+                                            map[behaviorSelected + WIDTH] = map[behaviorSelected];
+                                            behaviorSelected += WIDTH;
+                                        } else if(behaviorSplitted[i].equals("right:copy")) {
+                                            map[behaviorSelected + 1] = map[behaviorSelected];
+                                            behaviorSelected++;
+                                        } else if(behaviorSplitted[i].equals("left:copy")) {
+                                            map[behaviorSelected - 1] = map[behaviorSelected];
+                                            behaviorSelected--;
+                                        }
+                                        /* fire, fire2 и boom */
+                                        else if(behaviorSplitted[i].split(":")[0].equals("fire")) {
+                                            fire(behaviorSelected);
+                                        } else if(behaviorSplitted[i].split(":")[0].equals("fire2")) {
+                                            fire2(behaviorSelected);
+                                        } else if(behaviorSplitted[i].split(":")[0].equals("boom")) {
+                                            boom(behaviorSelected);
+                                        }
+                                        /* set */
+                                        else if(behaviorSplitted[i].split(":")[0].equals("set")) {
+                                            map[behaviorSelected] = behaviorSplitted[i].split(":")[1].toCharArray()[0];
+                                        }
+                                        /* setn */
+                                        else if(behaviorSplitted[i].split(":")[0].equals("setn")) {
+                                            map[behaviorSelected] = (char)Integer.parseInt(behaviorSplitted[i].split(":")[1]);
+                                        }
+                                        /* ~<...> */
+                                        else if(behaviorSplitted[i].startsWith("~")) {
+                                            Thread.sleep(!slow ? Integer.parseInt(behaviorSplitted[i].replace("~", "")) : Integer.parseInt(behaviorSplitted[i].replace("~", "")) * 2);
+                                        }
+                                        /* wait */
+                                        else if(behaviorSplitted[i].equals("wait:up")) {
+                                            while(map[behaviorSelected - WIDTH] == '.' && (!behavior.isEmpty() && ph && !programmingMode))
+                                                Thread.sleep(40);
+                                        } else if(behaviorSplitted[i].equals("wait:down")) {
+                                            while(map[behaviorSelected + WIDTH] == '.' && (!behavior.isEmpty() && ph && !programmingMode))
+                                                Thread.sleep(40);
+                                        } else if(behaviorSplitted[i].equals("wait:right")) {
+                                            while(map[behaviorSelected + 1] == '.' && (!behavior.isEmpty() && ph && !programmingMode))
+                                                Thread.sleep(40);
+                                        } else if(behaviorSplitted[i].equals("wait:left")) {
+                                            while(map[behaviorSelected - 1] == '.' && (!behavior.isEmpty() && ph && !programmingMode))
+                                                Thread.sleep(40);
+                                        } else if(behaviorSplitted[i].equals("wait:light")) {
+                                            while(!lightMap[behaviorSelected] &&
+                                                  !lightMap[behaviorSelected - 1] &&
+                                                  !lightMap[behaviorSelected + 1] &&
+                                                  !lightMap[behaviorSelected - WIDTH] &&
+                                                  !lightMap[behaviorSelected + WIDTH] &&
+                                                  (!behavior.isEmpty() && ph && !programmingMode))
+                                                Thread.sleep(40);
+                                        } else if(behaviorSplitted[i].equals("wait")) {
+                                            while(map[behaviorSelected - 1] == '.'     &&
+                                                  map[behaviorSelected + 1] == '.'     &&
+                                                  map[behaviorSelected + WIDTH] == '.' &&
+                                                  map[behaviorSelected - WIDTH] == '.' && (!behavior.isEmpty() && ph && !programmingMode))
+                                                Thread.sleep(40);
+                                        }
+                                        /* tp */
+                                        else if(behaviorSplitted[i].startsWith("tp:")) {
+                                            map[Integer.parseInt(behaviorSplitted[i].split(":")[1])] = map[behaviorSelected];
+                                            map[behaviorSelected] = '.';
+                                            behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
+                                        }
+                                        /* step */
+                                        else if(behaviorSplitted[i].startsWith("step:")) {
+                                            int delay  = Integer.parseInt(behaviorSplitted[i].split(":")[2]),
+                                                target = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
                                             
-                                            Thread.sleep((long)delay);
+                                            while(behaviorSelected != target && (!behavior.isEmpty() && ph && !programmingMode)) {
+                                                if(behaviorSelected / WIDTH < target / WIDTH && map[behaviorSelected + WIDTH] == '.') {
+                                                    map[behaviorSelected + WIDTH] = map[behaviorSelected];
+                                                    map[behaviorSelected] = '.';
+                                                    behaviorSelected += WIDTH;
+                                                } else if(behaviorSelected / WIDTH < target / WIDTH && map[behaviorSelected + WIDTH] != '.') {
+                                                    break;
+                                                } else if(behaviorSelected / WIDTH > target / WIDTH && map[behaviorSelected - WIDTH] == '.') {
+                                                    map[behaviorSelected - WIDTH] = map[behaviorSelected];
+                                                    map[behaviorSelected] = '.';
+                                                    behaviorSelected -= WIDTH;
+                                                } else if(behaviorSelected / WIDTH > target / WIDTH && map[behaviorSelected - WIDTH] != '.') {
+                                                    break;
+                                                }
+                                                
+                                                if(behaviorSelected % WIDTH < target % WIDTH && map[behaviorSelected + 1] == '.') {
+                                                    map[behaviorSelected + 1] = map[behaviorSelected];
+                                                    map[behaviorSelected] = '.';
+                                                    behaviorSelected++;
+                                                } else if(behaviorSelected % WIDTH < target % WIDTH && map[behaviorSelected + 1] != '.') {
+                                                    break;
+                                                } else if(behaviorSelected % WIDTH > target % WIDTH && map[behaviorSelected - 1] == '.') {
+                                                    map[behaviorSelected - 1] = map[behaviorSelected];
+                                                    map[behaviorSelected] = '.';
+                                                    behaviorSelected--;
+                                                } else if(behaviorSelected % WIDTH > target % WIDTH && map[behaviorSelected - 1] != '.') {
+                                                    break;
+                                                }
+                                                
+                                                Thread.sleep((long)delay);
+                                            }
                                         }
                                     }
                                 }
+                                
+                                Thread.sleep(100);
+                            } catch(Exception e) {
+                                //e.printStackTrace();
                             }
-                            
-                            Thread.sleep(500);
-                        } catch(Exception e) {
-                            //e.printStackTrace();
                         }
                     }
-                }
-            }.start();
+                }.start();
+            }
         }
         
         /* для многопользовательской игры */
