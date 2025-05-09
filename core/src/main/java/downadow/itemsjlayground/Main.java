@@ -1045,9 +1045,10 @@ public class Main implements ApplicationListener {
             }
             
         } else if(scene == S_GAME) {
+            final int camPos = cameraStart;
             /* рисование объектов
                ================== */
-            int iii = cameraStart;
+            int iii = camPos;
             for(int i = 0; i < 17; i++) {
                 for(int ii = 0; ii < 26; ii++) {
                     try {
@@ -1137,7 +1138,7 @@ public class Main implements ApplicationListener {
             batch.setProjectionMatrix(viewport.getCamera().combined);
             batch.begin(); noEnd = true;
             
-            iii = cameraStart;
+            iii = camPos;
             for(int i = 0; i < 17; i++) {
                 for(int ii = 0; ii < 26; ii++) {
                     try {
@@ -1171,7 +1172,7 @@ public class Main implements ApplicationListener {
             }
             /*********************************/
             
-            iii = cameraStart;
+            iii = camPos;
             for(int i = 0; i < 17; i++) {
                 for(int ii = 0; ii < 26; ii++) {
                     try {
