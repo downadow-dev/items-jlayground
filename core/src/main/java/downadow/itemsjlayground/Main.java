@@ -79,7 +79,7 @@ public class Main implements ApplicationListener {
     
     private boolean programmingMode = false;
     
-    private String behavior = "", cmsg = "", selectNumber = "";
+    private String behavior = "", cmsg = "[joined]", selectNumber = "";
     
     private boolean ui = true;
     /* блокировка управления */
@@ -2084,6 +2084,21 @@ public class Main implements ApplicationListener {
                                                 Thread.sleep(40);
                                             }
                                         }
+                                        /* findn */
+                                        else if(behaviorSplitted[i].split(":")[0].equals("findn") && behaviorSelected == 0) {
+                                            char need = (char)Integer.parseInt(behaviorSplitted[i].split(":")[1]);
+                                            
+                                            findLoop:
+                                            while(!behavior.isEmpty() && ph && !programmingMode) {
+                                                for(int j = 0; j < map.length; j++) {
+                                                    if(map[j] == need) {
+                                                        behaviorSelected = j;
+                                                        break findLoop;
+                                                    }
+                                                }
+                                                Thread.sleep(40);
+                                            }
+                                        }
                                         /* перемещение */
                                         else if(behaviorSplitted[i].equals("up")) {
                                             map[behaviorSelected - WIDTH] = map[behaviorSelected];
@@ -2173,6 +2188,14 @@ public class Main implements ApplicationListener {
                                                   !lightMap[behaviorSelected + 1] &&
                                                   !lightMap[behaviorSelected - WIDTH] &&
                                                   !lightMap[behaviorSelected + WIDTH] &&
+                                                  (!behavior.isEmpty() && ph && !programmingMode))
+                                                Thread.sleep(40);
+                                        } else if(behaviorSplitted[i].equals("wait:dark")) {
+                                            while((lightMap[behaviorSelected] ||
+                                                  lightMap[behaviorSelected - 1] ||
+                                                  lightMap[behaviorSelected + 1] ||
+                                                  lightMap[behaviorSelected - WIDTH] ||
+                                                  lightMap[behaviorSelected + WIDTH]) &&
                                                   (!behavior.isEmpty() && ph && !programmingMode))
                                                 Thread.sleep(40);
                                         } else if(behaviorSplitted[i].equals("wait")) {
@@ -2299,7 +2322,7 @@ public class Main implements ApplicationListener {
                                 }
                             } catch(Exception ex) {}
                             
-                            Thread.sleep(400);
+                            Thread.sleep(200);
                         } catch(Exception ex) {}
                     }
                 }
@@ -2335,7 +2358,7 @@ public class Main implements ApplicationListener {
                             } catch(Exception ex) {}
                             /******************/
                             
-                            Thread.sleep(450);
+                            Thread.sleep(200);
                         } catch(Exception ex) {}
                     }
                 }
