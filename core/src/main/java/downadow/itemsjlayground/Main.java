@@ -296,16 +296,16 @@ public class Main implements ApplicationListener {
                                 setBlock(selectedBlockAddr(), currentBlock);
                                 return true;
                             } else if(key == Input.Keys.S && selected == -1) {
-                                Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString(behavior + "\n", false);
-                                Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString(bgColorRed + " " + bgColorGreen + " " + bgColorBlue + "\n", true);
+                                String save = behavior + "\n" + bgColorRed + " " + bgColorGreen + " " + bgColorBlue + "\n";
                                 int iii = 0;
                                 for(int i = 0; i < HEIGHT; i++) {
                                     for(int ii = 0; ii < WIDTH; ii++) {
-                                        Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString("" + map[iii], true);
+                                        save += "" + map[iii];
                                         iii++;
                                     }
-                                    Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString("\n", true);
+                                    save += "\n";
                                 }
+                                Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString(save, false);
                                 msgSaved = !msgSaved;
                                 return true;
                             } else if(key == Input.Keys.BACKSPACE) {
