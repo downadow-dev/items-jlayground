@@ -1269,8 +1269,8 @@ public class Main implements ApplicationListener {
                 
                 font.getData().setScale(0.5f);
                 
-                if(gameState == 1) font.draw(batch, message, 15, 728 - 60);
-                else if(gameState == 2 && writeMessage) font.draw(batch, text + "█", 15, 728 - 60);
+                if(gameState == 2 && writeMessage) font.draw(batch, text + "█", 15, 728 - 60);
+                else if(gameState == 1 || gameState == 2) font.draw(batch, message, 15, 728 - 60);
                 
                 if(msgSaved) font.draw(batch, "сохранено", 15, 728 - 80);
                 
@@ -1787,6 +1787,24 @@ public class Main implements ApplicationListener {
                                         tmp[iii] = true;
                                     }
                                     for(int iii = ii; -(iii - ii) < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii--) {
+                                        tmp[iii] = true;
+                                    }
+                                }
+                                left = Blocks.getLight(map[i]);
+                                for(int ii = i; left > 0 && (Blocks.isTranslucent(map[ii]) || ii == i); ii--, left--) {
+                                    for(int iii = ii; (iii - ii) / WIDTH < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii += WIDTH) {
+                                        tmp[iii] = true;
+                                    }
+                                    for(int iii = ii; -(iii - ii) / WIDTH < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii -= WIDTH) {
+                                        tmp[iii] = true;
+                                    }
+                                }
+                                left = Blocks.getLight(map[i]);
+                                for(int ii = i; left > 0 && (Blocks.isTranslucent(map[ii]) || ii == i); ii++, left--) {
+                                    for(int iii = ii; (iii - ii) / WIDTH < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii += WIDTH) {
+                                        tmp[iii] = true;
+                                    }
+                                    for(int iii = ii; -(iii - ii) / WIDTH < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii -= WIDTH) {
                                         tmp[iii] = true;
                                     }
                                 }
@@ -2332,7 +2350,7 @@ public class Main implements ApplicationListener {
                 public void run() {
                     while(true) {
                         try {
-                            /* загрузка карты, поведения и позиции хоста */
+                            /* загрузка карты, поведения, позиции хоста и сообщения */
                             
                             if(selected == -1) {
                                 downloadFile(connectUrl + "/adminMap", Gdx.files.external(root + "/" + rpList[selectedRp] + "/map"));
@@ -2355,6 +2373,17 @@ public class Main implements ApplicationListener {
                             try {
                                 downloadFile(connectUrl + "/adminPos", Gdx.files.external(root + "/adminPos"));
                                 adminPos = Integer.parseInt(Gdx.files.external(root + "/adminPos").readString());
+                            } catch(Exception ex) {}
+                            
+                            try {
+                                downloadFile(connectUrl + "/msg", Gdx.files.external(root + "/lastMsg"));
+                                String[] messages = Gdx.files.external(root + "/lastMsg").readString().split(";;;");
+                                
+                                for(int msgi = 0; msgi < messages.length; msgi++) {
+                                    message = messages[msgi];
+                                    if(message.startsWith("/"))
+                                        message = "";
+                                }
                             } catch(Exception ex) {}
                             /******************/
                             
