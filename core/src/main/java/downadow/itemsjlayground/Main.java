@@ -973,10 +973,6 @@ public class Main implements ApplicationListener {
         viewport.getCamera().update();
         
         if(scene == S_INFO || scene == S_MENU || scene == S_CLIENT_MENU) {
-            batch.setProjectionMatrix(viewport.getCamera().combined);
-            batch.begin(); noEnd = true;
-            
-            batch.end(); noEnd = false;
             shape.setProjectionMatrix(viewport.getCamera().combined);
             shape.begin(ShapeRenderer.ShapeType.Filled); noShapeEnd = true;
             shape.setColor(new Color(0.55f, 0.55f, 1f, 1f));
@@ -987,17 +983,17 @@ public class Main implements ApplicationListener {
                 batch.begin(); noEnd = true;
                 
                 batch.draw(blackTexture, 0, 0, 1200, 728);
-                font.getData().setScale(0.65f);
+                font.getData().setScale(0.6f);
                 font.draw(batch, "Items Jlayground — это свободная игра-песочница, в которой игрок", 10, 680);
                 font.draw(batch, "способен строить, разрушать, программировать, взрывать, летать", 10, 660);
                 font.draw(batch, "на вертолёте, стрелять из танка и другое.  Игра написана на Java", 10, 640);
                 font.draw(batch, "с использованием LibGDX.  Items Jlayground поддерживает многопользова-", 10, 620);
                 font.draw(batch, "тельскую игру.  Автор игры — downadow.", 10, 600);
                 
-                font.draw(batch, "Мир Items Jlayground представляет собой одномерный массив с заданными", 10, 560);
-                font.draw(batch, "шириной (250) и высотой (60).  Ячейка может определяться как отсутствие", 10, 540);
-                font.draw(batch, "блока (.), либо танк, либо вертолёт, либо вода, либо примитив.  Примитивы", 10, 520);
-                font.draw(batch, "могут иметь множество атрибутов (падающий, крепкий, липкий и т. д.).", 10, 500);
+                font.draw(batch, "Мир Items Jlayground представляет собой одномерный массив с заданными", 10, 570);
+                font.draw(batch, "шириной (250) и высотой (60).  Ячейка может определяться как отсутствие", 10, 550);
+                font.draw(batch, "блока (.), либо танк, либо вертолёт, либо вода, либо примитив.  Примитивы", 10, 530);
+                font.draw(batch, "могут иметь множество атрибутов (падающий, крепкий, липкий и т. д.).", 10, 510);
                 
                 font.getData().setScale(0.5f);
                 font.draw(batch, "Нажмите для продолжения...", 900, 60);
@@ -1207,7 +1203,7 @@ public class Main implements ApplicationListener {
                     font.draw(batch, "Выберите сторону...", 15, 728 - 20);
                 
                 if(programmingMode) {
-                    font.getData().setScale(0.4f);
+                    font.getData().setScale(0.45f);
                     font.draw(batch, "Режим программирования", 15, 728 - 60);
                     char[] behavior2 = behavior.toCharArray();
                     
@@ -1216,13 +1212,13 @@ public class Main implements ApplicationListener {
                     loop: for(; i < 8; i++) {
                         for(ii = 0; ii < 128; ii++, iii++) {
                             try {
-                                font.draw(batch, "" + behavior2[iii], 15 + ii * 7, 728 - (80 + i * 20));
+                                font.draw(batch, "" + behavior2[iii], 15 + ii * 9, 728 - (80 + i * 20));
                             } catch(ArrayIndexOutOfBoundsException e) {
                                 break loop;
                             }
                         }
                     }
-                    font.draw(batch, "█", 15 + ii * 7, 728 - (80 + i * 20));
+                    font.draw(batch, "█", 15 + ii * 9, 728 - (80 + i * 20));
                 }
                 
                 try {font.draw(batch, "" + selectedBlockAddr() + "  " + map[selectedBlockAddr()] + " [" + (select ? ("?" + (selectNumber.isEmpty() ? "?" : selectNumber) + "?") : currentBlock) + "]", 15, 728 - 40);} catch(ArrayIndexOutOfBoundsException e) {}
@@ -1270,7 +1266,7 @@ public class Main implements ApplicationListener {
                 font.getData().setScale(0.5f);
                 
                 if(gameState == 2 && writeMessage) font.draw(batch, text + "█", 15, 728 - 60);
-                else if(gameState == 1 || gameState == 2) font.draw(batch, message, 15, 728 - 60);
+                else if((gameState == 1 || gameState == 2) && !programmingMode) font.draw(batch, message, 15, 728 - 60);
                 
                 if(msgSaved) font.draw(batch, "сохранено", 15, 728 - 80);
                 
@@ -2284,18 +2280,19 @@ public class Main implements ApplicationListener {
         if(gameState == 1) {
             new Thread() {
                 public void run() {
+                    String save;
                     while(true) {
                         try {
-                            Gdx.files.external(root + "/adminMap").writeString(behavior + "\n", false);
-                            Gdx.files.external(root + "/adminMap").writeString(bgColorRed + " " + bgColorGreen + " " + bgColorBlue + "\n", true);
+                            save = behavior + "\n" + bgColorRed + " " + bgColorGreen + " " + bgColorBlue + "\n";
                             int iii = 0;
                             for(int i = 0; i < HEIGHT; i++) {
                                 for(int ii = 0; ii < WIDTH; ii++) {
-                                    Gdx.files.external(root + "/adminMap").writeString("" + map[iii], true);
+                                    save += "" + map[iii];
                                     iii++;
                                 }
-                                Gdx.files.external(root + "/adminMap").writeString("\n", true);
+                                save += "\n";
                             }
+                            Gdx.files.external(root + "/adminMap").writeString(save, false);
                             
                             Gdx.files.external(root + "/adminPos").writeString("" + selectedBlockAddr(), false);
                             
@@ -2365,8 +2362,8 @@ public class Main implements ApplicationListener {
                                 int ii = 0;
                                 for(int j = 2; j < HEIGHT + 2; j++) {
                                     char[] line = ln[j].toCharArray();
-                                    for(int i = 0; i < WIDTH; i++)
-                                        map[ii++] = line[i];
+                                    for(int i = 0; i < WIDTH; i++, ii++)
+                                        map[ii] = line[i];
                                 }
                             }
                             
@@ -2376,14 +2373,15 @@ public class Main implements ApplicationListener {
                             } catch(Exception ex) {}
                             
                             try {
-                                downloadFile(connectUrl + "/msg", Gdx.files.external(root + "/lastMsg"));
-                                String[] messages = Gdx.files.external(root + "/lastMsg").readString().split(";;;");
-                                
-                                for(int msgi = 0; msgi < messages.length; msgi++) {
-                                    message = messages[msgi];
-                                    if(message.startsWith("/"))
-                                        message = "";
-                                }
+                                if(downloadFile(connectUrl + "/msg", Gdx.files.external(root + "/lastMsg"))) {
+                                    String[] messages = Gdx.files.external(root + "/lastMsg").readString().split(";;;");
+                                    
+                                    for(int msgi = 0; msgi < messages.length; msgi++) {
+                                        message = messages[msgi];
+                                        if(message.startsWith("/"))
+                                            message = "";
+                                    }
+                                } else message = "failed to connect to the server";
                             } catch(Exception ex) {}
                             /******************/
                             
