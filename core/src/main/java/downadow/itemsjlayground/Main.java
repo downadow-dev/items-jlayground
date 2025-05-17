@@ -37,7 +37,7 @@ public class Main implements ApplicationListener {
     HttpRequestBuilder rqbuilder;
     short scene;
     boolean pleaseWait = false, msgSaved = false;
-    final short S_INFO = 0,
+    final short S_START = 0,
         S_MENU = 1,
         S_CLIENT_MENU = 2,
         S_GAME = 3;
@@ -48,7 +48,8 @@ public class Main implements ApplicationListener {
         fireBtnTexture, fire2BtnTexture, boomBtnTexture, delBoomBtnTexture,
         nightBtnTexture, rainBtnTexture, slowBtnTexture, uiBtnTexture,
         qBtnTexture, eBtnTexture, moreBtnTexture, bgColorBtnTexture,
-        programmingModeBtnTexture, chatBtnTexture, phBtnTexture;
+        programmingModeBtnTexture, chatBtnTexture, phBtnTexture,
+        bgTexture, bg2Texture;
     Texture[] boomTextures, rainTextures;
     String text;
     boolean done, retval;
@@ -123,6 +124,8 @@ public class Main implements ApplicationListener {
         rqbuilder = new HttpRequestBuilder();
         text = "";
         
+        bgTexture = new Texture("bg.png");
+        bg2Texture = new Texture("bg2.png");
         blackTexture = new Texture("black.png");
         black2Texture = new Texture("black2.png");
         redTexture = new Texture("red.png");
@@ -622,7 +625,7 @@ public class Main implements ApplicationListener {
                 touch.set(x, y);
                 viewport.unproject(touch);
                 
-                if(scene == S_INFO) {
+                if(scene == S_START) {
                     scene = S_MENU;
                     return true;
                 } else if(scene == S_MENU) {
@@ -935,7 +938,7 @@ public class Main implements ApplicationListener {
         font = new BitmapFont(Gdx.files.internal("font/font.fnt"), false);
         font.setFixedWidthGlyphs(" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~*ЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮёйцукенгшщзхъфывапролджэячсмитьбю█№—");
         
-        scene = S_INFO;
+        scene = S_START;
         
         updateRpList();
         Blocks.init();
@@ -945,10 +948,11 @@ public class Main implements ApplicationListener {
                 if(name.equals("game"))
                     return;
         
-        Gdx.files.internal("game").copyTo(Gdx.files.external(root));
-        Gdx.files.external(root + "/rp_list.txt").writeString("game\n", true);
-        
-        updateRpList();
+        if(Gdx.files.internal("game").isDirectory()) {
+            Gdx.files.internal("game").copyTo(Gdx.files.external(root));
+            Gdx.files.external(root + "/rp_list.txt").writeString("game\n", true);
+            updateRpList();
+        }
     }
     
     public void resize(int width, int height) {
@@ -972,44 +976,19 @@ public class Main implements ApplicationListener {
         viewport.apply();
         viewport.getCamera().update();
         
-        if(scene == S_INFO || scene == S_MENU || scene == S_CLIENT_MENU) {
-            shape.setProjectionMatrix(viewport.getCamera().combined);
-            shape.begin(ShapeRenderer.ShapeType.Filled); noShapeEnd = true;
-            shape.setColor(new Color(0.55f, 0.55f, 1f, 1f));
-            shape.rect(0, 0, 1200, 728);
-            shape.end(); noShapeEnd = false;
-            if(scene == S_INFO) {
-                batch.setProjectionMatrix(viewport.getCamera().combined);
-                batch.begin(); noEnd = true;
-                
-                batch.draw(blackTexture, 0, 0, 1200, 728);
-                font.getData().setScale(0.6f);
-                font.draw(batch, "Items Jlayground — это свободная игра-песочница, в которой игрок", 10, 680);
-                font.draw(batch, "способен строить, разрушать, программировать, взрывать, летать", 10, 660);
-                font.draw(batch, "на вертолёте, стрелять из танка и другое.  Игра написана на Java", 10, 640);
-                font.draw(batch, "с использованием LibGDX.  Items Jlayground поддерживает многопользова-", 10, 620);
-                font.draw(batch, "тельскую игру.  Автор игры — downadow.", 10, 600);
-                
-                font.draw(batch, "Мир Items Jlayground представляет собой одномерный массив с заданными", 10, 570);
-                font.draw(batch, "шириной (250) и высотой (60).  Ячейка может определяться как отсутствие", 10, 550);
-                font.draw(batch, "блока (.), либо танк, либо вертолёт, либо вода, либо примитив.  Примитивы", 10, 530);
-                font.draw(batch, "могут иметь множество атрибутов (падающий, крепкий, липкий и т. д.).", 10, 510);
-                
-                font.getData().setScale(0.5f);
-                font.draw(batch, "Нажмите для продолжения...", 900, 60);
-                
-                batch.end(); noEnd = false;
-            } else {
+        if(scene == S_START || scene == S_MENU || scene == S_CLIENT_MENU) {
+            batch.setProjectionMatrix(viewport.getCamera().combined);
+            batch.begin(); noEnd = true;
+            batch.draw(scene == S_START ? bgTexture : bg2Texture, 0, 0, 1200, 728);
+            batch.end(); noEnd = false;
+            
+            if(scene != S_START) {
                 shape.setProjectionMatrix(viewport.getCamera().combined);
                 shape.begin(ShapeRenderer.ShapeType.Filled); noShapeEnd = true;
-                shape.setColor(new Color(0.1f, 0.1f, 0.1f, 1f));
-                shape.rect(15, 640, 940, 30);
                 shape.setColor(new Color(0f, 1f, 0f, 1f));
                 shape.rect(940, 640, 60, 30);
                 if(scene != S_CLIENT_MENU) {
-                    shape.setColor(new Color(0.1f, 0.1f, 0.1f, 1f));
-                    shape.rect(15, 100, 1000, 480);
-                    shape.setColor(new Color(0f, 0.8f, 0f, 1f));
+                    shape.setColor(new Color(0.6f, 0.6f, 0f, 1f));
                     shape.rect(15, 50, 250, 30);
                     shape.rect(275, 50, 250, 30);
                     if(Gdx.app.getType() == Application.ApplicationType.Desktop)
@@ -1019,6 +998,10 @@ public class Main implements ApplicationListener {
                 
                 batch.setProjectionMatrix(viewport.getCamera().combined);
                 batch.begin(); noEnd = true;
+                batch.draw(blackTexture, 15, 640, 920, 30);
+                if(scene != S_CLIENT_MENU)
+                    batch.draw(blackTexture, 15, 100, 1000, 480);
+                
                 font.getData().setScale(0.6f);
                 font.draw(batch, (scene != S_CLIENT_MENU ? "HTTP-адрес для загрузки ресурспака" : "HTTP-адрес сервера"), 15, 700);
                 if(pleaseWait)
