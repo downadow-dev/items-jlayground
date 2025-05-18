@@ -63,14 +63,14 @@ public class Blocks {
     }
     
     public static void addTank(char c, char leftC, char rightC, Texture texture,
-                               char c2, boolean isStrong,
+                               Texture texture2, boolean isStrong,
                                int x, int y, int w, int h) {
         tanks[tanksLength] = new Tank();
         tanks[tanksLength].c = c;
         tanks[tanksLength].leftC = leftC;
         tanks[tanksLength].rightC = rightC;
         tanks[tanksLength].texture = texture;
-        tanks[tanksLength].c2 = c2;
+        tanks[tanksLength].texture2 = texture2;
         tanks[tanksLength].isStrong = isStrong;
         tanks[tanksLength].x = x;
         tanks[tanksLength].y = y;
@@ -81,14 +81,14 @@ public class Blocks {
     }
     
     public static void addHelicopter(char c, char leftC, char rightC, Texture texture,
-                                     char c2, boolean isStrong,
+                                     Texture texture2, boolean isStrong,
                                      int x, int y, int w, int h) {
         helicopters[helicoptersLength] = new Helicopter();
         helicopters[helicoptersLength].c = c;
         helicopters[helicoptersLength].leftC = leftC;
         helicopters[helicoptersLength].rightC = rightC;
         helicopters[helicoptersLength].texture = texture;
-        helicopters[helicoptersLength].c2 = c2;
+        helicopters[helicoptersLength].texture2 = texture2;
         helicopters[helicoptersLength].isStrong = isStrong;
         helicopters[helicoptersLength].x = x;
         helicopters[helicoptersLength].y = y;
@@ -342,14 +342,14 @@ public class Blocks {
         return defaultH;
     }
     
-    public static char getC2(char c) {
+    public static Texture getTexture2(char c) {
         for(int i = 0; i < tanksLength; i++)
             if(tanks[i].c == c)
-                return tanks[i].c2;
+                return tanks[i].texture2;
         for(int i = 0; i < helicoptersLength; i++)
             if(helicopters[i].c == c)
-                return helicopters[i].c2;
-        return c;
+                return helicopters[i].texture2;
+        return voidTexture;
     }
 }
 

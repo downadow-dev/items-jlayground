@@ -36,7 +36,8 @@ public class Main implements ApplicationListener {
     BitmapFont font;
     HttpRequestBuilder rqbuilder;
     short scene;
-    boolean pleaseWait = false, msgSaved = false;
+    boolean pleaseWait = false, msgSaved = false, nextTexture = false,
+        shoot = false;
     final short S_START = 0,
         S_MENU = 1,
         S_CLIENT_MENU = 2,
@@ -487,14 +488,14 @@ public class Main implements ApplicationListener {
                                 else if(key == Input.Keys.ENTER && Blocks.isTank(map[selected]) && Blocks.getRightC(map[selected]) == map[selected]) {
                                     for(int i = 1; i < 16; i++) {
                                         if((map[selected + i - WIDTH] != '.' && !(map[selected + i - WIDTH] >= '0' && map[selected + i - WIDTH] <= '9')) || (map[selected + i] != '.' && !(map[selected + i] >= '0' && map[selected + i] <= '9'))) {
-                                            map[selected] = Blocks.getC2(map[selected]);
+                                            shoot = true;
                                             boom(selected + i - WIDTH);
                                             
                                             new Thread() {
                                                 public void run() {
                                                     try {
                                                         Thread.sleep(60);
-                                                        map[selected] = Blocks.getC2(map[selected]);
+                                                        shoot = false;
                                                     } catch(Exception ex) {}
                                                 }
                                             }.start();
@@ -505,14 +506,14 @@ public class Main implements ApplicationListener {
                                 } else if(key == Input.Keys.ENTER && Blocks.isTank(map[selected]) && Blocks.getLeftC(map[selected]) == map[selected]) {
                                     for(int i = 1; i < 16; i++) {
                                         if((map[selected - i - WIDTH] != '.' && !(map[selected - i - WIDTH] >= '0' && map[selected - i - WIDTH] <= '9')) || (map[selected - i] != '.' && !(map[selected - i] >= '0' && map[selected - i] <= '9'))) {
-                                            map[selected] = Blocks.getC2(map[selected]);
+                                            shoot = true;
                                             boom(selected - i - WIDTH);
                                             
                                             new Thread() {
                                                 public void run() {
                                                     try {
                                                         Thread.sleep(60);
-                                                        map[selected] = Blocks.getC2(map[selected]);
+                                                        shoot = false;
                                                     } catch(Exception ex) {}
                                                 }
                                             }.start();
@@ -921,6 +922,11 @@ public class Main implements ApplicationListener {
                                                 text = "ERROR!!!"; pleaseWait = false;
                                                 return;
                                             }
+                                            
+                                            if(tkn.split(":").length > 2 && !downloadFile(text + "/images/" + tkn.split(":")[2], Gdx.files.external(root + "/" + mapDir + "/images/" + tkn.split(":")[2]))) {
+                                                text = "ERROR!!!"; pleaseWait = false;
+                                                return;
+                                            }
                                         }
                                     }
                                 }
@@ -1008,7 +1014,7 @@ public class Main implements ApplicationListener {
         if(scene == S_START || scene == S_MENU || scene == S_CLIENT_MENU) {
             batch.setProjectionMatrix(viewport.getCamera().combined);
             batch.begin(); noEnd = true;
-            batch.draw(scene == S_START && rain >= 0 ? bgTextures[1 + rain] : bgTextures[0], 0, 85, 1200, 650);
+            batch.draw((scene == S_START && rain >= 0) ? bgTextures[1 + rain] : bgTextures[0], 0, 85, 1200, 650);
             batch.end(); noEnd = false;
             
             if(scene != S_START) {
@@ -1127,10 +1133,8 @@ public class Main implements ApplicationListener {
                                 Blocks.getTextureWidth(map[iii]) <= Blocks.defaultW && Blocks.getTextureHeight(map[iii]) <= Blocks.defaultH && !Blocks.isUnknown(map[iii])) {
                             batch.setProjectionMatrix(viewport.getCamera().combined);
                             batch.begin(); noEnd = true;
-                            batch.draw(Blocks.getTexture(map[iii]), ii * Blocks.defaultW + Blocks.getTextureX(map[iii]) - 1, 728 - i * Blocks.defaultH - Blocks.getTextureHeight(map[iii]) - Blocks.getTextureY(map[iii]), Blocks.getTextureWidth(map[iii]) + 2, Blocks.getTextureHeight(map[iii]) + 1);
+                            batch.draw(((Blocks.isHelicopter(map[iii]) && map[iii + WIDTH] == '.' && nextTexture) || (iii == selected && shoot)) ? Blocks.getTexture2(map[iii]) : Blocks.getTexture(map[iii]), ii * Blocks.defaultW + Blocks.getTextureX(map[iii]) - 1, 728 - i * Blocks.defaultH - Blocks.getTextureHeight(map[iii]) - Blocks.getTextureY(map[iii]), Blocks.getTextureWidth(map[iii]) + 2, Blocks.getTextureHeight(map[iii]) + 1);
                             batch.end(); noEnd = false;
-                            if(Blocks.isHelicopter(map[iii]) && map[iii + WIDTH] == '.')
-                                map[iii] = Blocks.getC2(map[iii]);
                         }
                     } catch(ArrayIndexOutOfBoundsException e) {
                         if(noShapeEnd) shape.end();
@@ -1151,11 +1155,11 @@ public class Main implements ApplicationListener {
                 for(int ii = 0; ii < 26; ii++) {
                     try {
                         if(map[iii] == 'f') {
-                            batch.draw(fireTexture, ii * Blocks.defaultW - Blocks.defaultW, 728 - ((i + 2) * Blocks.defaultH), Blocks.defaultW * 3, Blocks.defaultH * 3);
+                            batch.draw(fireTexture, ii * Blocks.defaultW - Blocks.defaultW, 728 - ((i + 2) * Blocks.defaultH), Blocks.defaultW * 3, Blocks.defaultH * 3 - (nextTexture ? Blocks.defaultH / 2 : 0));
                             if(rain >= 0 && selected == -1)
                                 map[iii] = 'b';
                         } else if(map[iii] == 'F')
-                            batch.draw(fire2Texture, ii * Blocks.defaultW - Blocks.defaultW, 728 - ((i + 2) * Blocks.defaultH), Blocks.defaultW * 3, Blocks.defaultH * 3);
+                            batch.draw(fire2Texture, ii * Blocks.defaultW - Blocks.defaultW, 728 - ((i + 2) * Blocks.defaultH), Blocks.defaultW * 3, Blocks.defaultH * 3 - (nextTexture ? Blocks.defaultH / 2 : 0));
                         else if((int)map[iii] >= (int)'0' && (int)map[iii] <= (int)'9')
                             batch.draw(boomTextures[map[iii] - '0'], ii * Blocks.defaultW - Blocks.defaultW, 728 - ((i + 2) * Blocks.defaultH), Blocks.defaultW * 3, Blocks.defaultH * 3);
                         else if(map[iii] == 'p') {
@@ -1169,9 +1173,7 @@ public class Main implements ApplicationListener {
                         /* блок мода */
                         else if(Blocks.getTextureX(map[iii]) != Blocks.defaultX || Blocks.getTextureY(map[iii]) != Blocks.defaultY ||
                                 Blocks.getTextureWidth(map[iii]) > Blocks.defaultW || Blocks.getTextureHeight(map[iii]) > Blocks.defaultH) {
-                            batch.draw(Blocks.getTexture(map[iii]), ii * Blocks.defaultW + Blocks.getTextureX(map[iii]), 728 - i * Blocks.defaultH - Blocks.getTextureHeight(map[iii]) - Blocks.getTextureY(map[iii]), Blocks.getTextureWidth(map[iii]), Blocks.getTextureHeight(map[iii]));
-                            if(Blocks.isHelicopter(map[iii]) && map[iii + WIDTH] == '.')
-                                map[iii] = Blocks.getC2(map[iii]);
+                            batch.draw(((Blocks.isHelicopter(map[iii]) && map[iii + WIDTH] == '.' && nextTexture) || (iii == selected && shoot)) ? Blocks.getTexture2(map[iii]) : Blocks.getTexture(map[iii]), ii * Blocks.defaultW + Blocks.getTextureX(map[iii]), 728 - i * Blocks.defaultH - Blocks.getTextureHeight(map[iii]) - Blocks.getTextureY(map[iii]), Blocks.getTextureWidth(map[iii]), Blocks.getTextureHeight(map[iii]));
                         }
                     } catch(ArrayIndexOutOfBoundsException e) {}
                     iii++;
@@ -1256,6 +1258,7 @@ public class Main implements ApplicationListener {
                     
                     if(etcPage == 0) {
                         batch.draw(fillBtnTexture, 980, 618, 100, 100);
+                        if(!fill) batch.draw(blackTexture, 980, 618, 100, 100);
                         batch.draw(fireBtnTexture, 875, 618, 100, 100);
                     } else if(etcPage == 1) {
                         batch.draw(fire2BtnTexture, 980, 618, 100, 100);
@@ -1263,15 +1266,20 @@ public class Main implements ApplicationListener {
                     } else if(etcPage == 2) {
                         batch.draw(delBoomBtnTexture, 980, 618, 100, 100);
                         batch.draw(nightBtnTexture, 875, 618, 100, 100);
+                        if(!night) batch.draw(blackTexture, 875, 618, 100, 100);
                     } else if(etcPage == 3) {
                         batch.draw(rainBtnTexture, 980, 618, 100, 100);
+                        if(rain < 0) batch.draw(blackTexture, 980, 618, 100, 100);
                         batch.draw(slowBtnTexture, 875, 618, 100, 100);
+                        if(!slow) batch.draw(blackTexture, 875, 618, 100, 100);
                     } else if(etcPage == 4) {
                         batch.draw(uiBtnTexture, 980, 618, 100, 100);
                         batch.draw(bgColorBtnTexture, 875, 618, 100, 100);
                     } else if(etcPage == 5) {
                         batch.draw(programmingModeBtnTexture, 980, 618, 100, 100);
+                        if(!programmingMode) batch.draw(blackTexture, 980, 618, 100, 100);
                         batch.draw(phBtnTexture, 875, 618, 100, 100);
+                        if(ph) batch.draw(blackTexture, 875, 618, 100, 100);
                     } else etcPage = 0;
                 }
                 
@@ -1604,8 +1612,8 @@ public class Main implements ApplicationListener {
                 char leftC = c;
                 char rightC = c;
                 Texture texture = null;
+                Texture texture2 = null;
                 boolean isStrong = false;
-                char c2 = c;
                 int x = Blocks.defaultX;
                 int y = Blocks.defaultY;
                 int w = Blocks.defaultW;
@@ -1621,11 +1629,9 @@ public class Main implements ApplicationListener {
                             leftC = c;
                             rightC = c;
                         }
-                        c2 = c;
-                    } else if(tokens[i].startsWith("c2:")) {
-                        c2 = tokens[i].toCharArray()[3];
                     } else if(tokens[i].startsWith("texture:")) {
-                        texture = new Texture(Gdx.files.external(root + "/" + rpList[selectedRp] + "/images/" + tokens[i].split(":")[1]));
+                        texture  = new Texture(Gdx.files.external(root + "/" + rpList[selectedRp] + "/images/" + tokens[i].split(":")[1]));
+                        texture2 = new Texture(Gdx.files.external(root + "/" + rpList[selectedRp] + "/images/" + tokens[i].split(":")[2]));
                     } else if(tokens[i].equals("strong")) {
                         isStrong = true;
                     } else if(tokens[i].startsWith("x:")) {
@@ -1640,9 +1646,9 @@ public class Main implements ApplicationListener {
                 }
                 
                 if(tokens[0].equals("type:tank"))
-                    Blocks.addTank(c, leftC, rightC, texture, c2, isStrong, x, y, w, h);
+                    Blocks.addTank(c, leftC, rightC, texture, texture2, isStrong, x, y, w, h);
                 else
-                    Blocks.addHelicopter(c, leftC, rightC, texture, c2, isStrong, x, y, w, h);
+                    Blocks.addHelicopter(c, leftC, rightC, texture, texture2, isStrong, x, y, w, h);
             } else if(tokens[0].equals("type:water")) {
                 char c = '\0';
                 int x = Blocks.defaultX;
@@ -1759,13 +1765,19 @@ public class Main implements ApplicationListener {
                         /* общее освещение */
                         if(!night) {
                             for(int i = WIDTH; i < WIDTH * 2; i++) {
-                                for(int ii = i; ii < map.length && Blocks.isTranslucent(map[ii]); ii += WIDTH + 1)
+                                for(int ii = i; ii < map.length && Blocks.isTranslucent(map[ii]); ii += WIDTH + 1) {
                                     tmp[ii] = true;
+                                    if(!Blocks.isTranslucent(map[ii + WIDTH]) && !Blocks.isTranslucent(map[ii + 1]))
+                                        break;
+                                }
                             }
                             
                             for(int i = WIDTH * 2 - 1; i >= WIDTH; i--) {
-                                for(int ii = i; ii < map.length && Blocks.isTranslucent(map[ii]); ii += WIDTH - 1)
+                                for(int ii = i; ii < map.length && Blocks.isTranslucent(map[ii]); ii += WIDTH - 1) {
                                     tmp[ii] = true;
+                                    if(!Blocks.isTranslucent(map[ii + WIDTH]) && !Blocks.isTranslucent(map[ii - 1]))
+                                        break;
+                                }
                             }
                             
                             for(int i = WIDTH; i < WIDTH * 2; i++) {
@@ -2016,6 +2028,13 @@ public class Main implements ApplicationListener {
                             Thread.sleep(30);
                         }
                         
+                        if(!ui && (select || programmingMode || writeMessage))
+                            ui = true;
+                        if(help && (select || programmingMode || writeMessage))
+                            help = false;
+                        
+                        nextTexture = !nextTexture;
+                        
                         Thread.sleep(30);
                     } catch(Exception e) {
                         //e.printStackTrace();
@@ -2250,13 +2269,13 @@ public class Main implements ApplicationListener {
                                                 }
                                                 
                                                 if(behaviorSelected % WIDTH < target % WIDTH && map[behaviorSelected + 1] == '.') {
-                                                    map[behaviorSelected + 1] = map[behaviorSelected];
+                                                    map[behaviorSelected + 1] = Blocks.getRightC(map[behaviorSelected]);
                                                     map[behaviorSelected] = '.';
                                                     behaviorSelected++;
                                                 } else if(behaviorSelected % WIDTH < target % WIDTH && map[behaviorSelected + 1] != '.') {
                                                     break;
                                                 } else if(behaviorSelected % WIDTH > target % WIDTH && map[behaviorSelected - 1] == '.') {
-                                                    map[behaviorSelected - 1] = map[behaviorSelected];
+                                                    map[behaviorSelected - 1] = Blocks.getLeftC(map[behaviorSelected]);
                                                     map[behaviorSelected] = '.';
                                                     behaviorSelected--;
                                                 } else if(behaviorSelected % WIDTH > target % WIDTH && map[behaviorSelected - 1] != '.') {

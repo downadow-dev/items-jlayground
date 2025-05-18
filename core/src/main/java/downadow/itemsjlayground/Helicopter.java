@@ -20,8 +20,8 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 
 public class Helicopter {
-    char c, c2, leftC, rightC;
-    Texture texture;
+    char c, leftC, rightC;
+    Texture texture, texture2;
     boolean isStrong;
     int x, y, w, h;
 }
