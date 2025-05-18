@@ -1327,9 +1327,21 @@ public class Main implements ApplicationListener {
                     rq = rqbuilder.newRequest().method(Net.HttpMethods.GET).url(url).build();
                     
                     Gdx.net.sendHttpRequest(rq, new Net.HttpResponseListener() {
-                        public void cancelled() { setDone(true); }
+                        public void cancelled() {
+                            try {
+                                Thread.sleep(500);
+                                setRetval(downloadFile(url, fileToSave));
+                                setDone(true);
+                            } catch(Exception ex) {}
+                        }
                         
-                        public void failed(Throwable t) { setDone(true); }
+                        public void failed(Throwable t) {
+                            try {
+                                Thread.sleep(500);
+                                setRetval(downloadFile(url, fileToSave));
+                                setDone(true);
+                            } catch(Exception ex) {}
+                        }
                         
                         public void handleHttpResponse(Net.HttpResponse httpResponse) {
                             if(httpResponse.getStatus().getStatusCode() != 404) {
