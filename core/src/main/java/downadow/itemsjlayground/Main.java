@@ -48,9 +48,8 @@ public class Main implements ApplicationListener {
         fireBtnTexture, fire2BtnTexture, boomBtnTexture, delBoomBtnTexture,
         nightBtnTexture, rainBtnTexture, slowBtnTexture, uiBtnTexture,
         qBtnTexture, eBtnTexture, moreBtnTexture, bgColorBtnTexture,
-        programmingModeBtnTexture, chatBtnTexture, phBtnTexture,
-        bgTexture, bg2Texture;
-    Texture[] boomTextures, rainTextures;
+        programmingModeBtnTexture, chatBtnTexture, phBtnTexture;
+    Texture[] boomTextures, rainTextures, bgTextures;
     String text;
     boolean done, retval;
     String[] rpList;
@@ -124,8 +123,6 @@ public class Main implements ApplicationListener {
         rqbuilder = new HttpRequestBuilder();
         text = "";
         
-        bgTexture = new Texture("bg.png");
-        bg2Texture = new Texture("bg2.png");
         blackTexture = new Texture("black.png");
         black2Texture = new Texture("black2.png");
         redTexture = new Texture("red.png");
@@ -139,6 +136,8 @@ public class Main implements ApplicationListener {
         portal1Texture = new Texture("portal1.png");
         rainTextures = new Texture[] {new Texture("rain0.png"), new Texture("rain1.png"),
             new Texture("rain2.png"), new Texture("rain3.png"), new Texture("rain4.png")};
+        bgTextures = new Texture[] {new Texture("bg.png"), new Texture("bg0.png"), new Texture("bg1.png"),
+            new Texture("bg2.png"), new Texture("bg3.png"), new Texture("bg4.png")};
         boomTextures = new Texture[] {new Texture("boom0.png"), new Texture("boom1.png"), new Texture("boom2.png"),
             new Texture("boom3.png"), new Texture("boom4.png"), new Texture("boom5.png"), new Texture("boom6.png")};
         
@@ -188,6 +187,7 @@ public class Main implements ApplicationListener {
                                             for(int i = 0; i < 3; i++) {
                                                 if(map[selected - WIDTH] == '.') {
                                                     selected -= WIDTH;
+                                                    cameraStart -= WIDTH;
                                                     map[selected] = map[selected + WIDTH];
                                                     map[selected + WIDTH] = '.';
                                                 }
@@ -212,6 +212,7 @@ public class Main implements ApplicationListener {
                                 setBlock(selected, '.');
                             
                             selected -= WIDTH;
+                            cameraStart -= WIDTH;
                             
                             up = true;
                         } else if(key == Input.Keys.DOWN && selected != -1 && (map[selected + WIDTH] == '.' || Blocks.isWater(map[selected + WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
@@ -223,6 +224,7 @@ public class Main implements ApplicationListener {
                                 setBlock(selected, '.');
                             
                             selected += WIDTH;
+                            cameraStart += WIDTH;
                             
                             down = true;
                         } else if(key == Input.Keys.LEFT && selected != -1 && (map[selected - 1] == '.' || Blocks.isWater(map[selected - 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
@@ -234,6 +236,7 @@ public class Main implements ApplicationListener {
                                 setBlock(selected, '.');
                             
                             selected--;
+                            cameraStart--;
                             
                             left = true;
                         } else if(key == Input.Keys.RIGHT && selected != -1 && (map[selected + 1] == '.' || Blocks.isWater(map[selected + 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
@@ -245,23 +248,24 @@ public class Main implements ApplicationListener {
                                 setBlock(selected, '.');
                             
                             selected++;
+                            cameraStart++;
                             
                             right = true;
                         }
                         /* перемещение */
-                        else if(key == Input.Keys.UP && !fill && !help) {
+                        else if(key == Input.Keys.UP && !fill && !help && selected == -1) {
                             cameraStart -= WIDTH;
                             up = true;
                             return true;
-                        } else if(key == Input.Keys.DOWN && !fill && !help) {
+                        } else if(key == Input.Keys.DOWN && !fill && !help && selected == -1) {
                             cameraStart += WIDTH;
                             down = true;
                             return true;
-                        } else if(key == Input.Keys.RIGHT && !fill && !help) {
+                        } else if(key == Input.Keys.RIGHT && !fill && !help && selected == -1) {
                             cameraStart++;
                             right = true;
                             return true;
-                        } else if(key == Input.Keys.LEFT && !fill && !help) {
+                        } else if(key == Input.Keys.LEFT && !fill && !help && selected == -1) {
                             cameraStart--;
                             left = true;
                             return true;
@@ -280,6 +284,7 @@ public class Main implements ApplicationListener {
                                     setBlock(selected, '.');
                                 
                                 selected--;
+                                cameraStart--;
                             } else if(key == Input.Keys.P && selected == -1) {
                                 cameraStart++;
                                 return true;
@@ -292,6 +297,7 @@ public class Main implements ApplicationListener {
                                     setBlock(selected, '.');
                                 
                                 selected++;
+                                cameraStart++;
                             } else if(key == Input.Keys.F1) {
                                 help = !help;
                                 return true;
@@ -320,53 +326,54 @@ public class Main implements ApplicationListener {
                             } else if(key == Input.Keys.DOWN && help) {
                                 helpIndex += 4;
                                 return true;
+                            /* заполнение */
                             } else if(key == Input.Keys.LEFT && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() - 1] == '.') {
-                                for(int i = selectedBlockAddr() - 1; map[i] == '.'; i--)
-                                    setBlock(i, map[selectedBlockAddr()]);
                                 fill = false;
+                                for(int i = selectedBlockAddr() - 1, j = 1; map[i] == '.' && j < WIDTH; i--, j++)
+                                    setBlock(i, map[selectedBlockAddr()]);
                                 return true;
                             }
                             else if(key == Input.Keys.RIGHT && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() + 1] == '.') {
-                                for(int i = selectedBlockAddr() + 1; map[i] == '.'; i++)
-                                    setBlock(i, map[selectedBlockAddr()]);
                                 fill = false;
+                                for(int i = selectedBlockAddr() + 1, j = 1; map[i] == '.' && j < WIDTH; i++, j++)
+                                    setBlock(i, map[selectedBlockAddr()]);
                                 return true;
                             }
                             else if(key == Input.Keys.DOWN && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() + WIDTH] == '.') {
+                                fill = false;
                                 for(int i = selectedBlockAddr() + WIDTH; map[i] == '.'; i += WIDTH)
                                     setBlock(i, map[selectedBlockAddr()]);
-                                fill = false;
                                 return true;
                             }
                             else if(key == Input.Keys.UP && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() - WIDTH] == '.') {
+                                fill = false;
                                 for(int i = selectedBlockAddr() - WIDTH; map[i] == '.'; i -= WIDTH)
                                     setBlock(i, map[selectedBlockAddr()]);
-                                fill = false;
                                 return true;
                             }
                             
                             else if(key == Input.Keys.LEFT && fill && map[selectedBlockAddr()] != '.') {
+                                fill = false;
                                 for(int i = selectedBlockAddr() - 1; map[i] != '.'; i--)
                                     setBlock(i, map[selectedBlockAddr()]);
-                                fill = false;
                                 return true;
                             }
                             else if(key == Input.Keys.RIGHT && fill && map[selectedBlockAddr()] != '.') {
+                                fill = false;
                                 for(int i = selectedBlockAddr() + 1; map[i] != '.'; i++)
                                     setBlock(i, map[selectedBlockAddr()]);
-                                fill = false;
                                 return true;
                             }
                             else if(key == Input.Keys.DOWN && fill && map[selectedBlockAddr()] != '.') {
+                                fill = false;
                                 for(int i = selectedBlockAddr() + WIDTH; map[i] != '.'; i += WIDTH)
                                     setBlock(i, map[selectedBlockAddr()]);
-                                fill = false;
                                 return true;
                             }
                             else if(key == Input.Keys.UP && fill && map[selectedBlockAddr()] != '.') {
+                                fill = false;
                                 for(int i = selectedBlockAddr() - WIDTH; map[i] != '.'; i -= WIDTH)
                                     setBlock(i, map[selectedBlockAddr()]);
-                                fill = false;
                                 return true;
                             }
                             /* включение/выключение "физики" */
@@ -425,7 +432,7 @@ public class Main implements ApplicationListener {
                                     slow = !slow;
                                 /*******************************/
                                 else if(key == Input.Keys.F10) {
-                                    rain = (rain == -1 ? 0 : -1);
+                                    rain = (rain < 0 ? 0 : -10);
                                 /*******************************/
                                 } else if(key == Input.Keys.ESCAPE && ui) {
                                     help = false;
@@ -627,6 +634,7 @@ public class Main implements ApplicationListener {
                 
                 if(scene == S_START) {
                     scene = S_MENU;
+                    rain = -10;
                     return true;
                 } else if(scene == S_MENU) {
                     if(touch.x > 15 && touch.x < 940 && touch.y > 640 && touch.y < 680 && Gdx.app.getType() == Application.ApplicationType.Android) {
@@ -939,9 +947,30 @@ public class Main implements ApplicationListener {
         font.setFixedWidthGlyphs(" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~*ЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮёйцукенгшщзхъфывапролджэячсмитьбю█№—");
         
         scene = S_START;
+        rain = 0;
         
         updateRpList();
         Blocks.init();
+        
+        /* дождь */
+        new Thread() {
+            public void run() {
+                while(true) {
+                    try {
+                        if(rain >= 0) {
+                            if(rain < 4)
+                                rain++;
+                            else
+                                rain = 0;
+                        }
+                        
+                        Thread.sleep(30);
+                    } catch(Exception e) {
+                        //e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
         
         if(rpList != null)
             for(String name : rpList)
@@ -979,7 +1008,7 @@ public class Main implements ApplicationListener {
         if(scene == S_START || scene == S_MENU || scene == S_CLIENT_MENU) {
             batch.setProjectionMatrix(viewport.getCamera().combined);
             batch.begin(); noEnd = true;
-            batch.draw(scene == S_START ? bgTexture : bg2Texture, 0, 0, 1200, 728);
+            batch.draw(scene == S_START && rain >= 0 ? bgTextures[1 + rain] : bgTextures[0], 0, 85, 1200, 650);
             batch.end(); noEnd = false;
             
             if(scene != S_START) {
@@ -988,7 +1017,7 @@ public class Main implements ApplicationListener {
                 shape.setColor(new Color(0f, 1f, 0f, 1f));
                 shape.rect(940, 640, 60, 30);
                 if(scene != S_CLIENT_MENU) {
-                    shape.setColor(new Color(0.6f, 0.6f, 0f, 1f));
+                    shape.setColor(new Color(0f, 0.7f, 0f, 1f));
                     shape.rect(15, 50, 250, 30);
                     shape.rect(275, 50, 250, 30);
                     if(Gdx.app.getType() == Application.ApplicationType.Desktop)
@@ -1048,7 +1077,7 @@ public class Main implements ApplicationListener {
                                 shape.end(); noShapeEnd = false;
                             }
                             
-                            if(rain != -1) {
+                            if(rain >= 0) {
                                 batch.setProjectionMatrix(viewport.getCamera().combined);
                                 batch.begin(); noEnd = true;
                                 batch.draw(rainTextures[rain], ii * Blocks.defaultW, 728 - (i + 1) * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
@@ -1123,7 +1152,7 @@ public class Main implements ApplicationListener {
                     try {
                         if(map[iii] == 'f') {
                             batch.draw(fireTexture, ii * Blocks.defaultW - Blocks.defaultW, 728 - ((i + 2) * Blocks.defaultH), Blocks.defaultW * 3, Blocks.defaultH * 3);
-                            if(rain != -1 && selected == -1)
+                            if(rain >= 0 && selected == -1)
                                 map[iii] = 'b';
                         } else if(map[iii] == 'F')
                             batch.draw(fire2Texture, ii * Blocks.defaultW - Blocks.defaultW, 728 - ((i + 2) * Blocks.defaultH), Blocks.defaultW * 3, Blocks.defaultH * 3);
@@ -1673,6 +1702,7 @@ public class Main implements ApplicationListener {
                                 setBlock(selected, '.');
                             
                             selected -= WIDTH;
+                            cameraStart -= WIDTH;
                         }
                         if(down && selected != -1 && (map[selected + WIDTH] == '.' || Blocks.isWater(map[selected + WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
                             map[selected + WIDTH] = map[selected];
@@ -1683,6 +1713,7 @@ public class Main implements ApplicationListener {
                                 setBlock(selected, '.');
                             
                             selected += WIDTH;
+                            cameraStart += WIDTH;
                         }
                         if(left && selected != -1 && (map[selected - 1] == '.' || Blocks.isWater(map[selected - 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
                             map[selected - 1] = map[selected];
@@ -1693,6 +1724,7 @@ public class Main implements ApplicationListener {
                                 setBlock(selected, '.');
                             
                             selected--;
+                            cameraStart--;
                         }
                         if(right && selected != -1 && (map[selected + 1] == '.' || Blocks.isWater(map[selected + 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
                             map[selected + 1] = map[selected];
@@ -1703,14 +1735,13 @@ public class Main implements ApplicationListener {
                                 setBlock(selected, '.');
                             
                             selected++;
+                            cameraStart++;
                         }
                         
-                        if(selected == -1) {
-                            if(up)    cameraStart -= WIDTH;
-                            if(down)  cameraStart += WIDTH;
-                            if(left)  cameraStart--;
-                            if(right) cameraStart++;
-                        }
+                        if(  up  && selected == -1) cameraStart -= WIDTH;
+                        if( down && selected == -1) cameraStart += WIDTH;
+                        if( left && selected == -1) cameraStart--;
+                        if(right && selected == -1) cameraStart++;
                     } catch(Exception ex) {}
                 }
             }
@@ -1932,37 +1963,6 @@ public class Main implements ApplicationListener {
             }.start();
         }
         
-        /* дождь и пр. */
-        new Thread() {
-            public void run() {
-                while(true) {
-                    try {
-                        if(selected != -1)
-                            cameraStart = selected - (selectedBlockAddr() - cameraStart);
-                        
-                        while(selected != -1 && !jump && selected > WIDTH && !Blocks.isHelicopter(map[selected]) && !Blocks.isEraser(map[selected]) && map[selected + WIDTH] == '.' && ph) {
-                            selected += WIDTH;
-                            cameraStart = selected - (selectedBlockAddr() - cameraStart);
-                            map[selected] = map[selected - WIDTH];
-                            map[selected - WIDTH] = '.';
-                            Thread.sleep(30);
-                        }
-                        
-                        if(rain != -1) {
-                            if(rain < 4)
-                                rain++;
-                            else
-                                rain = 0;
-                        }
-                        
-                        Thread.sleep(25);
-                    } catch(Exception e) {
-                        //e.printStackTrace();
-                    }
-                }
-            }
-        }.start();
-        
         /* отправка сообщения */
         if(gameState == 2) {
             new Thread() {
@@ -2002,6 +2002,27 @@ public class Main implements ApplicationListener {
                 }
             }.start();
         }
+        
+        /* падение выделенного блока */
+        new Thread() {
+            public void run() {
+                while(true) {
+                    try {
+                        while(selected != -1 && !jump && selected > WIDTH && !Blocks.isHelicopter(map[selected]) && !Blocks.isEraser(map[selected]) && map[selected + WIDTH] == '.' && ph) {
+                            selected += WIDTH;
+                            cameraStart += WIDTH;
+                            map[selected] = map[selected - WIDTH];
+                            map[selected - WIDTH] = '.';
+                            Thread.sleep(30);
+                        }
+                        
+                        Thread.sleep(30);
+                    } catch(Exception e) {
+                        //e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
         
         /* логика стрелок */
         if(gameState != 2) {
