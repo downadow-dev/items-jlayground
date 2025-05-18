@@ -1258,7 +1258,7 @@ public class Main implements ApplicationListener {
                     
                     if(etcPage == 0) {
                         batch.draw(fillBtnTexture, 980, 618, 100, 100);
-                        if(!fill) batch.draw(blackTexture, 980, 618, 100, 100);
+                        if(!fill) batch.draw(black2Texture, 980, 618, 100, 100);
                         batch.draw(fireBtnTexture, 875, 618, 100, 100);
                     } else if(etcPage == 1) {
                         batch.draw(fire2BtnTexture, 980, 618, 100, 100);
@@ -1266,20 +1266,20 @@ public class Main implements ApplicationListener {
                     } else if(etcPage == 2) {
                         batch.draw(delBoomBtnTexture, 980, 618, 100, 100);
                         batch.draw(nightBtnTexture, 875, 618, 100, 100);
-                        if(!night) batch.draw(blackTexture, 875, 618, 100, 100);
+                        if(!night) batch.draw(black2Texture, 875, 618, 100, 100);
                     } else if(etcPage == 3) {
                         batch.draw(rainBtnTexture, 980, 618, 100, 100);
-                        if(rain < 0) batch.draw(blackTexture, 980, 618, 100, 100);
+                        if(rain < 0) batch.draw(black2Texture, 980, 618, 100, 100);
                         batch.draw(slowBtnTexture, 875, 618, 100, 100);
-                        if(!slow) batch.draw(blackTexture, 875, 618, 100, 100);
+                        if(!slow) batch.draw(black2Texture, 875, 618, 100, 100);
                     } else if(etcPage == 4) {
                         batch.draw(uiBtnTexture, 980, 618, 100, 100);
                         batch.draw(bgColorBtnTexture, 875, 618, 100, 100);
                     } else if(etcPage == 5) {
                         batch.draw(programmingModeBtnTexture, 980, 618, 100, 100);
-                        if(!programmingMode) batch.draw(blackTexture, 980, 618, 100, 100);
+                        if(!programmingMode) batch.draw(black2Texture, 980, 618, 100, 100);
                         batch.draw(phBtnTexture, 875, 618, 100, 100);
-                        if(ph) batch.draw(blackTexture, 875, 618, 100, 100);
+                        if(ph) batch.draw(black2Texture, 875, 618, 100, 100);
                     } else etcPage = 0;
                 }
                 
