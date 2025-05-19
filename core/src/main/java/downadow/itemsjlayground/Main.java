@@ -304,7 +304,7 @@ public class Main implements ApplicationListener {
                                 selected++;
                                 cameraStart++;
                             } else if(key == Input.Keys.F1) {
-                                click.play(0.5f);
+                                click.play(0.4f);
                                 help = !help;
                                 return true;
                             } else if(key == Input.Keys.C) {
@@ -337,24 +337,28 @@ public class Main implements ApplicationListener {
                             /* заполнение */
                             } else if(key == Input.Keys.LEFT && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() - 1] == '.') {
                                 fill = false;
+                                click.play(1.0f);
                                 for(int i = selectedBlockAddr() - 1, j = 1; map[i] == '.' && j < WIDTH; i--, j++)
                                     setBlock(i, map[selectedBlockAddr()]);
                                 return true;
                             }
                             else if(key == Input.Keys.RIGHT && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() + 1] == '.') {
                                 fill = false;
+                                click.play(1.0f);
                                 for(int i = selectedBlockAddr() + 1, j = 1; map[i] == '.' && j < WIDTH; i++, j++)
                                     setBlock(i, map[selectedBlockAddr()]);
                                 return true;
                             }
                             else if(key == Input.Keys.DOWN && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() + WIDTH] == '.') {
                                 fill = false;
+                                click.play(1.0f);
                                 for(int i = selectedBlockAddr() + WIDTH; map[i] == '.'; i += WIDTH)
                                     setBlock(i, map[selectedBlockAddr()]);
                                 return true;
                             }
                             else if(key == Input.Keys.UP && fill && map[selectedBlockAddr()] != '.' && map[selectedBlockAddr() - WIDTH] == '.') {
                                 fill = false;
+                                click.play(1.0f);
                                 for(int i = selectedBlockAddr() - WIDTH; map[i] == '.'; i -= WIDTH)
                                     setBlock(i, map[selectedBlockAddr()]);
                                 return true;
@@ -362,37 +366,41 @@ public class Main implements ApplicationListener {
                             
                             else if(key == Input.Keys.LEFT && fill && map[selectedBlockAddr()] != '.') {
                                 fill = false;
+                                click.play(1.0f);
                                 for(int i = selectedBlockAddr() - 1; map[i] != '.'; i--)
                                     setBlock(i, map[selectedBlockAddr()]);
                                 return true;
                             }
                             else if(key == Input.Keys.RIGHT && fill && map[selectedBlockAddr()] != '.') {
                                 fill = false;
+                                click.play(1.0f);
                                 for(int i = selectedBlockAddr() + 1; map[i] != '.'; i++)
                                     setBlock(i, map[selectedBlockAddr()]);
                                 return true;
                             }
                             else if(key == Input.Keys.DOWN && fill && map[selectedBlockAddr()] != '.') {
                                 fill = false;
+                                click.play(1.0f);
                                 for(int i = selectedBlockAddr() + WIDTH; map[i] != '.'; i += WIDTH)
                                     setBlock(i, map[selectedBlockAddr()]);
                                 return true;
                             }
                             else if(key == Input.Keys.UP && fill && map[selectedBlockAddr()] != '.') {
                                 fill = false;
+                                click.play(1.0f);
                                 for(int i = selectedBlockAddr() - WIDTH; map[i] != '.'; i -= WIDTH)
                                     setBlock(i, map[selectedBlockAddr()]);
                                 return true;
                             }
                             /* включение/выключение "физики" */
                             else if(key == Input.Keys.F6 && gameState != 2) {
-                                click.play(0.5f);
+                                click.play(0.4f);
                                 ph = !ph;
                                 return true;
                             }
                             /* изменение цвета фона */
                             else if(key == Input.Keys.F3) {
-                                click.play(0.5f);
+                                click.play(0.4f);
                                 colorPointer++;
                                 if(colorPointer == 6)
                                     colorPointer = 0;
@@ -427,34 +435,34 @@ public class Main implements ApplicationListener {
                             }
                             /* включение/выключение ночи */
                             else if(key == Input.Keys.N) {
-                                click.play(0.5f);
+                                click.play(0.4f);
                                 night = !night;
                                 return true;
                             }
                             
                             if(!block) {
                                 if(key == Input.Keys.F4) {
-                                    click.play(1.0f);
+                                    click.play(0.4f);
                                     fill = !fill;
                                 /* показать/скрыть помощь */
                                 } else if(key == Input.Keys.F1 && ui) {
-                                    click.play(0.5f);
+                                    click.play(0.4f);
                                     help = !help;
                                 /* включить/выключить замедление времени */
                                 } else if(key == Input.Keys.F2) {
-                                    click.play(0.5f);
+                                    click.play(0.4f);
                                     slow = !slow;
                                 /*******************************/
                                 } else if(key == Input.Keys.F10) {
-                                    click.play(0.5f);
+                                    click.play(0.4f);
                                     rain = (rain < 0 ? 0 : -10);
                                 /*******************************/
                                 } else if(key == Input.Keys.ESCAPE && ui) {
-                                    click.play(0.5f);
+                                    click.play(0.4f);
                                     help = false;
                                     ui = false;
                                 } else if(key == Input.Keys.ESCAPE && !ui) {
-                                    click.play(0.5f);
+                                    click.play(0.4f);
                                     ui = true;
                                 /* поставить огонь */
                                 } else if(key == Input.Keys.F && map[selectedBlockAddr()] != '.' &&
@@ -464,7 +472,7 @@ public class Main implements ApplicationListener {
                                     fire2(selectedBlockAddr());
                                 /* выбрать блок под прицелом */
                                 else if(key == Input.Keys.SPACE && selected == -1 && map[selectedBlockAddr()] != '.') {
-                                    click.play(0.5f);
+                                    click.play(0.4f);
                                     selected = selectedBlockAddr();
                                 /* убрать выделение */
                                 } else if(key == Input.Keys.SPACE && selected != -1) {
@@ -482,7 +490,7 @@ public class Main implements ApplicationListener {
                                     map[selected] = Blocks.getRightC(map[selected]);
                                 /* взрыв */
                                 else if(key == Input.Keys.ENTER && selected == -1) {
-                                    click.play(0.8f);
+                                    click.play(0.7f);
                                     new Thread() {
                                         public void run() {
                                             for(int i = 0; i < forBoom.length; i++) {
@@ -506,7 +514,7 @@ public class Main implements ApplicationListener {
                                 else if(key == Input.Keys.ENTER && Blocks.isTank(map[selected]) && Blocks.getRightC(map[selected]) == map[selected]) {
                                     for(int i = 1; i < 16; i++) {
                                         if((map[selected + i - WIDTH] != '.' && !(map[selected + i - WIDTH] >= '0' && map[selected + i - WIDTH] <= '9')) || (map[selected + i] != '.' && !(map[selected + i] >= '0' && map[selected + i] <= '9'))) {
-                                            click.play(0.8f);
+                                            click.play(0.7f);
                                             shoot = true;
                                             boom(selected + i - WIDTH);
                                             
@@ -525,7 +533,7 @@ public class Main implements ApplicationListener {
                                 } else if(key == Input.Keys.ENTER && Blocks.isTank(map[selected]) && Blocks.getLeftC(map[selected]) == map[selected]) {
                                     for(int i = 1; i < 16; i++) {
                                         if((map[selected - i - WIDTH] != '.' && !(map[selected - i - WIDTH] >= '0' && map[selected - i - WIDTH] <= '9')) || (map[selected - i] != '.' && !(map[selected - i] >= '0' && map[selected - i] <= '9'))) {
-                                            click.play(0.8f);
+                                            click.play(0.7f);
                                             shoot = true;
                                             boom(selected - i - WIDTH);
                                             
@@ -542,7 +550,7 @@ public class Main implements ApplicationListener {
                                         }
                                     }
                                 } else if(key == Input.Keys.ENTER && Blocks.isHelicopter(map[selected]) && map[selected + WIDTH] == '.' && !blockHelicopter) {
-                                    click.play(0.8f);                                    
+                                    click.play(0.7f);                                    
                                     new Thread() {
                                         public void run() {
                                             blockHelicopter = true;
@@ -561,7 +569,7 @@ public class Main implements ApplicationListener {
                                 }
                                 /* удалить всю воду */
                                 else if(key == Input.Keys.F8) {
-                                    click.play(0.5f);
+                                    click.play(0.4f);
                                     noWater = true;
                                 }
                             }
@@ -590,7 +598,7 @@ public class Main implements ApplicationListener {
                         
                         /* включить/выключить режим изменения поведения */
                         else if(key == Input.Keys.F5 && !programmingMode) {
-                            click.play(0.5f);
+                            click.play(0.4f);
                             if(Gdx.app.getType() == Application.ApplicationType.Android)
                                 Gdx.input.setOnscreenKeyboardVisible(true);
                             
@@ -599,7 +607,7 @@ public class Main implements ApplicationListener {
                             return true;
                         }
                         else if(key == Input.Keys.F5 && programmingMode) {
-                            click.play(0.5f);
+                            click.play(0.4f);
                             if(Gdx.app.getType() == Application.ApplicationType.Android)
                                 Gdx.input.setOnscreenKeyboardVisible(false);
                             
@@ -609,7 +617,7 @@ public class Main implements ApplicationListener {
                         }
                         
                         else if((!programmingMode && !writeMessage) && key == Input.Keys.X) {
-                            click.play(0.5f);
+                            click.play(0.4f);
                             select = true;
                             if(Gdx.app.getType() == Application.ApplicationType.Android)
                                 Gdx.input.setOnscreenKeyboardVisible(true);
@@ -618,7 +626,7 @@ public class Main implements ApplicationListener {
                         
                         /* написать сообщение */
                         else if(key == Input.Keys.F7 && gameState == 2 && !writeMessage) {
-                            click.play(0.5f);
+                            click.play(0.4f);
                             text = "";
                             writeMessage = true;
                             msgSaved = false;
@@ -626,7 +634,7 @@ public class Main implements ApplicationListener {
                                 Gdx.input.setOnscreenKeyboardVisible(true);
                             return true;
                         } else if(key == Input.Keys.F7 && gameState == 2) {
-                            click.play(0.5f);
+                            click.play(0.4f);
                             if(Gdx.app.getType() == Application.ApplicationType.Android)
                                 Gdx.input.setOnscreenKeyboardVisible(false);
                             
