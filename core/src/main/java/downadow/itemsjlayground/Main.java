@@ -1354,6 +1354,8 @@ public class Main implements ApplicationListener {
         retval = val;
     }
     
+    private int downloadFileAttempt = 0;
+    
     private boolean downloadFile(String url, FileHandle fileToSave) {
         retval = false;
         done = false;
@@ -1366,19 +1368,23 @@ public class Main implements ApplicationListener {
                     
                     Gdx.net.sendHttpRequest(rq, new Net.HttpResponseListener() {
                         public void cancelled() {
-                            try {
-                                Thread.sleep(500);
+                            if(downloadFileAttempt < 5) {
+                                downloadFileAttempt++;
+                                try { Thread.sleep(500); } catch(Exception ex) {}
                                 setRetval(downloadFile(url, fileToSave));
-                                setDone(true);
-                            } catch(Exception ex) {}
+                            }
+                            downloadFileAttempt = 0;
+                            setDone(true);
                         }
                         
                         public void failed(Throwable t) {
-                            try {
-                                Thread.sleep(500);
+                            if(downloadFileAttempt < 5) {
+                                downloadFileAttempt++;
+                                try { Thread.sleep(500); } catch(Exception ex) {}
                                 setRetval(downloadFile(url, fileToSave));
-                                setDone(true);
-                            } catch(Exception ex) {}
+                            }
+                            downloadFileAttempt = 0;
+                            setDone(true);
                         }
                         
                         public void handleHttpResponse(Net.HttpResponse httpResponse) {
@@ -1387,18 +1393,20 @@ public class Main implements ApplicationListener {
                                 setRetval(true);
                             }
                             
+                            downloadFileAttempt = 0;
                             setDone(true);
                         }
                     });
                     Thread.sleep(35000);
                     Pools.free(rq);
                 } catch(Exception ex) {}
+                downloadFileAttempt = 0;
                 setDone(true);
             }
         }.start();
         
         while(!done) {
-            try { Thread.sleep(100); } catch(Exception ex) {}
+            try { Thread.sleep(20); } catch(Exception ex) {}
         }
         
         return retval;
