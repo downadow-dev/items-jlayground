@@ -747,11 +747,17 @@ public class Main implements ApplicationListener {
                         selectNumber = "";
                         return keyUp(Input.Keys.X);
                     } else if(touch.x > 700 && touch.x < 1200 && touch.y > 0 && touch.y < 500) {
-                        for(boolean val : forBoom)
-                            if(val && selected == -1)
-                                return keyDown(Input.Keys.ENTER);
-                        
-                        return keyDown((selected != -1 && (Blocks.isTank(map[selected]) || Blocks.isHelicopter(map[selected]))) ? Input.Keys.ENTER : Input.Keys.C);
+                        if(selected != -1 && !Blocks.isTank(map[selected]) && !Blocks.isHelicopter(map[selected])) {
+                            return keyDown(Input.Keys.UP);
+                        } else if(selected != -1 && (Blocks.isTank(map[selected]) || Blocks.isHelicopter(map[selected]))) {
+                            return keyDown(Input.Keys.ENTER);
+                        } else {
+                            for(boolean val : forBoom)
+                                if(val)
+                                    return keyDown(Input.Keys.ENTER);
+                            
+                            return keyDown(Input.Keys.C);
+                        }
                     } else if(touch.x > 770 && touch.x < 870 && touch.y > 618 && touch.y < 718) {
                         etcPage++;
                         return true;
@@ -1346,68 +1352,37 @@ public class Main implements ApplicationListener {
         }
     }
     
-    private void setDone(boolean val) {
-        done = val;
-    }
-    
-    private void setRetval(boolean val) {
-        retval = val;
-    }
-    
-    private int downloadFileAttempt = 0;
-    
     private boolean downloadFile(String url, FileHandle fileToSave) {
         retval = false;
         done = false;
+        Net.HttpRequest rq = rqbuilder.newRequest().method(Net.HttpMethods.GET).url(url).build();
         
-        new Thread() {
-            public void run() {
-                try {
-                    Net.HttpRequest rq;
-                    rq = rqbuilder.newRequest().method(Net.HttpMethods.GET).url(url).build();
-                    
-                    Gdx.net.sendHttpRequest(rq, new Net.HttpResponseListener() {
-                        public void cancelled() {
-                            if(downloadFileAttempt < 5) {
-                                downloadFileAttempt++;
-                                try { Thread.sleep(500); } catch(Exception ex) {}
-                                setRetval(downloadFile(url, fileToSave));
-                            }
-                            downloadFileAttempt = 0;
-                            setDone(true);
-                        }
-                        
-                        public void failed(Throwable t) {
-                            if(downloadFileAttempt < 5) {
-                                downloadFileAttempt++;
-                                try { Thread.sleep(500); } catch(Exception ex) {}
-                                setRetval(downloadFile(url, fileToSave));
-                            }
-                            downloadFileAttempt = 0;
-                            setDone(true);
-                        }
-                        
-                        public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                            if(httpResponse.getStatus().getStatusCode() != 404) {
-                                fileToSave.writeBytes(httpResponse.getResult(), false);
-                                setRetval(true);
-                            }
-                            
-                            downloadFileAttempt = 0;
-                            setDone(true);
-                        }
-                    });
-                    Thread.sleep(35000);
-                    Pools.free(rq);
-                } catch(Exception ex) {}
-                downloadFileAttempt = 0;
-                setDone(true);
+        Gdx.net.sendHttpRequest(rq, new Net.HttpResponseListener() {
+            public void cancelled() {
+                try { Thread.sleep(10); } catch(Exception ex) {}
+                retval = downloadFile(url, fileToSave);
+                done = true;
             }
-        }.start();
+            
+            public void failed(Throwable t) {
+                try { Thread.sleep(10); } catch(Exception ex) {}
+                retval = downloadFile(url, fileToSave);
+                done = true;
+            }
+            
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                if(httpResponse.getStatus().getStatusCode() != 404) {
+                    fileToSave.writeBytes(httpResponse.getResult(), false);
+                    retval = true;
+                }
+                done = true;
+            }
+        });
         
         while(!done) {
             try { Thread.sleep(20); } catch(Exception ex) {}
         }
+        Pools.free(rq);
         
         return retval;
     }
@@ -2040,7 +2015,7 @@ public class Main implements ApplicationListener {
                     while(true) {
                         try {
                             if(!cmsg.isEmpty()) {
-                                setDone(false);
+                                done = false;
                                 Net.HttpRequest rq;
                                 
                                 String m = "";
@@ -2055,11 +2030,11 @@ public class Main implements ApplicationListener {
                                 
                                 rq = rqbuilder.newRequest().method(Net.HttpMethods.GET).url(connectUrl + "/msg.php").content("m=" + m).build();     
                                 Gdx.net.sendHttpRequest(rq, new Net.HttpResponseListener() {
-                                    public void cancelled() { setDone(true); }
+                                    public void cancelled() { done = true; }
                                     
-                                    public void failed(Throwable t) { setDone(true); }
+                                    public void failed(Throwable t) { done = true; }
                                     
-                                    public void handleHttpResponse(Net.HttpResponse httpResponse) { setDone(true); }
+                                    public void handleHttpResponse(Net.HttpResponse httpResponse) { done = true; }
                                 });
                                 while(!done)
                                     Thread.sleep(50);
