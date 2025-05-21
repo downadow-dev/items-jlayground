@@ -654,7 +654,10 @@ public class Main implements ApplicationListener {
             }
             
             public boolean touchUp(int x, int y, int ptr, int btn) {
-                if(scene == S_GAME && Gdx.app.getType() == Application.ApplicationType.Android) {
+                touch.set(x, y);
+                viewport.unproject(touch);
+                
+                if(Gdx.app.getType() == Application.ApplicationType.Android && scene == S_GAME && touch.x < 400) {
                     up    = false;
                     down  = false;
                     left  = false;
@@ -1870,7 +1873,7 @@ public class Main implements ApplicationListener {
                             lightMap[i] = tmp[i];
                         }
                         
-                        Thread.sleep(1000);
+                        Thread.sleep(400);
                     } catch(Exception e) {}
                 }
             }
