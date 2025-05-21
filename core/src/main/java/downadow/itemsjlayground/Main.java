@@ -414,13 +414,13 @@ public class Main implements ApplicationListener {
                                     bgColorGreen = 60;
                                     bgColorBlue = 60;
                                 } else if(colorPointer == 2) {
-                                    bgColorRed = 115;
+                                    bgColorRed = 100;
                                     bgColorGreen = 0;
                                     bgColorBlue = 0;
                                 } else if(colorPointer == 3) {
-                                    bgColorRed = 130;
-                                    bgColorGreen = 130;
-                                    bgColorBlue = 75;
+                                    bgColorRed = 200;
+                                    bgColorGreen = 200;
+                                    bgColorBlue = 100;
                                 } else if(colorPointer == 4) {
                                     bgColorRed = 160;
                                     bgColorGreen = 160;
@@ -657,11 +657,13 @@ public class Main implements ApplicationListener {
                 touch.set(x, y);
                 viewport.unproject(touch);
                 
-                if(Gdx.app.getType() == Application.ApplicationType.Android && scene == S_GAME && touch.x < 400) {
-                    up    = false;
-                    down  = false;
-                    left  = false;
-                    right = false;
+                if(Gdx.app.getType() == Application.ApplicationType.Android && scene == S_GAME) {
+                    up = false;
+                    if(touch.x < 400) {
+                        down  = false;
+                        left  = false;
+                        right = false;
+                    }
                     return true;
                 }
                 return false;
