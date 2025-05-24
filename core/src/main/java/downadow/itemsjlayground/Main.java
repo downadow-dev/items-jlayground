@@ -2175,69 +2175,69 @@ public class Main implements ApplicationListener {
                                             }
                                         }
                                         /* перемещение */
-                                        else if(behaviorSplitted[i].equals("up")) {
+                                        else if(behaviorSplitted[i].equals("up") && behaviorSelected != 0) {
                                             map[behaviorSelected - WIDTH] = map[behaviorSelected];
                                             map[behaviorSelected] = '.';
                                             behaviorSelected -= WIDTH;
-                                        } else if(behaviorSplitted[i].equals("down")) {
+                                        } else if(behaviorSplitted[i].equals("down") && behaviorSelected != 0) {
                                             map[behaviorSelected + WIDTH] = map[behaviorSelected];
                                             map[behaviorSelected] = '.';
                                             behaviorSelected += WIDTH;
-                                        } else if(behaviorSplitted[i].equals("right")) {
+                                        } else if(behaviorSplitted[i].equals("right") && behaviorSelected != 0) {
                                             map[behaviorSelected + 1] = map[behaviorSelected];
                                             map[behaviorSelected] = '.';
                                             behaviorSelected++;
-                                        } else if(behaviorSplitted[i].equals("left")) {
+                                        } else if(behaviorSplitted[i].equals("left") && behaviorSelected != 0) {
                                             map[behaviorSelected - 1] = map[behaviorSelected];
                                             map[behaviorSelected] = '.';
                                             behaviorSelected--;
-                                        } else if(behaviorSplitted[i].equals("up:lift")) {
+                                        } else if(behaviorSplitted[i].equals("up:lift") && behaviorSelected != 0) {
                                             map[behaviorSelected - WIDTH * 2] = map[behaviorSelected - WIDTH];
                                             map[behaviorSelected - WIDTH] = map[behaviorSelected];
                                             map[behaviorSelected] = '.';
                                             behaviorSelected -= WIDTH;
-                                        } else if(behaviorSplitted[i].equals("down:lift")) {
+                                        } else if(behaviorSplitted[i].equals("down:lift") && behaviorSelected != 0) {
                                             map[behaviorSelected + WIDTH * 2] = map[behaviorSelected + WIDTH];
                                             map[behaviorSelected + WIDTH] = map[behaviorSelected];
                                             map[behaviorSelected] = '.';
                                             behaviorSelected += WIDTH;
-                                        } else if(behaviorSplitted[i].equals("right:lift")) {
+                                        } else if(behaviorSplitted[i].equals("right:lift") && behaviorSelected != 0) {
                                             map[behaviorSelected + 2] = map[behaviorSelected + 1];
                                             map[behaviorSelected + 1] = map[behaviorSelected];
                                             map[behaviorSelected] = '.';
                                             behaviorSelected++;
-                                        } else if(behaviorSplitted[i].equals("left:lift")) {
+                                        } else if(behaviorSplitted[i].equals("left:lift") && behaviorSelected != 0) {
                                             map[behaviorSelected - 2] = map[behaviorSelected - 1];
                                             map[behaviorSelected - 1] = map[behaviorSelected];
                                             map[behaviorSelected] = '.';
                                             behaviorSelected--;
-                                        } else if(behaviorSplitted[i].equals("up:copy")) {
+                                        } else if(behaviorSplitted[i].equals("up:copy") && behaviorSelected != 0) {
                                             map[behaviorSelected - WIDTH] = map[behaviorSelected];
                                             behaviorSelected -= WIDTH;
-                                        } else if(behaviorSplitted[i].equals("down:copy")) {
+                                        } else if(behaviorSplitted[i].equals("down:copy") && behaviorSelected != 0) {
                                             map[behaviorSelected + WIDTH] = map[behaviorSelected];
                                             behaviorSelected += WIDTH;
-                                        } else if(behaviorSplitted[i].equals("right:copy")) {
+                                        } else if(behaviorSplitted[i].equals("right:copy") && behaviorSelected != 0) {
                                             map[behaviorSelected + 1] = map[behaviorSelected];
                                             behaviorSelected++;
-                                        } else if(behaviorSplitted[i].equals("left:copy")) {
+                                        } else if(behaviorSplitted[i].equals("left:copy") && behaviorSelected != 0) {
                                             map[behaviorSelected - 1] = map[behaviorSelected];
                                             behaviorSelected--;
                                         }
                                         /* fire, fire2 и boom */
-                                        else if(behaviorSplitted[i].split(":")[0].equals("fire")) {
+                                        else if(behaviorSplitted[i].split(":")[0].equals("fire") && behaviorSelected != 0) {
                                             fire(behaviorSelected);
-                                        } else if(behaviorSplitted[i].split(":")[0].equals("fire2")) {
+                                        } else if(behaviorSplitted[i].split(":")[0].equals("fire2") && behaviorSelected != 0) {
                                             fire2(behaviorSelected);
-                                        } else if(behaviorSplitted[i].split(":")[0].equals("boom")) {
+                                        } else if(behaviorSplitted[i].split(":")[0].equals("boom") && behaviorSelected != 0) {
                                             boom(behaviorSelected);
                                         }
                                         /* set */
-                                        else if(behaviorSplitted[i].split(":")[0].equals("set")) {
+                                        else if(behaviorSplitted[i].split(":")[0].equals("set") && behaviorSelected != 0) {
                                             map[behaviorSelected] = behaviorSplitted[i].split(":")[1].toCharArray()[0];
                                         }
                                         /* setn */
-                                        else if(behaviorSplitted[i].split(":")[0].equals("setn")) {
+                                        else if(behaviorSplitted[i].split(":")[0].equals("setn") && behaviorSelected != 0) {
                                             map[behaviorSelected] = (char)Integer.parseInt(behaviorSplitted[i].split(":")[1]);
                                         }
                                         /* ~<...> */
@@ -2245,19 +2245,19 @@ public class Main implements ApplicationListener {
                                             Thread.sleep(!slow ? Integer.parseInt(behaviorSplitted[i].replace("~", "")) : Integer.parseInt(behaviorSplitted[i].replace("~", "")) * 2);
                                         }
                                         /* wait */
-                                        else if(behaviorSplitted[i].equals("wait:up")) {
+                                        else if(behaviorSplitted[i].equals("wait:up") && behaviorSelected != 0) {
                                             while(map[behaviorSelected - WIDTH] == '.' && (!behavior.isEmpty() && ph && !programmingMode))
                                                 Thread.sleep(40);
-                                        } else if(behaviorSplitted[i].equals("wait:down")) {
+                                        } else if(behaviorSplitted[i].equals("wait:down") && behaviorSelected != 0) {
                                             while(map[behaviorSelected + WIDTH] == '.' && (!behavior.isEmpty() && ph && !programmingMode))
                                                 Thread.sleep(40);
-                                        } else if(behaviorSplitted[i].equals("wait:right")) {
+                                        } else if(behaviorSplitted[i].equals("wait:right") && behaviorSelected != 0) {
                                             while(map[behaviorSelected + 1] == '.' && (!behavior.isEmpty() && ph && !programmingMode))
                                                 Thread.sleep(40);
-                                        } else if(behaviorSplitted[i].equals("wait:left")) {
+                                        } else if(behaviorSplitted[i].equals("wait:left") && behaviorSelected != 0) {
                                             while(map[behaviorSelected - 1] == '.' && (!behavior.isEmpty() && ph && !programmingMode))
                                                 Thread.sleep(40);
-                                        } else if(behaviorSplitted[i].equals("wait:light")) {
+                                        } else if(behaviorSplitted[i].equals("wait:light") && behaviorSelected != 0) {
                                             while(!lightMap[behaviorSelected] &&
                                                   !lightMap[behaviorSelected - 1] &&
                                                   !lightMap[behaviorSelected + 1] &&
@@ -2265,7 +2265,7 @@ public class Main implements ApplicationListener {
                                                   !lightMap[behaviorSelected + WIDTH] &&
                                                   (!behavior.isEmpty() && ph && !programmingMode))
                                                 Thread.sleep(40);
-                                        } else if(behaviorSplitted[i].equals("wait:dark")) {
+                                        } else if(behaviorSplitted[i].equals("wait:dark") && behaviorSelected != 0) {
                                             while((lightMap[behaviorSelected] ||
                                                   lightMap[behaviorSelected - 1] ||
                                                   lightMap[behaviorSelected + 1] ||
@@ -2273,7 +2273,7 @@ public class Main implements ApplicationListener {
                                                   lightMap[behaviorSelected + WIDTH]) &&
                                                   (!behavior.isEmpty() && ph && !programmingMode))
                                                 Thread.sleep(40);
-                                        } else if(behaviorSplitted[i].equals("wait")) {
+                                        } else if(behaviorSplitted[i].equals("wait") && behaviorSelected != 0) {
                                             while(map[behaviorSelected - 1] == '.'     &&
                                                   map[behaviorSelected + 1] == '.'     &&
                                                   map[behaviorSelected + WIDTH] == '.' &&
@@ -2281,13 +2281,13 @@ public class Main implements ApplicationListener {
                                                 Thread.sleep(40);
                                         }
                                         /* tp */
-                                        else if(behaviorSplitted[i].startsWith("tp:")) {
+                                        else if(behaviorSplitted[i].startsWith("tp:") && behaviorSelected != 0) {
                                             map[Integer.parseInt(behaviorSplitted[i].split(":")[1])] = map[behaviorSelected];
                                             map[behaviorSelected] = '.';
                                             behaviorSelected = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
                                         }
                                         /* step */
-                                        else if(behaviorSplitted[i].startsWith("step:")) {
+                                        else if(behaviorSplitted[i].startsWith("step:") && behaviorSelected != 0) {
                                             int delay  = Integer.parseInt(behaviorSplitted[i].split(":")[2]),
                                                 target = Integer.parseInt(behaviorSplitted[i].split(":")[1]);
                                             
@@ -2326,7 +2326,7 @@ public class Main implements ApplicationListener {
                                     }
                                 }
                                 
-                                Thread.sleep(100);
+                                Thread.sleep(60);
                             } catch(Exception e) {
                                 //e.printStackTrace();
                             }
