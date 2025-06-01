@@ -1000,6 +1000,7 @@ public class Main implements ApplicationListener {
         viewport = new FitViewport(1200, 728);
         font = new BitmapFont(Gdx.files.internal("font/font.fnt"), false);
         font.setFixedWidthGlyphs(" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~*ЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮёйцукенгшщзхъфывапролджэячсмитьбю█№—");
+        font.setUseIntegerPositions(false);
         
         scene = S_START;
         rain = 0;
