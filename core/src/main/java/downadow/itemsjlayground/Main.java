@@ -1060,15 +1060,15 @@ public class Main implements ApplicationListener {
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         viewport.getCamera().update();
+        batch.setProjectionMatrix(viewport.getCamera().combined);
+        shape.setProjectionMatrix(viewport.getCamera().combined);
         
         if(scene == S_START || scene == S_MENU || scene == S_CLIENT_MENU) {
-            batch.setProjectionMatrix(viewport.getCamera().combined);
             batch.begin(); noEnd = true;
             batch.draw((scene == S_START && rain >= 0) ? bgTextures[1 + rain] : bgTextures[0], 0, 85, 1200, 650);
             batch.end(); noEnd = false;
             
             if(scene != S_START) {
-                shape.setProjectionMatrix(viewport.getCamera().combined);
                 shape.begin(ShapeRenderer.ShapeType.Filled); noShapeEnd = true;
                 shape.setColor(new Color(0f, 1f, 0f, 1f));
                 shape.rect(940, 640, 60, 30);
@@ -1081,7 +1081,7 @@ public class Main implements ApplicationListener {
                 }
                 shape.end(); noShapeEnd = false;
                 
-                batch.setProjectionMatrix(viewport.getCamera().combined);
+                
                 batch.begin(); noEnd = true;
                 batch.draw(blackTexture, 15, 640, 920, 30);
                 if(scene != S_CLIENT_MENU)
@@ -1117,14 +1117,14 @@ public class Main implements ApplicationListener {
                 for(int ii = 0; ii < 26; ii++) {
                     try {
                         if(iii < map.length && iii >= 0) {
-                            shape.setProjectionMatrix(viewport.getCamera().combined);
+                            
                             shape.begin(ShapeRenderer.ShapeType.Filled); noShapeEnd = true;
                             shape.setColor(new Color(bgColorRed * (1f / 255), bgColorGreen * (1f / 255), bgColorBlue * (1f / 255), 1f));
                             shape.rect(ii * Blocks.defaultW, 728 - (i + 1) * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
                             
                             shape.end(); noShapeEnd = false;
                             if(ui) {
-                                shape.setProjectionMatrix(viewport.getCamera().combined);
+                                
                                 shape.begin(ShapeRenderer.ShapeType.Line); noShapeEnd = true;
                                 try {
                                     shape.setColor(bgColorRed < 195 && bgColorGreen < 195 && bgColorBlue < 195 ? new Color((bgColorRed + 60) * (1f / 255), (bgColorGreen + 60) * (1f / 255), (bgColorBlue + 60) * (1f / 255), 1f) : new Color((bgColorRed - 60) * (1f / 255), (bgColorGreen - 60) * (1f / 255), (bgColorBlue - 60) * (1f / 255), 1f));
@@ -1134,7 +1134,7 @@ public class Main implements ApplicationListener {
                             }
                             
                             if(rain >= 0) {
-                                batch.setProjectionMatrix(viewport.getCamera().combined);
+                                
                                 batch.begin(); noEnd = true;
                                 batch.draw(rainTextures[rain], ii * Blocks.defaultW, 728 - (i + 1) * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
                                 batch.end(); noEnd = false;
@@ -1142,7 +1142,7 @@ public class Main implements ApplicationListener {
                         }
                         
                         if(map[iii] == '~' || map[iii] == ',') {
-                            shape.setProjectionMatrix(viewport.getCamera().combined);
+                            
                             shape.begin(ShapeRenderer.ShapeType.Filled); noShapeEnd = true;
                             
                             shape.setColor(new Color(0.03f, 0.03f, 0.03f, 1f));
@@ -1153,24 +1153,24 @@ public class Main implements ApplicationListener {
                             shape.end(); noShapeEnd = false;
                             
                             if(ui) {
-                                batch.setProjectionMatrix(viewport.getCamera().combined);
+                                
                                 batch.begin(); noEnd = true;
                                 font.getData().setScale(0.4f);
                                 font.draw(batch, (map[iii] == ',' ? "<" : ">"), ii * Blocks.defaultW + 5, 728 - (i * Blocks.defaultH + 5));
                                 batch.end(); noEnd = false;
                             }
                         } else if(map[iii] == ':') {
-                            batch.setProjectionMatrix(viewport.getCamera().combined);
+                            
                             batch.begin(); noEnd = true;
                             batch.draw(leftTexture, ii * Blocks.defaultW, 728 - (i + 1) * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
                             batch.end(); noEnd = false;
                         } else if(map[iii] == ';') {
-                            batch.setProjectionMatrix(viewport.getCamera().combined);
+                            
                             batch.begin(); noEnd = true;
                             batch.draw(rightTexture, ii * Blocks.defaultW, 728 - (i + 1) * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
                             batch.end(); noEnd = false;
                         } else if(map[iii] == 'b') {
-                            shape.setProjectionMatrix(viewport.getCamera().combined);
+                            
                             shape.begin(ShapeRenderer.ShapeType.Filled); noShapeEnd = true;
                             
                             shape.setColor(new Color(0.03f, 0.03f, 0.03f, 1f));
@@ -1181,7 +1181,7 @@ public class Main implements ApplicationListener {
                         /* блок мода */
                         else if(Blocks.getTextureX(map[iii]) == Blocks.defaultX && Blocks.getTextureY(map[iii]) == Blocks.defaultY &&
                                 Blocks.getTextureWidth(map[iii]) <= Blocks.defaultW && Blocks.getTextureHeight(map[iii]) <= Blocks.defaultH && !Blocks.isUnknown(map[iii])) {
-                            batch.setProjectionMatrix(viewport.getCamera().combined);
+                            
                             batch.begin(); noEnd = true;
                             batch.draw(((Blocks.isHelicopter(map[iii]) && map[iii + WIDTH] == '.' && nextTexture) || (iii == selected && shoot)) ? Blocks.getTexture2(map[iii]) : Blocks.getTexture(map[iii]), ii * Blocks.defaultW + Blocks.getTextureX(map[iii]) - 1, 728 - i * Blocks.defaultH - Blocks.getTextureHeight(map[iii]) - Blocks.getTextureY(map[iii]), Blocks.getTextureWidth(map[iii]) + 2, Blocks.getTextureHeight(map[iii]) + 1);
                             batch.end(); noEnd = false;
@@ -1197,7 +1197,7 @@ public class Main implements ApplicationListener {
                 iii += WIDTH - 26;
             }
             
-            batch.setProjectionMatrix(viewport.getCamera().combined);
+            
             batch.begin(); noEnd = true;
             
             iii = camPos;
