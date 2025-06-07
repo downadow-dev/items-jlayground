@@ -1828,46 +1828,12 @@ public class Main implements ApplicationListener {
                         /* свет от блоков */
                         for(int i = 0; i < lightMap.length; i++) {
                             if(Blocks.getLight(map[i]) > 0) {
-                                tmp[i - 1]     = true;
-                                tmp[i + 1]     = true;
-                                tmp[i - WIDTH] = true;
-                                tmp[i + WIDTH] = true;
-                                
-                                int left = Blocks.getLight(map[i]);
-                                for(int ii = i; left > 0 && (Blocks.isTranslucent(map[ii]) || ii == i); ii -= WIDTH, left--) {
-                                    for(int iii = ii; (iii - ii) < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii++) {
-                                        tmp[iii] = true;
-                                    }
-                                    for(int iii = ii; -(iii - ii) < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii--) {
-                                        tmp[iii] = true;
-                                    }
-                                }
-                                left = Blocks.getLight(map[i]);
-                                for(int ii = i; left > 0 && (Blocks.isTranslucent(map[ii]) || ii == i); ii += WIDTH, left--) {
-                                    for(int iii = ii; (iii - ii) < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii++) {
-                                        tmp[iii] = true;
-                                    }
-                                    for(int iii = ii; -(iii - ii) < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii--) {
-                                        tmp[iii] = true;
-                                    }
-                                }
-                                left = Blocks.getLight(map[i]);
-                                for(int ii = i; left > 0 && (Blocks.isTranslucent(map[ii]) || ii == i); ii--, left--) {
-                                    for(int iii = ii; (iii - ii) / WIDTH < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii += WIDTH) {
-                                        tmp[iii] = true;
-                                    }
-                                    for(int iii = ii; -(iii - ii) / WIDTH < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii -= WIDTH) {
-                                        tmp[iii] = true;
-                                    }
-                                }
-                                left = Blocks.getLight(map[i]);
-                                for(int ii = i; left > 0 && (Blocks.isTranslucent(map[ii]) || ii == i); ii++, left--) {
-                                    for(int iii = ii; (iii - ii) / WIDTH < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii += WIDTH) {
-                                        tmp[iii] = true;
-                                    }
-                                    for(int iii = ii; -(iii - ii) / WIDTH < left && (Blocks.isTranslucent(map[iii]) || iii == i); iii -= WIDTH) {
-                                        tmp[iii] = true;
-                                    }
+                                final int max = Blocks.getLight(map[i]);
+                                for(float angle = 0.0001f; angle < 6.28318f; angle += 0.1f) {
+                                    final float eY = (float)Math.sin(angle);
+                                    final float eX = (float)Math.cos(angle);
+                                    for(float dist = 0.1f; dist < max && (i == i + (int)(eX * dist) + (int)(eY * dist) * WIDTH || Blocks.isTranslucent(map[i + (int)(eX * dist) + (int)(eY * dist) * WIDTH])); dist += 0.1f)
+                                        tmp[i + (int)(eX * dist) + (int)(eY * dist) * WIDTH] = true;
                                 }
                             }
                         }
