@@ -1829,7 +1829,7 @@ public class Main implements ApplicationListener {
                         for(int i = 0; i < lightMap.length; i++) {
                             if(Blocks.getLight(map[i]) > 0) {
                                 final int max = Blocks.getLight(map[i]);
-                                for(float angle = 0.0001f; angle < 6.28318f; angle += 0.1f) {
+                                for(float angle = 0.0001f; angle < 6.283f; angle += 0.01f) {
                                     final float eY = (float)Math.sin(angle);
                                     final float eX = (float)Math.cos(angle);
                                     for(float dist = 0.1f; dist < max && (i == i + (int)(eX * dist) + (int)(eY * dist) * WIDTH || Blocks.isTranslucent(map[i + (int)(eX * dist) + (int)(eY * dist) * WIDTH])); dist += 0.1f)
