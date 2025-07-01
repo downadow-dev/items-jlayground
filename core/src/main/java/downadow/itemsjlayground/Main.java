@@ -1017,6 +1017,7 @@ public class Main implements ApplicationListener {
     }
     
     public void resize(int width, int height) {
+        if(width <= 0 || height <= 0) return;
         viewport.update(width, height, true);
     }
     
