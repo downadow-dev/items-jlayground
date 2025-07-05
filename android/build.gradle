@@ -34,8 +34,8 @@ android {
     applicationId 'downadow.itemsjlayground'
     minSdkVersion 21
     targetSdkVersion 35
-    versionCode 35
-    versionName "2.4.2"
+    versionCode 36
+    versionName "2.4.3"
   }
   compileOptions {
     sourceCompatibility "8"

@@ -122,6 +122,9 @@ public class Main implements ApplicationListener {
     private int adminPos = 0;
     private int etcPage = 0;
     
+    private int attempts = 0;
+    private String downloaded = "";
+    
     public void create() {
         root = ".items-jlayground.data";
         rqbuilder = new HttpRequestBuilder();
@@ -918,9 +921,9 @@ public class Main implements ApplicationListener {
                             public void run() {
                                 String mapDir;
                                 if(!downloadFile(text + "/name", Gdx.files.external(root + "/name")))
-                                    mapDir = "rp" + new Random().nextInt(1000000000);
+                                    mapDir = "rp" + new Random().nextInt(1000000);
                                 else
-                                    mapDir = Gdx.files.external(root + "/name").readString().replace("\n", "") + "_" + new Random().nextInt(1000000);
+                                    mapDir = Gdx.files.external(root + "/name").readString().replace("\n", "") + "_" + new Random().nextInt(100000);
                                 
                                 Gdx.files.external(root + "/rp_list.txt").writeString(mapDir + "\n", true);
                                 if(!downloadFile(text + "/desc", Gdx.files.external(root + "/" + mapDir + "/desc"))) {
@@ -1338,24 +1341,28 @@ public class Main implements ApplicationListener {
     private boolean downloadFile(String url, FileHandle fileToSave) {
         retval = false;
         done = false;
+        downloaded = "";
         Net.HttpRequest rq = rqbuilder.newRequest().method(Net.HttpMethods.GET).url(url).build();
         
         Gdx.net.sendHttpRequest(rq, new Net.HttpResponseListener() {
             public void cancelled() {
-                try { Thread.sleep(10); } catch(Exception ex) {}
-                retval = downloadFile(url, fileToSave);
+                try { Thread.sleep(20); } catch(Exception ex) {}
+                retval = (++attempts < 10 ? downloadFile(url, fileToSave) : false);
                 done = true;
             }
             
             public void failed(Throwable t) {
-                try { Thread.sleep(10); } catch(Exception ex) {}
-                retval = downloadFile(url, fileToSave);
+                try { Thread.sleep(20); } catch(Exception ex) {}
+                retval = (++attempts < 10 ? downloadFile(url, fileToSave) : false);
                 done = true;
             }
             
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 if(httpResponse.getStatus().getStatusCode() != 404) {
-                    fileToSave.writeBytes(httpResponse.getResult(), false);
+                    if(fileToSave != null)
+                        fileToSave.writeBytes(httpResponse.getResult(), false);
+                    else
+                        downloaded = httpResponse.getResultAsString();
                     retval = true;
                 }
                 done = true;
@@ -1367,6 +1374,7 @@ public class Main implements ApplicationListener {
         }
         Pools.free(rq);
         
+        attempts = 0;
         return retval;
     }
     
@@ -2022,7 +2030,7 @@ public class Main implements ApplicationListener {
                                 Pools.free(rq);
                                 cmsg = "";
                             }
-                            Thread.sleep(300);
+                            Thread.sleep(320);
                         } catch(Exception e) {}
                     }
                 }
@@ -2355,15 +2363,15 @@ public class Main implements ApplicationListener {
             new Thread() {
                 public void run() {
                     while(true) {
+                        /* загрузка карты, поведения, позиции хоста и сообщения */
+                        
                         try {
-                            /* загрузка карты, поведения, позиции хоста и сообщения */
+                            Thread.sleep(100);
                             
                             if(selected == -1) {
-                                downloadFile(connectUrl + "/adminMap", Gdx.files.external(root + "/" + rpList[selectedRp] + "/map"));
+                                downloadFile(connectUrl + "/adminMap", null);
                                 
-                                String[] ln;
-                                
-                                ln = Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").readString().split("\n");
+                                String[] ln = downloaded.split("\n");
                                 if(!programmingMode) behavior = ln[0];
                                 bgColorRed = Integer.parseInt(ln[1].split(" ")[0]);
                                 bgColorGreen = Integer.parseInt(ln[1].split(" ")[1]);
@@ -2375,27 +2383,25 @@ public class Main implements ApplicationListener {
                                         map[ii] = line[i];
                                 }
                             }
-                            
-                            try {
-                                downloadFile(connectUrl + "/adminPos", Gdx.files.external(root + "/adminPos"));
-                                adminPos = Integer.parseInt(Gdx.files.external(root + "/adminPos").readString());
-                            } catch(Exception ex) {}
-                            
-                            try {
-                                if(downloadFile(connectUrl + "/msg", Gdx.files.external(root + "/lastMsg"))) {
-                                    String[] messages = Gdx.files.external(root + "/lastMsg").readString().split(";;;");
-                                    
-                                    for(int msgi = 0; msgi < messages.length; msgi++) {
-                                        message = messages[msgi];
-                                        if(message.startsWith("/"))
-                                            message = "";
-                                    }
-                                } else message = "failed to connect to the server";
-                            } catch(Exception ex) {}
-                            /******************/
-                            
-                            Thread.sleep(100);
                         } catch(Exception ex) {}
+                        
+                        try {
+                            downloadFile(connectUrl + "/adminPos", null);
+                            adminPos = Integer.parseInt(downloaded);
+                        } catch(Exception ex) {}
+                        
+                        try {
+                            if(downloadFile(connectUrl + "/msg", null)) {
+                                String[] messages = downloaded.split(";;;");
+                                
+                                for(int msgi = 0; msgi < messages.length; msgi++) {
+                                    message = messages[msgi];
+                                    if(message.startsWith("/"))
+                                        message = "";
+                                }
+                            } else message = "failed to connect to the server";
+                        } catch(Exception ex) {}
+                        /******************/
                     }
                 }
             }.start();
