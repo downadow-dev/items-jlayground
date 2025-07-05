@@ -2018,11 +2018,11 @@ public class Main implements ApplicationListener {
                                     public void handleHttpResponse(Net.HttpResponse httpResponse) { done = true; }
                                 });
                                 while(!done)
-                                    Thread.sleep(50);
+                                    Thread.sleep(20);
                                 Pools.free(rq);
                                 cmsg = "";
                             }
-                            Thread.sleep(1000);
+                            Thread.sleep(300);
                         } catch(Exception e) {}
                     }
                 }
@@ -2346,7 +2346,7 @@ public class Main implements ApplicationListener {
                                 }
                             } catch(Exception ex) {}
                             
-                            Thread.sleep(270);
+                            Thread.sleep(100);
                         } catch(Exception ex) {}
                     }
                 }
@@ -2394,7 +2394,7 @@ public class Main implements ApplicationListener {
                             } catch(Exception ex) {}
                             /******************/
                             
-                            Thread.sleep(270);
+                            Thread.sleep(100);
                         } catch(Exception ex) {}
                     }
                 }
