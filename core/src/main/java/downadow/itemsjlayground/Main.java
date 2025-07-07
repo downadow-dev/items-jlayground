@@ -1068,7 +1068,7 @@ public class Main implements ApplicationListener {
                 if(scene != S_CLIENT_MENU)
                     batch.draw(blackTexture, 15, 100, 1000, 480);
                 
-                font.getData().setScale(0.6f);
+                font.getData().setScale(0.56f);
                 font.draw(batch, (scene != S_CLIENT_MENU ? "HTTP-адрес для загрузки ресурспака" : "HTTP-адрес сервера"), 15, 700);
                 if(pleaseWait)
                     font.draw(batch, "пожалуйста, подождите...", 920, 705);
@@ -1198,7 +1198,7 @@ public class Main implements ApplicationListener {
                         } else if(map[iii] == 'P') {
                             batch.draw(portal1Texture, ii * Blocks.defaultW, 728 - ((i + 1) * Blocks.defaultH), Blocks.defaultW, Blocks.defaultH * 2);
                         } else if(Blocks.isUnknown(map[iii])) {
-                            font.getData().setScale(2f);
+                            font.getData().setScale(2.0f);
                             font.draw(batch, "" + map[iii], ii * Blocks.defaultW + Blocks.defaultW / 4, 728 - (i + 1) * Blocks.defaultH);
                         }
                         /* блок мода */
@@ -1255,7 +1255,7 @@ public class Main implements ApplicationListener {
                     iii = 0;
                     int i = 0, ii = 0;
                     loop: for(; i < 8; i++) {
-                        for(ii = 0; ii < 134; ii++, iii++) {
+                        for(ii = 0; ii < 140; ii++, iii++) {
                             try {
                                 font.draw(batch, "" + behavior2[iii], 15 + ii * 8, 728 - (80 + i * 20));
                             } catch(ArrayIndexOutOfBoundsException e) {
