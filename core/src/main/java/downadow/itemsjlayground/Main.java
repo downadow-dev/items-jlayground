@@ -62,7 +62,7 @@ public class Main implements ApplicationListener {
     boolean cancelMovement = false;
     
     /* ширина и высота карты в объектах */
-    private final int WIDTH = 250, HEIGHT = 60;
+    private final int WIDTH = 250, HEIGHT = 80;
     /* карта */
     private char[] map = new char[WIDTH * HEIGHT];
     
@@ -97,7 +97,7 @@ public class Main implements ApplicationListener {
     
     private boolean fill = false;
     
-    private int cameraStart = 115 + 50 * WIDTH;
+    private int cameraStart = 125 + 70 * WIDTH;
     /* выбранный блок */
     private int selected = -1;
     /* вывести помощь */
@@ -980,6 +980,7 @@ public class Main implements ApplicationListener {
         font = new BitmapFont(Gdx.files.internal("font/font.fnt"), false);
         font.setFixedWidthGlyphs(" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\"!`?'.,;:()[]{}<>|/@\\^$-%+=#_&~*ЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮёйцукенгшщзхъфывапролджэячсмитьбю█№—");
         font.setUseIntegerPositions(false);
+        font.setColor(Color.WHITE);
         
         scene = S_START;
         updateRpList();
@@ -1254,15 +1255,15 @@ public class Main implements ApplicationListener {
                     iii = 0;
                     int i = 0, ii = 0;
                     loop: for(; i < 8; i++) {
-                        for(ii = 0; ii < 128; ii++, iii++) {
+                        for(ii = 0; ii < 134; ii++, iii++) {
                             try {
-                                font.draw(batch, "" + behavior2[iii], 15 + ii * 9, 728 - (80 + i * 20));
+                                font.draw(batch, "" + behavior2[iii], 15 + ii * 8, 728 - (80 + i * 20));
                             } catch(ArrayIndexOutOfBoundsException e) {
                                 break loop;
                             }
                         }
                     }
-                    font.draw(batch, "█", 15 + ii * 9, 728 - (80 + i * 20));
+                    font.draw(batch, "█", 15 + ii * 8, 728 - (80 + i * 20));
                 }
                 
                 try {font.draw(batch, "" + selectedBlockAddr() + "  " + map[selectedBlockAddr()] + " [" + (select ? ("?" + (selectNumber.isEmpty() ? "?" : selectNumber) + "?") : currentBlock) + "]", 15, 728 - 40);} catch(ArrayIndexOutOfBoundsException e) {}
@@ -1846,7 +1847,7 @@ public class Main implements ApplicationListener {
                         for(int i = 0; i < lightMap.length; i++) {
                             if(Blocks.getLight(map[i]) > 0) {
                                 final int max = Blocks.getLight(map[i]);
-                                for(float angle = 0.0001f; angle < 6.28f; angle += 0.01f) {
+                                for(float angle = 0.0f; angle < 6.28f; angle += 0.01f) {
                                     final float eY = (float)Math.sin(angle);
                                     final float eX = (float)Math.cos(angle);
                                     for(float dist = 0.1f; dist < max && (i == i + (int)(eX * dist) + (int)(eY * dist) * WIDTH || Blocks.isTranslucent(map[i + (int)(eX * dist) + (int)(eY * dist) * WIDTH])); dist += 0.1f)
