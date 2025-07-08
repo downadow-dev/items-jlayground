@@ -200,10 +200,10 @@ public class Main implements ApplicationListener {
                                                     map[selected] = map[selected + WIDTH];
                                                     map[selected + WIDTH] = '.';
                                                 }
-                                                Thread.sleep(150);
+                                                Thread.sleep(!slow ? 150 : 300);
                                             }
                                         }
-                                        Thread.sleep(200);
+                                        Thread.sleep(!slow ? 200 : 400);
                                         
                                         jump = false;
                                     } catch(Exception e) {}
@@ -1371,7 +1371,7 @@ public class Main implements ApplicationListener {
         });
         
         while(!done) {
-            try { Thread.sleep(20); } catch(Exception ex) {}
+            try { Thread.sleep(10); } catch(Exception ex) {}
         }
         Pools.free(rq);
         
@@ -1715,7 +1715,7 @@ public class Main implements ApplicationListener {
                             cameraStart += WIDTH;
                             map[selected] = map[selected - WIDTH];
                             map[selected - WIDTH] = '.';
-                            Thread.sleep(30);
+                            Thread.sleep(!slow ? 30 : 60);
                         }
                         
                         if(!ui && (select || programmingMode || writeMessage))
@@ -2027,11 +2027,11 @@ public class Main implements ApplicationListener {
                                     public void handleHttpResponse(Net.HttpResponse httpResponse) { done = true; }
                                 });
                                 while(!done)
-                                    Thread.sleep(20);
+                                    Thread.sleep(10);
                                 Pools.free(rq);
                                 cmsg = "";
                             }
-                            Thread.sleep(320);
+                            Thread.sleep(300);
                         } catch(Exception e) {}
                     }
                 }
@@ -2277,7 +2277,7 @@ public class Main implements ApplicationListener {
                                                     break;
                                                 }
                                                 
-                                                Thread.sleep((long)delay);
+                                                Thread.sleep(!slow ? (long)delay : (long)delay * 2L);
                                             }
                                         }
                                     }
@@ -2355,7 +2355,7 @@ public class Main implements ApplicationListener {
                                 }
                             } catch(Exception ex) {}
                             
-                            Thread.sleep(100);
+                            Thread.sleep(80);
                         } catch(Exception ex) {}
                     }
                 }
@@ -2367,7 +2367,7 @@ public class Main implements ApplicationListener {
                         /* загрузка карты, поведения, позиции хоста и сообщения */
                         
                         try {
-                            Thread.sleep(100);
+                            Thread.sleep(80);
                             
                             if(selected == -1) {
                                 downloadFile(connectUrl + "/adminMap", null);
