@@ -1490,7 +1490,7 @@ public class Main implements ApplicationListener {
                         if(!Blocks.isStrong(map[saved + WIDTH])) map[saved + WIDTH] = '.';
                         if(!Blocks.isStrong(map[saved - WIDTH])) map[saved - WIDTH] = '.';
                         
-                        if(!(map[saved - 1 - WIDTH] >= '0' && map[saved - 1 - WIDTH] <= '9') && !Blocks.isStrong(map[saved -1 - WIDTH]) && map[saved - 1 - WIDTH] != '.') {
+                        if(!(map[saved - 1 - WIDTH] >= '0' && map[saved - 1 - WIDTH] <= '9') && !Blocks.isStrong(map[saved - 1 - WIDTH]) && map[saved - 1 - WIDTH] != '.') {
                             if(!Blocks.isStrong(map[saved - 2 - WIDTH * 2]))
                                 map[saved - 2 - WIDTH * 2] = map[saved - 1 - WIDTH];
                             map[saved - 1 - WIDTH] = '.';
@@ -2004,10 +2004,7 @@ public class Main implements ApplicationListener {
                 public void run() {
                     while(true) {
                         try {
-                            if(!cmsg.isEmpty()) {
-                                done = false;
-                                Net.HttpRequest rq;
-                                
+                            if(!cmsg.isEmpty() && selected == -1) {
                                 String m = "";
                                 for(byte c : cmsg.getBytes(java.nio.charset.StandardCharsets.UTF_8)) {
                                     if(c == (byte)' ') m += "+";
@@ -2017,8 +2014,10 @@ public class Main implements ApplicationListener {
                                         m += "%" + (result.length() < 2 ? "0" : "") + result;
                                     }
                                 }
+                                cmsg = "";
                                 
-                                rq = rqbuilder.newRequest().method(Net.HttpMethods.GET).url(connectUrl + "/msg.php").content("m=" + m).build();     
+                                done = false;
+                                Net.HttpRequest rq = rqbuilder.newRequest().method(Net.HttpMethods.GET).url(connectUrl + "/msg.php").content("m=" + m).build();     
                                 Gdx.net.sendHttpRequest(rq, new Net.HttpResponseListener() {
                                     public void cancelled() { done = true; }
                                     
@@ -2029,9 +2028,8 @@ public class Main implements ApplicationListener {
                                 while(!done)
                                     Thread.sleep(10);
                                 Pools.free(rq);
-                                cmsg = "";
                             }
-                            Thread.sleep(120);
+                            Thread.sleep(125);
                         } catch(Exception e) {}
                     }
                 }
