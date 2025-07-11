@@ -2029,7 +2029,7 @@ public class Main implements ApplicationListener {
                                     Thread.sleep(10);
                                 Pools.free(rq);
                             }
-                            Thread.sleep(125);
+                            Thread.sleep(130);
                         } catch(Exception e) {}
                     }
                 }
@@ -2353,7 +2353,7 @@ public class Main implements ApplicationListener {
                                 }
                             } catch(Exception ex) {}
                             
-                            Thread.sleep(10);
+                            Thread.sleep(20);
                         } catch(Exception ex) {}
                     }
                 }
@@ -2365,7 +2365,7 @@ public class Main implements ApplicationListener {
                         /* загрузка карты, поведения, позиции хоста и сообщения */
                         
                         try {
-                            Thread.sleep(10);
+                            Thread.sleep(20);
                             
                             if(selected == -1) {
                                 downloadFile(connectUrl + "/adminMap", null);
