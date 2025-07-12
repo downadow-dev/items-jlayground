@@ -1344,6 +1344,7 @@ public class Main implements ApplicationListener {
         done = false;
         downloaded = "";
         Net.HttpRequest rq = rqbuilder.newRequest().method(Net.HttpMethods.GET).url(url).build();
+        rq.setFollowRedirects(true);
         
         Gdx.net.sendHttpRequest(rq, new Net.HttpResponseListener() {
             public void cancelled() {
