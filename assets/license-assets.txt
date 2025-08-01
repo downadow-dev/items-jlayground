@@ -1,0 +1,2 @@
+Если не указано иное, то файлы здесь (кроме apache-license-2.0.txt) лицензированы по CC0 (см. <https://freedomdefined.org/Licenses/CC-0>).
+
