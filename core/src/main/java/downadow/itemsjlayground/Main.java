@@ -299,7 +299,7 @@ public class Main implements ApplicationListener {
                                     }
                                     save += "\n";
                                 }
-                                Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString(save, false);
+                                Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").writeString(save, false, "UTF-8");
                                 msgSaved = !msgSaved;
                                 return true;
                             } else if(key == Input.Keys.BACKSPACE) {
@@ -924,9 +924,9 @@ public class Main implements ApplicationListener {
                                 if(!downloadFile(text + "/name", Gdx.files.external(root + "/name")))
                                     mapDir = "rp" + new Random().nextInt(1000000);
                                 else
-                                    mapDir = Gdx.files.external(root + "/name").readString().replace("\n", "") + "_" + new Random().nextInt(100000);
+                                    mapDir = Gdx.files.external(root + "/name").readString("UTF-8").replace("\n", "") + "_" + new Random().nextInt(100000);
                                 
-                                Gdx.files.external(root + "/rp_list.txt").writeString(mapDir + "\n", true);
+                                Gdx.files.external(root + "/rp_list.txt").writeString(mapDir + "\n", true, "UTF-8");
                                 if(!downloadFile(text + "/desc", Gdx.files.external(root + "/" + mapDir + "/desc"))) {
                                     text = "ERROR!!!"; pleaseWait = false;
                                     return;
@@ -942,7 +942,7 @@ public class Main implements ApplicationListener {
                                     return;
                                 }
                                 
-                                String[] lines = Gdx.files.external(root + "/" + mapDir + "/desc").readString().replace("\r", "").split("\n");
+                                String[] lines = Gdx.files.external(root + "/" + mapDir + "/desc").readString("UTF-8").replace("\r", "").split("\n");
                                 for(String line : lines) {
                                     String[] tokens = line.split(" ");
                                     for(String tkn : tokens) {
@@ -1016,7 +1016,7 @@ public class Main implements ApplicationListener {
         
         if(Gdx.files.internal("game").isDirectory()) {
             Gdx.files.internal("game").copyTo(Gdx.files.external(root));
-            Gdx.files.external(root + "/rp_list.txt").writeString("game\n", true);
+            Gdx.files.external(root + "/rp_list.txt").writeString("game\n", true, "UTF-8");
             updateRpList();
         }
     }
@@ -1376,7 +1376,7 @@ public class Main implements ApplicationListener {
             return;
         }
         
-        rpList = Gdx.files.external(root + "/rp_list.txt").readString().split("\n");
+        rpList = Gdx.files.external(root + "/rp_list.txt").readString("UTF-8").split("\n");
         for(int i = 0; i < rpList.length; i++) {
             if(!Gdx.files.external(root + "/" + rpList[i] + "/map").exists())
                 rpList[i] = "";
@@ -1544,7 +1544,7 @@ public class Main implements ApplicationListener {
         
         String[] lines;
         
-        lines = Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").readString().split("\n");
+        lines = Gdx.files.external(root + "/" + rpList[selectedRp] + "/map").readString("UTF-8").split("\n");
         behavior = lines[0];
         bgColorRed = Integer.parseInt(lines[1].split(" ")[0]);
         bgColorGreen = Integer.parseInt(lines[1].split(" ")[1]);
@@ -1556,9 +1556,9 @@ public class Main implements ApplicationListener {
                 map[ii++] = line[i];
         }
         
-        helpMessage = Gdx.files.external(root + "/" + rpList[selectedRp] + "/help").readString().split("\n");
+        helpMessage = Gdx.files.external(root + "/" + rpList[selectedRp] + "/help").readString("UTF-8").split("\n");
         
-        lines = Gdx.files.external(root + "/" + rpList[selectedRp] + "/desc").readString().split("\n");
+        lines = Gdx.files.external(root + "/" + rpList[selectedRp] + "/desc").readString("UTF-8").split("\n");
         for(String line : lines) {
             String[] tokens = line.replace("  ", " ").replace("\t", "").split(" ");
             
