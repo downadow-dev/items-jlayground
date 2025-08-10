@@ -371,7 +371,7 @@ public class Main implements ApplicationListener {
                                 return true;
                             }
                             /* включение/выключение "физики" */
-                            else if(key == Input.Keys.F6 && gameState != 2) {
+                            else if(key == Input.Keys.F6) {
                                 click.play(0.4f);
                                 ph = !ph;
                                 return true;
@@ -1232,7 +1232,7 @@ public class Main implements ApplicationListener {
                             } else if(behaviorSelected2 != -1 && iii == behaviorSelected2 && programmingMode)
                                 batch.draw(redTexture, ii * Blocks.defaultW, 728 - i * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
                             else if((gameState == 2 && iii == adminPos) || (gameState == 1 && iii == pos2))
-                                batch.draw(pricelTexture, ii * Blocks.defaultW + Blocks.defaultW / 2, 728 - i * Blocks.defaultH - Blocks.defaultH / 2, 12, 8);
+                                batch.draw(pricelTexture, ii * Blocks.defaultW + Blocks.defaultW / 2 - 8, 728 - i * Blocks.defaultH - Blocks.defaultH / 2 - 5, 16, 8);
                         }
                     } catch(ArrayIndexOutOfBoundsException e) {}
                     iii++;
@@ -1241,7 +1241,7 @@ public class Main implements ApplicationListener {
             }
             
             if(ui) {
-                batch.draw(pricelTexture, 1200 / 2 + 16, 728 - (700 / 2 - 20), 14, 8);
+                batch.draw(pricelTexture, 1200 / 2 + 16, 728 - (700 / 2 - 20), 16, 8);
                 batch.draw(vignetteTexture, 0, 0, 1200, 728);
                 
                 font.getData().setScale(0.5f);
@@ -1734,7 +1734,7 @@ public class Main implements ApplicationListener {
                         }
                         if(mvWait) {
                             mvWait = false;
-                            Thread.sleep(200);
+                            Thread.sleep(250);
                         }
                         
                         if(cancelMovement) {
@@ -2281,29 +2281,31 @@ public class Main implements ApplicationListener {
                                     if(message.startsWith("/")) {
                                         String[] command = message.substring(1).split(" ");
                                         
-                                        if(command[0].startsWith("c")) {
-                                            char[] chrs = command[2].toCharArray();
-                                            int start = Integer.parseInt(command[1]);
-                                            for(int i = 0; i < chrs.length; i++)
-                                                map[start + i] = chrs[i];
-                                        } else if(command[0].startsWith("C")) {
-                                            char[] chrs = command[2].toCharArray();
-                                            int start = Integer.parseInt(command[1]);
-                                            for(int i = 0; i < chrs.length; i++)
-                                                map[start + i * WIDTH] = chrs[i];
-                                        } else if(command[0].startsWith("f")) {
-                                            fire(Integer.parseInt(command[1]));
-                                        } else if(command[0].startsWith("F")) {
-                                            fire2(Integer.parseInt(command[1]));
-                                        } else if(command[0].startsWith("b")) {
-                                            boom(Integer.parseInt(command[1]));
-                                        } else if(command[0].equals("p")) {
-                                            behavior = message.substring(3);
-                                        } else if(command[0].startsWith("B")) {
-                                            bgColorRed = Integer.parseInt(command[1]);
-                                            bgColorGreen = Integer.parseInt(command[2]);
-                                            bgColorBlue = Integer.parseInt(command[3]);
-                                        }
+                                        try {
+                                            if(command[0].startsWith("c")) {
+                                                char[] chrs = command[2].toCharArray();
+                                                int start = Integer.parseInt(command[1]);
+                                                for(int i = 0; i < chrs.length; i++)
+                                                    map[start + i] = chrs[i];
+                                            } else if(command[0].startsWith("C")) {
+                                                char[] chrs = command[2].toCharArray();
+                                                int start = Integer.parseInt(command[1]);
+                                                for(int i = 0; i < chrs.length; i++)
+                                                    map[start + i * WIDTH] = chrs[i];
+                                            } else if(command[0].startsWith("f")) {
+                                                fire(Integer.parseInt(command[1]));
+                                            } else if(command[0].startsWith("F")) {
+                                                fire2(Integer.parseInt(command[1]));
+                                            } else if(command[0].startsWith("b")) {
+                                                boom(Integer.parseInt(command[1]));
+                                            } else if(command[0].equals("p")) {
+                                                behavior = message.substring(3);
+                                            } else if(command[0].startsWith("B")) {
+                                                bgColorRed = Integer.parseInt(command[1]);
+                                                bgColorGreen = Integer.parseInt(command[2]);
+                                                bgColorBlue = Integer.parseInt(command[3]);
+                                            }
+                                        } catch(Exception e) {}
                                         
                                         message = "";
                                     }
