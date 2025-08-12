@@ -195,8 +195,8 @@ public class Main implements ApplicationListener {
                                         int savedSelected = selected;
                                         if(map[savedSelected + WIDTH] != '.') {
                                             for(int i = 0; i < 3; i++) {
+                                                savedSelected = selected;
                                                 if(map[savedSelected - WIDTH] == '.') {
-                                                    savedSelected = selected;
                                                     savedSelected -= WIDTH;
                                                     map[savedSelected] = map[savedSelected + WIDTH];
                                                     map[savedSelected + WIDTH] = '.';
