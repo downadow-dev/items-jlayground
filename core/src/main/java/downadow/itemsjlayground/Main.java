@@ -192,13 +192,15 @@ public class Main implements ApplicationListener {
                                     try {
                                         jump = true;
                                         
-                                        if(map[selected + WIDTH] != '.') {
+                                        int savedSelected = selected;
+                                        if(map[savedSelected + WIDTH] != '.') {
                                             for(int i = 0; i < 3; i++) {
-                                                if(map[selected - WIDTH] == '.') {
-                                                    selected -= WIDTH;
-                                                    cameraStart -= WIDTH;
-                                                    map[selected] = map[selected + WIDTH];
-                                                    map[selected + WIDTH] = '.';
+                                                if(map[savedSelected - WIDTH] == '.') {
+                                                    savedSelected = selected;
+                                                    savedSelected -= WIDTH;
+                                                    map[savedSelected] = map[savedSelected + WIDTH];
+                                                    map[savedSelected + WIDTH] = '.';
+                                                    selected = savedSelected;
                                                 }
                                                 Thread.sleep(!slow ? 150 : 300);
                                             }
@@ -213,51 +215,55 @@ public class Main implements ApplicationListener {
                             return true;
                         /* перемещение выделенного блока */
                         } else if(key == Input.Keys.UP && selected != -1 && (map[selected - WIDTH] == '.' || Blocks.isWater(map[selected - WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                            map[selected - WIDTH] = map[selected];
+                            int savedSelected = selected;
+                            map[savedSelected - WIDTH] = map[savedSelected];
                             
-                            if(!Blocks.isEraser(map[selected]))
-                                map[selected] = '.';
+                            if(!Blocks.isEraser(map[savedSelected]))
+                                map[savedSelected] = '.';
                             else
-                                setBlock(selected, '.');
+                                setBlock(savedSelected, '.');
                             
-                            selected -= WIDTH;
-                            cameraStart -= WIDTH;
+                            savedSelected -= WIDTH;
+                            selected = savedSelected;
                             
                             up = true;
                         } else if(key == Input.Keys.DOWN && selected != -1 && (map[selected + WIDTH] == '.' || Blocks.isWater(map[selected + WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                            map[selected + WIDTH] = map[selected];
+                            int savedSelected = selected;
+                            map[savedSelected + WIDTH] = map[savedSelected];
                             
-                            if(!Blocks.isEraser(map[selected]))
-                                map[selected] = '.';
+                            if(!Blocks.isEraser(map[savedSelected]))
+                                map[savedSelected] = '.';
                             else
-                                setBlock(selected, '.');
+                                setBlock(savedSelected, '.');
                             
-                            selected += WIDTH;
-                            cameraStart += WIDTH;
+                            savedSelected += WIDTH;
+                            selected = savedSelected;
                             
                             down = true;
                         } else if(key == Input.Keys.LEFT && selected != -1 && (map[selected - 1] == '.' || Blocks.isWater(map[selected - 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                            map[selected - 1] = map[selected];
+                            int savedSelected = selected;
+                            map[savedSelected - 1] = map[savedSelected];
                             
-                            if(!Blocks.isEraser(map[selected]))
-                                map[selected] = '.';
+                            if(!Blocks.isEraser(map[savedSelected]))
+                                map[savedSelected] = '.';
                             else
-                                setBlock(selected, '.');
+                                setBlock(savedSelected, '.');
                             
-                            selected--;
-                            cameraStart--;
+                            savedSelected--;
+                            selected = savedSelected;
                             
                             left = true;
                         } else if(key == Input.Keys.RIGHT && selected != -1 && (map[selected + 1] == '.' || Blocks.isWater(map[selected + 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                            map[selected + 1] = map[selected];
+                            int savedSelected = selected;
+                            map[savedSelected + 1] = map[savedSelected];
                             
-                            if(!Blocks.isEraser(map[selected]))
-                                map[selected] = '.';
+                            if(!Blocks.isEraser(map[savedSelected]))
+                                map[savedSelected] = '.';
                             else
-                                setBlock(selected, '.');
+                                setBlock(savedSelected, '.');
                             
-                            selected++;
-                            cameraStart++;
+                            savedSelected++;
+                            selected = savedSelected;
                             
                             right = true;
                         }
@@ -926,7 +932,7 @@ public class Main implements ApplicationListener {
                                 else
                                     mapDir = Gdx.files.external(root + "/name").readString("UTF-8").replace("\n", "") + "_" + new Random().nextInt(100000);
                                 
-                                Gdx.files.external(root + "/rp_list.txt").writeString(mapDir + "\n", true, "UTF-8");
+                                Gdx.files.external(root + "/rp_list.txt").writeString(mapDir + "\n" + (Gdx.files.external(root + "/rp_list.txt").exists() ? Gdx.files.external(root + "/rp_list.txt").readString("UTF-8") : ""), false, "UTF-8");
                                 if(!downloadFile(text + "/desc", Gdx.files.external(root + "/" + mapDir + "/desc"))) {
                                     text = "ERROR!!!"; pleaseWait = false;
                                     return;
@@ -989,7 +995,7 @@ public class Main implements ApplicationListener {
         
         rain = 0;
         
-        /* дождь */
+        /* дождь и др. */
         new Thread() {
             public void run() {
                 while(true) {
@@ -1001,7 +1007,9 @@ public class Main implements ApplicationListener {
                                 rain = 0;
                         }
                         
-                        Thread.sleep(30);
+                        if(selected != -1) cameraStart = selected - (12 + 6 * WIDTH);
+                        
+                        Thread.sleep(25);
                     } catch(Exception e) {
                         //e.printStackTrace();
                     }
@@ -1075,7 +1083,7 @@ public class Main implements ApplicationListener {
                 if(scene != S_LAN_MENU) {
                     font.draw(batch, "Ресурспаки", 15, 620);
                     try {
-                        for(int j = 570, i = 0; i < rpList.length; i++) {
+                        for(int j = 570, i = 0; i < rpList.length && i < 16; i++) {
                             font.draw(batch, (i == selectedRp ? "> " : "") + rpList[i], 20, j);
                             j -= 25;
                         }
@@ -1698,11 +1706,13 @@ public class Main implements ApplicationListener {
             public void run() {
                 while(true) {
                     try {
-                        while(selected != -1 && !jump && selected > WIDTH && !Blocks.isHelicopter(map[selected]) && !Blocks.isEraser(map[selected]) && map[selected + WIDTH] == '.' && ph) {
-                            selected += WIDTH;
-                            cameraStart += WIDTH;
-                            map[selected] = map[selected - WIDTH];
-                            map[selected - WIDTH] = '.';
+                        int savedSelected = selected;
+                        while(savedSelected != -1 && !jump && savedSelected > WIDTH && !Blocks.isHelicopter(map[savedSelected]) && !Blocks.isEraser(map[savedSelected]) && map[savedSelected + WIDTH] == '.' && ph) {
+                            savedSelected = selected;
+                            savedSelected += WIDTH;
+                            map[savedSelected] = map[savedSelected - WIDTH];
+                            map[savedSelected - WIDTH] = '.';
+                            selected = savedSelected;
                             Thread.sleep(!slow ? 30 : 60);
                         }
                         
@@ -1713,7 +1723,7 @@ public class Main implements ApplicationListener {
                         
                         nextTexture = !nextTexture;
                         
-                        Thread.sleep(30);
+                        Thread.sleep(40);
                     } catch(Exception e) {
                         //e.printStackTrace();
                     }
@@ -1744,54 +1754,54 @@ public class Main implements ApplicationListener {
                         
                         Thread.sleep(50);
                         
-                        if(up && selected != -1 && (map[selected - WIDTH] == '.' || Blocks.isWater(map[selected - WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                            map[selected - WIDTH] = map[selected];
+                        int savedSelected = selected;
+                        
+                        if(up && savedSelected != -1 && (map[savedSelected - WIDTH] == '.' || Blocks.isWater(map[savedSelected - WIDTH]) || Blocks.isEraser(map[savedSelected])) && map[savedSelected] != 'f') {
+                            map[savedSelected - WIDTH] = map[savedSelected];
                             
-                            if(!Blocks.isEraser(map[selected]))
-                                map[selected] = '.';
+                            if(!Blocks.isEraser(map[savedSelected]))
+                                map[savedSelected] = '.';
                             else
-                                setBlock(selected, '.');
+                                setBlock(savedSelected, '.');
                             
-                            selected -= WIDTH;
-                            cameraStart -= WIDTH;
+                            savedSelected -= WIDTH;
                         }
-                        if(down && selected != -1 && (map[selected + WIDTH] == '.' || Blocks.isWater(map[selected + WIDTH]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                            map[selected + WIDTH] = map[selected];
+                        if(down && savedSelected != -1 && (map[savedSelected + WIDTH] == '.' || Blocks.isWater(map[savedSelected + WIDTH]) || Blocks.isEraser(map[savedSelected])) && map[savedSelected] != 'f') {
+                            map[savedSelected + WIDTH] = map[savedSelected];
                             
-                            if(!Blocks.isEraser(map[selected]))
-                                map[selected] = '.';
+                            if(!Blocks.isEraser(map[savedSelected]))
+                                map[savedSelected] = '.';
                             else
-                                setBlock(selected, '.');
+                                setBlock(savedSelected, '.');
                             
-                            selected += WIDTH;
-                            cameraStart += WIDTH;
+                            savedSelected += WIDTH;
                         }
-                        if(left && selected != -1 && (map[selected - 1] == '.' || Blocks.isWater(map[selected - 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                            map[selected - 1] = map[selected];
+                        if(left && savedSelected != -1 && (map[savedSelected - 1] == '.' || Blocks.isWater(map[savedSelected - 1]) || Blocks.isEraser(map[savedSelected])) && map[savedSelected] != 'f') {
+                            map[savedSelected - 1] = map[savedSelected];
                             
-                            if(!Blocks.isEraser(map[selected]))
-                                map[selected] = '.';
+                            if(!Blocks.isEraser(map[savedSelected]))
+                                map[savedSelected] = '.';
                             else
-                                setBlock(selected, '.');
+                                setBlock(savedSelected, '.');
                             
-                            selected--;
-                            cameraStart--;
+                            savedSelected--;
                         }
-                        if(right && selected != -1 && (map[selected + 1] == '.' || Blocks.isWater(map[selected + 1]) || Blocks.isEraser(map[selected])) && map[selected] != 'f') {
-                            map[selected + 1] = map[selected];
+                        if(right && savedSelected != -1 && (map[savedSelected + 1] == '.' || Blocks.isWater(map[savedSelected + 1]) || Blocks.isEraser(map[savedSelected])) && map[savedSelected] != 'f') {
+                            map[savedSelected + 1] = map[savedSelected];
                             
-                            if(!Blocks.isEraser(map[selected]))
-                                map[selected] = '.';
+                            if(!Blocks.isEraser(map[savedSelected]))
+                                map[savedSelected] = '.';
                             else
-                                setBlock(selected, '.');
+                                setBlock(savedSelected, '.');
                             
-                            selected++;
-                            cameraStart++;
+                            savedSelected++;
                         }
                         
-                        if(  up  && selected == -1) cameraStart -= WIDTH;
-                        if( down && selected == -1) cameraStart += WIDTH;
-                        if( left && selected == -1) cameraStart--;
+                        selected = savedSelected;
+                        
+                        if(up && selected == -1) cameraStart -= WIDTH;
+                        if(down && selected == -1) cameraStart += WIDTH;
+                        if(left && selected == -1) cameraStart--;
                         if(right && selected == -1) cameraStart++;
                     } catch(Exception ex) {}
                 }
