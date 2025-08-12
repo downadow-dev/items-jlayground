@@ -1708,12 +1708,12 @@ public class Main implements ApplicationListener {
                     try {
                         int savedSelected = selected;
                         while(savedSelected != -1 && !jump && savedSelected > WIDTH && !Blocks.isHelicopter(map[savedSelected]) && !Blocks.isEraser(map[savedSelected]) && map[savedSelected + WIDTH] == '.' && ph) {
-                            savedSelected = selected;
                             savedSelected += WIDTH;
                             map[savedSelected] = map[savedSelected - WIDTH];
                             map[savedSelected - WIDTH] = '.';
                             selected = savedSelected;
                             Thread.sleep(!slow ? 30 : 60);
+                            savedSelected = selected;
                         }
                         
                         if(!ui && (select || programmingMode || writeMessage))
