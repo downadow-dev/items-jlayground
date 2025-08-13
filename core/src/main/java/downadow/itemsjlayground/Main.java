@@ -1896,16 +1896,16 @@ public class Main implements ApplicationListener {
                                     if(map[i] == 'p') {
                                         for(int ii = 0; ii < map.length - 1; ii++) {
                                             if(map[ii] == 'P') {
+                                                if((i + 1) == selected) { selectedNewPos = ii - 1; Thread.sleep(15); }
+                                                else if((i - 1) == selected) { selectedNewPos = ii + 1; Thread.sleep(15); }
+                                                else if((i - WIDTH) == selected) { selectedNewPos = ii + WIDTH; Thread.sleep(15); }
+                                                
                                                 if(map[i + 1] != '.')
                                                     map[ii - 1] = map[i + 1];
                                                 if(map[i - 1] != '.')
                                                     map[ii + 1] = map[i - 1];
                                                 if(map[i - WIDTH] != '.')
                                                     map[ii + WIDTH] = map[i - WIDTH];
-                                                
-                                                if((i + 1) == selected) selected = ii - 1;
-                                                else if((i - 1) == selected) selected = ii + 1;
-                                                else if((i - WIDTH) == selected) selected = ii + WIDTH;
                                                 
                                                 map[i - 1] = '.';
                                                 map[i + 1] = '.';

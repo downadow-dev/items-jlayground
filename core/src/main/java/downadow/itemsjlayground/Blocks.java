@@ -250,7 +250,8 @@ public class Blocks {
     }
     
     public static boolean isTranslucent(char c) {
-        if(c == '.' || c == ';' || c == ':' || isUnknown(c)) return true;
+        if(c == '.' || c == ';' || c == ':' || c == 'p' ||
+           c == 'P' || c == 'f' || c == 'F' || isUnknown(c)) return true;
         
         for(int i = 0; i < waterTypesLength; i++)
             if(waterTypes[i].c == c)
