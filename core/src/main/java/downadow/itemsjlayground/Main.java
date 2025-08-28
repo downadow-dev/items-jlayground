@@ -735,7 +735,7 @@ public class Main implements ApplicationListener {
                         return keyDown(Input.Keys.F6);
                     } else if(touch.x > 1090 && touch.x < 1190 && touch.y > 518 && touch.y < 618) {
                         return keyUp(Input.Keys.F7);
-                    } else if(touch.x > 0 && touch.x < 1200 && touch.y > 640)
+                    } else if(touch.x > 0 && touch.x < 760 && touch.y > 640)
                         return keyDown(Input.Keys.S);
                 }
                 
