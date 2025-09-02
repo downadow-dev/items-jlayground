@@ -1093,7 +1093,7 @@ public class Main implements ApplicationListener {
             for(int i = 0; i < 17; i++) {
                 for(int ii = 0; ii < 26; ii++) {
                     try {
-                        if(rain >= 0 && iii < map.length && iii >= 0)
+                        if(rain >= 0 && iii < map.length && iii >= 0 && !Blocks.isWater(map[iii]))
                             batch.draw(rainTextures[rain], ii * Blocks.defaultW, 728 - (i + 1) * Blocks.defaultH, Blocks.defaultW, Blocks.defaultH);
                         
                         if(map[iii] == ':')
