@@ -92,7 +92,7 @@ public class Main implements ApplicationListener {
     /* блокировка управления */
     private boolean block = false;
     /* замедленное время */
-    private boolean slow = false;
+    private int slow = 1;
     
     private boolean noWater = false;
     
@@ -197,10 +197,10 @@ public class Main implements ApplicationListener {
                                             for(int i = 0; i < 3; i++) {
                                                 if(map[selected - WIDTH] == '.')
                                                     selectedNewPos = selected - WIDTH;
-                                                Thread.sleep(!slow ? 150 : 300);
+                                                Thread.sleep(150 * slow);
                                             }
                                         }
-                                        Thread.sleep(!slow ? 200 : 400);
+                                        Thread.sleep(200 * slow);
                                         
                                         jump = false;
                                     } catch(Exception e) {}
@@ -390,7 +390,7 @@ public class Main implements ApplicationListener {
                                 /* включить/выключить замедление времени */
                                 } else if(key == Input.Keys.F2) {
                                     click.play(0.4f);
-                                    slow = !slow;
+                                    slow = (slow > 1 ? 1 : 2);
                                 /*******************************/
                                 } else if(key == Input.Keys.F10) {
                                     click.play(0.4f);
@@ -498,7 +498,7 @@ public class Main implements ApplicationListener {
                                                 int i;
                                                 for(i = selected + WIDTH * 2; map[i] == '.'; i += WIDTH) {
                                                     map[i] = 'b';
-                                                    Thread.sleep(slow ? 90 : 40);
+                                                    Thread.sleep(40 * slow);
                                                     map[i] = '.';
                                                 }
                                                 boom(i);
@@ -963,7 +963,7 @@ public class Main implements ApplicationListener {
                                 rain = 0;
                         }
                         
-                        Thread.sleep(25);
+                        Thread.sleep(25 * slow);
                     } catch(Exception e) {
                         //e.printStackTrace();
                     }
@@ -1238,7 +1238,7 @@ public class Main implements ApplicationListener {
                 
                 font.getData().setScale(0.7f);
                 
-                if(slow)
+                if(slow > 1)
                     font.draw(batch, "~", 1160, 728 - 20);
                 
                 if(Gdx.app.getType() == Application.ApplicationType.Android) {
@@ -1270,7 +1270,7 @@ public class Main implements ApplicationListener {
                         batch.draw(rainBtnTexture, 980, 618, 100, 100);
                         if(rain < 0) batch.draw(black2Texture, 980, 618, 100, 100);
                         batch.draw(slowBtnTexture, 875, 618, 100, 100);
-                        if(!slow) batch.draw(black2Texture, 875, 618, 100, 100);
+                        if(slow == 1) batch.draw(black2Texture, 875, 618, 100, 100);
                     } else if(etcPage == 4) {
                         batch.draw(uiBtnTexture, 980, 618, 100, 100);
                         batch.draw(bgColorBtnTexture, 875, 618, 100, 100);
@@ -1369,7 +1369,7 @@ public class Main implements ApplicationListener {
                     public void run() {
                         try {
                             for(int i = 0; i < 6; i++) {
-                                Thread.sleep(5000);
+                                Thread.sleep(4000 * slow);
                                 if(map[saved] != 'f')
                                     return;
                                 if(!Blocks.isFireResistant(map[saved - 1]))
@@ -1381,8 +1381,6 @@ public class Main implements ApplicationListener {
                                 if(!Blocks.isFireResistant(map[saved - WIDTH]))
                                     fire(saved - WIDTH);
                             }
-                            if(slow)
-                                Thread.sleep(15000);
                             if(map[saved] == 'f');
                                 map[saved] = new Random().nextInt(3) == 1 ? 'b' : '.';
                         } catch(Exception e) {}
@@ -1404,7 +1402,7 @@ public class Main implements ApplicationListener {
             new Thread() {
                 public void run() {
                     try {
-                        Thread.sleep(!slow ? 500 : 1200);
+                        Thread.sleep(500 * slow);
                         if(map[saved - 1] != '.' && map[saved - 1] != 'F' && !Blocks.isWater(map[saved - 1]))
                             fire2(saved - 1);
                         if(map[saved + 1] != '.' && map[saved + 1] != 'F' && !Blocks.isWater(map[saved + 1]))
@@ -1422,7 +1420,7 @@ public class Main implements ApplicationListener {
                         if(map[saved + WIDTH + 1] != '.' && map[saved + WIDTH + 1] != 'F' && !Blocks.isWater(map[saved + WIDTH + 1]))
                             fire2(saved + WIDTH + 1);
                         
-                        Thread.sleep(!slow ? 7000 : 15000);
+                        Thread.sleep(6000 * slow);
                         map[saved] = '.';
                     } catch(Exception e) {}
                 }
@@ -1477,10 +1475,7 @@ public class Main implements ApplicationListener {
                     for(int i = 0; i < 7; i++) {
                         if(!Blocks.isStrong(map[saved]))
                             map[saved] = (char)((int)'0' + i);
-                        if(!slow)
-                            Thread.sleep(30);
-                        else
-                            Thread.sleep(110);
+                        Thread.sleep(30 * slow);
                     }
                     if(!Blocks.isStrong(map[saved]))
                         map[saved] = '.';
@@ -1682,7 +1677,7 @@ public class Main implements ApplicationListener {
                     try {
                         while(selected != -1 && !jump && selected > WIDTH && !Blocks.isHelicopter(map[selected]) && !Blocks.isEraser(map[selected]) && map[selected + WIDTH] == '.' && ph) {
                             selectedNewPos = selected + WIDTH;
-                            Thread.sleep(!slow ? 30 : 60);
+                            Thread.sleep(30 * slow);
                         }
                         
                         if(!ui && (select || programmingMode || writeMessage))
@@ -1692,7 +1687,7 @@ public class Main implements ApplicationListener {
                         
                         nextTexture = !nextTexture;
                         
-                        Thread.sleep(40);
+                        Thread.sleep(30 * slow);
                     } catch(Exception e) {
                         //e.printStackTrace();
                     }
@@ -1826,10 +1821,7 @@ public class Main implements ApplicationListener {
                                 }
                             }
                             
-                            if(!slow)
-                                Thread.sleep(30);
-                            else
-                                Thread.sleep(70);
+                            Thread.sleep(30 * slow);
                         } catch(Exception e) {}
                     }
                 }
@@ -1852,18 +1844,12 @@ public class Main implements ApplicationListener {
                                         
                                         if((map[i + WIDTH] != '.' && !Blocks.isWater(map[i + WIDTH])) || i + WIDTH * 2 > map.length) {
                                             if(map[i - 1] == '.') {
-                                                if(!slow)
-                                                    Thread.sleep(100);
-                                                else
-                                                    Thread.sleep(210);
+                                                Thread.sleep(100 * slow);
                                                 map[i - 1] = map[i];
                                             }
                                     
                                             if(map[i + 1] == '.') {
-                                                if(!slow)
-                                                    Thread.sleep(100);
-                                                else
-                                                    Thread.sleep(210);
+                                                Thread.sleep(100 * slow);
                                                 map[i + 1] = map[i];
                                             }
                                         }
@@ -1918,19 +1904,19 @@ public class Main implements ApplicationListener {
                                     else if(map[i] == '~' && map[i - WIDTH] != '.' && !Blocks.isWater(map[i - WIDTH]) && map[i - WIDTH + 1] == '.') {
                                         map[i - WIDTH + 1] = map[i - WIDTH];
                                         map[i - WIDTH] = '.';
-                                        Thread.sleep(!slow ? 200 : 500);
+                                        Thread.sleep(200 * slow);
                                     } else if(map[i] == '~' && map[i - WIDTH] != '.' && !Blocks.isWater(map[i - WIDTH]) && map[i - WIDTH + 1] != '.' && map[i - WIDTH * 2 + 1] == '.' && map[i - WIDTH * 2] == '.') {
                                         map[i - WIDTH * 2 + 1] = map[i - WIDTH];
                                         map[i - WIDTH] = '.';
-                                        Thread.sleep(!slow ? 200 : 500);
+                                        Thread.sleep(200 * slow);
                                     } else if(map[i] == ',' && map[i - WIDTH] != '.' && !Blocks.isWater(map[i - WIDTH]) && map[i - WIDTH - 1] == '.') {
                                         map[i - WIDTH - 1] = map[i - WIDTH];
                                         map[i - WIDTH] = '.';
-                                        Thread.sleep(!slow ? 200 : 500);
+                                        Thread.sleep(200 * slow);
                                     } else if(map[i] == ',' && map[i - WIDTH] != '.' && !Blocks.isWater(map[i - WIDTH]) && map[i - WIDTH - 1] != '.' && map[i - WIDTH * 2 - 1] == '.' && map[i - WIDTH * 2] == '.') {
                                         map[i - WIDTH * 2 - 1] = map[i - WIDTH];
                                         map[i - WIDTH] = '.';
-                                        Thread.sleep(!slow ? 200 : 500);
+                                        Thread.sleep(200 * slow);
                                     }
                                 } catch(Exception e) {
                                     //e.printStackTrace();
@@ -1972,7 +1958,7 @@ public class Main implements ApplicationListener {
                                 }
                             } catch(Exception e) {}
                         }
-                        try {Thread.sleep(!slow ? 400 : 1000);} catch(Exception e) {}
+                        try {Thread.sleep(400 * slow);} catch(Exception e) {}
                     }
                 }
             }.start();
@@ -2104,7 +2090,7 @@ public class Main implements ApplicationListener {
                                         }
                                         /* ~<...> */
                                         else if(behaviorSplitted[i].startsWith("~")) {
-                                            Thread.sleep(!slow ? Integer.parseInt(behaviorSplitted[i].replace("~", "")) : Integer.parseInt(behaviorSplitted[i].replace("~", "")) * 2);
+                                            Thread.sleep(Integer.parseInt(behaviorSplitted[i].replace("~", "")) * slow);
                                         }
                                         /* wait */
                                         else if(behaviorSplitted[i].equals("wait:up") && behaviorSelected != 0) {
@@ -2182,7 +2168,7 @@ public class Main implements ApplicationListener {
                                                     break;
                                                 }
                                                 
-                                                Thread.sleep(!slow ? (long)delay : (long)delay * 2L);
+                                                Thread.sleep((long)(delay * slow));
                                             }
                                         }
                                     }
